@@ -4,13 +4,12 @@ import TestService from '../../src/Service';
 import mocks from '../support/mocks';
 
 describe('Service Template TCs', () => {
-
   const defaultConfig = { message: 'Hello' };
 
   it('Bootstrap registers component correctly', async () => {
     const registerServiceStub = cy.stub();
     const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
-    await bootstrap(fakeWorkspace, config);
+    await bootstrap(fakeWorkspace, defaultConfig);
 
     expect(registerServiceStub).to.be.calledOnce;
     // @ts-ignore
