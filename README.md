@@ -11,7 +11,6 @@ The list of all the packages that are included in the repository.
 Core packages, that are used for the internal implementation of Capsulahub.
 
 1) workspace
-2) rendered
 
 ### CLI
 
@@ -28,6 +27,7 @@ These extensions add some logic to an application, don't have a UI representatio
 1) service-configuration
 2) service-env-registry
 3) service-selector
+4) renderer
 
 ### Widget extensions
 
