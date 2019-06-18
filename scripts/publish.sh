@@ -6,45 +6,46 @@ MSG_PUBLISH_FAIL="lerna publish: Failed"
 
 git status
 
+set_git_remote() {
+    git remote set-url origin https://${GH_ACCESS_TOKEN}@github.com/capsulajs/capsulahub
+}
+
+echo_result() {
+    if [[ "$1" == 0 ]]; then
+        echo "$MSG_PUBLISH_SUCCESS"
+    else
+        echo "$MSG_PUBLISH_FAIL"
+    fi
+}
+
 if [[ "$TRAVIS_BRANCH" =~ ^feature\/.*$ ]]; then
     echo "--------------------------------------------"
     echo "|    Deploying snapshot on npm registry    |"
     echo "--------------------------------------------"
 
-    lerna publish --canary --dist-tag snapshot --preid snapshot.$(date +%s) --yes
-    if [[ "$?" == 0 ]]; then
-        echo $MSG_PUBLISH_SUCCESS
-    else
-        echo $MSG_PUBLISH_FAIL
-    fi
+    lerna publish --canary --dist-tag snapshot --preid snapshot.${TRAVIS_BRANCH}.$(date +%s) --yes
+    echo_result "$?"
+
 elif [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
     echo "--------------------------------------------"
     echo "|     Deploying latest on npm registry     |"
     echo "--------------------------------------------"
 
-    git remote set-url origin https://${GH_TOKEN}@github.com/capsulajs/capsulahub-core
+    set_git_remote
     git checkout develop
     lerna publish prerelease --dist-tag next --yes -m '[skip ci]'
+    echo_result "$?"
 
-    if [[ "$?" == 0 ]]; then
-        echo $MSG_PUBLISH_SUCCESS
-    else
-        echo $MSG_PUBLISH_FAIL
-    fi
 elif [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
     echo "--------------------------------------------"
     echo "|     Deploying stable on npm registry     |"
     echo "--------------------------------------------"
 
-    git remote set-url origin https://${GH_TOKEN}@github.com/capsulajs/capsulahub-core
+    set_git_remote
     git checkout master
     lerna publish patch --yes -m '[skip ci]'
+    echo_result "$?"
 
-    if [[ "$?" == 0 ]]; then
-        echo $MSG_PUBLISH_SUCCESS
-    else
-        echo $MSG_PUBLISH_FAIL
-    fi
 else
     echo "*************************************************"
     echo "*   Not a pull request, npm publish skipped !   *"
