@@ -1,11 +1,11 @@
-import Component from './Component';
+import Widget from './Widget';
 import * as API from './api';
 
-declare let publicExports: any;
+declare let publicExports: object;
 
 const bootstrap = (): Promise<new () => HTMLElement> => {
   return new Promise((resolve) => {
-    return resolve(Component);
+    return resolve(Widget);
   });
 };
 

@@ -1,6 +1,6 @@
 # Template extension
 
-Component detailed info
+Widget detailed info
 
 # Exports
 
@@ -14,7 +14,7 @@ The public API of the extension.
 
 # Example
 
-Internally example prepares the component almost in the same way as **Workspace** does it.
+Internally example prepares the widget almost in the same way as **Workspace** does it.
 
 ### Run
 `yarn start`
@@ -30,7 +30,7 @@ The bundle is being loaded statically in order to provide **_watch mode_**.
 1) `yarn test`
 2) `yarn test:debug`
 
-## Add new commands
+## Add new commands (in Cypress)
 
 New commands have to be typed correctly in typescript.
 

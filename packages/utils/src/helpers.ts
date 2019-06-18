@@ -1,7 +1,7 @@
 import * as TYPES from './types';
 
 export default {
-  prepareComponent({ bootstrap, mountId, name }: TYPES.PrepareComponentRequest) {
+  prepareWebComponent({ bootstrap, mountId, name }: TYPES.PrepareWebComponentRequest) {
     return bootstrap().then((Component) => {
       customElements.define(name, Component);
       const customElement = new Component();

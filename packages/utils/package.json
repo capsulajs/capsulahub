@@ -1,7 +1,7 @@
 {
-  "name": "@capsulajs/capsula-hub-utils",
+  "name": "@capsulajs/capsulahub-utils",
   "version": "0.0.1",
-  "description": "CalsulaJS utils",
+  "description": "Different common utils for Calsulahub",
   "main": "lib/index.js",
   "module": "lib/index.js",
   "types": "lib/index.d.ts",

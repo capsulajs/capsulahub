@@ -1,7 +1,7 @@
 {
-  "name": "@capsulajs/capsula-hub-component-template",
+  "name": "@capsulajs/capsulahub-widget-template",
   "version": "0.0.1",
-  "description": "A component template package for an extension",
+  "description": "A widget template package for an extension",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -23,5 +23,8 @@
     "cypress:debug": "cypress open",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
     "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix"
+  },
+  "dependencies": {
+    "@capsulajs/capsulahub-utils": "^0.0.1"
   }
 }

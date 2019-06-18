@@ -1,6 +1,8 @@
 import TestService from './Service';
 import * as API from './api';
 
+declare let publicExports: object;
+
 const bootstrap = (WORKSPACE: any, SERVICE_CONFIG: any) => {
   return new Promise(async (resolve) => {
     const testService = new TestService(SERVICE_CONFIG.message);
@@ -15,9 +17,7 @@ const bootstrap = (WORKSPACE: any, SERVICE_CONFIG: any) => {
   });
 };
 
-// @ts-ignore
 if (typeof publicExports !== 'undefined') {
-  // @ts-ignore
   publicExports = bootstrap;
 }
 
