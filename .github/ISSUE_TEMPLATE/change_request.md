@@ -21,36 +21,29 @@ Links to any external dependency for this feature
 
 A clear and concise description of the design proposition.
 
-- [ ] Is it backward compatible ?
-- [ ] Adds new API
-- [ ] Changes existing API
-- [ ] Removes existing API
+1) Is it backward compatible? - Yes/No
+2) Adds new API - Yes/No
+3) Changes existing API - Yes/No
+4) Removes existing API - Yes/No
 
 #### Changes
 
 Provide link to a PR or code snippet of old and new API.
 
 ## Technical considerations
+
 List of everything to consider before writing test cases.
 
 ## Behavior
 
-- [ ] Does the suggested changes impact the current behaviour ?
+1) Does the suggested changes impact the current behaviour? - Yes/No
 <!-- If yes, specify which behaviour will be changed and how or provide the link to a PR.-->
-- [ ] Does the suggested changes are specific to some devices/browsers/environments
+2) Are the suggested changes specific to some devices/browsers/environments? - Yes/No
 <!-- If yes, specify which devices/browsers/environments -->
-- [ ] Does the suggested changes require to add new dependencies to the package ?
+3) Does the suggested changes require to add new dependencies to the package? - Yes/No
 <!-- If yes, provide the list of dependencies and explain why it's required. -->
 
-<!-- 
-Describe the feature behavior the best you can using gherkin feature file 
-Link to PR or Gherkin snippet
-```gherkin
-Given A great package
-When I add a new feature
-Then I expect it to work fine
-```
--->
+Describe the feature behavior the best you can using _**[Gherkin Syntax](https://docs.cucumber.io/gherkin/reference/)**_.
 
 ## Test cases
 

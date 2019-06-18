@@ -1,11 +1,13 @@
 {
-  "name": "@jivygroup/exchange-sandbox-component-template",
+  "name": "@capsulajs/capsula-hub-component-template",
   "version": "0.0.1",
   "description": "A component template package for an extension",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
-  "private": true,
+  "author": "CapsulaJS",
+  "license": "MIT",
+  "private": false,
   "scripts": {
     "build": "yarn build:lib && yarn build:dist",
     "start": "webpack-dev-server --env.production=false",
@@ -15,7 +17,6 @@
     "prettier": "prettier --write '{src,tests}/**/*.{js,ts,tsx}'",
     "clean": "rimraf lib dist node_modules",
     "doc": "typedoc src/api --out ./doc --mode file --hideGenerator --readme ./documentation.md",
-    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh $SERVICE 'true'",
     "build:dist": "rimraf dist && webpack --env.production=true",
     "build:lib": "rimraf lib && tsc",
     "cypress:run": "cypress run --browser chrome",

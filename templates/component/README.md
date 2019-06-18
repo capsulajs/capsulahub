@@ -1,7 +1,5 @@
 # Template extension
 
-![WebComponent](https://coryrylan.com/assets/images/posts/types/web-components.svg)
-
 Component detailed info
 
 # Exports
@@ -38,7 +36,8 @@ New commands have to be typed correctly in typescript.
 
 For example:
 
-\`Cypress.Commands.add('getHeading', () => {
+```typescript
+Cypress.Commands.add('getHeading', () => {
   return cy.get('h1');
 });
 
@@ -46,4 +45,5 @@ declare namespace Cypress {
   interface Chainable {
     getHeading: () => Chainable;
   }
-}\`
+}
+```

@@ -1,7 +1,5 @@
 # Service Template extension
 
-![WebComponent](https://avatars0.githubusercontent.com/u/12896170?s=400&v=4)
-
 Service detailed info
 
 # Exports

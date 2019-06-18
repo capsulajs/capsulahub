@@ -1,4 +1,3 @@
-const path = require('path');
 const WrapperPlugin = require('wrapper-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -6,6 +5,7 @@ module.exports = (env) => {
   const packagePath = process.cwd();
   const plugins = [];
   const isProduction = env.production === 'true';
+  const devServerPort = env.port || 1234;
   if (isProduction) {
     // Production plugins
     plugins.push(
@@ -64,7 +64,7 @@ module.exports = (env) => {
     devServer: {
       contentBase: `${packagePath}/public`,
       compress: false,
-      port: 1234,
+      port: devServerPort,
     },
     plugins,
     node: {

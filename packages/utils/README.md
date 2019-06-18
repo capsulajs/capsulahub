@@ -11,7 +11,7 @@ An object with all the helper functions.
 
 ### Add the package to packages dependencies
 
-Add `@jivygroup/exchange-sandbox-utils` package and run `yarn bootstrap` from the root.
+Add `@capsulajs/capsula-hub-utils` package and run `yarn bootstrap` from the root.
 
 ### Development
 
