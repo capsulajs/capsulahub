@@ -1,0 +1,23 @@
+# Utils
+
+Common utils for Exchange Sandbox and its extensions.
+
+# Exports
+
+### Named (helpers)
+An object with all the helper functions.
+
+# Usage
+
+### Add the package to packages dependencies
+
+Add `@jivygroup/exchange-sandbox-utils` package and run `yarn bootstrap` from the root.
+
+### Development
+
+To make the changes automatically be applied in other packages (the users of **_utils_** package) you should run:
+
+`yarn start`
+
+It will turn on watch mode.
+
