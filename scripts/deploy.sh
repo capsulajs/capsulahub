@@ -27,22 +27,22 @@ echo "travis event type: $TRAVIS_EVENT_TYPE"
 echo "S3 URL: $FINAL_URL"
 echo "SERVICE_PATH: $SERVICE_PATH"
 
-[[ -z $SERVICE_PATH ]] && echo "Error: Empty SERVICE_PATH" && exit 1
+[[ -z "$SERVICE_PATH" ]] && echo "Error: Empty SERVICE_PATH" && exit 1
 
-export PATH=$PATH:$HOME/.local/bin
+export PATH="$PATH:$HOME/.local/bin"
 
 # upload to s3
-aws s3 rm $S3_PATH/$SERVICE_PATH --recursive --region $S3_REGION
-aws s3 cp dist $SERVICE_FULL_PATH --recursive
-[[ $SERVICE == "exchange-sandbox" ]] && aws s3 cp configuration $CONFIGURATION_PATH --recursive
-[[ $INCLUDE_DOC == "true" ]] && aws s3 cp doc $DOC_PATH --recursive
+aws s3 rm "$SERVICE_FULL_PATH" --recursive --region "$S3_REGION"
+aws s3 cp dist "$SERVICE_FULL_PATH" --recursive
+[[ "$SERVICE" == "exchange-sandbox" ]] && aws s3 cp configuration "$CONFIGURATION_PATH" --recursive
+[[ "$INCLUDE_DOC" == "true" ]] && aws s3 cp doc "$DOC_PATH" --recursive
 
 echo "application was uploaded to s3 url: $SERVICE_FULL_PATH"
 
 
-if [ ! "$TRAVIS_PULL_REQUEST" == "false" ]; then
+if [[ ! "$TRAVIS_PULL_REQUEST" == "false" ]]; then
     # add comment on github pull request.
-    source ../../scripts/gh.sh $SERVICE $FINAL_URL $INCLUDE_DOC
+    source ../../scripts/gh.sh "$SERVICE" "$FINAL_URL" "$INCLUDE_DOC"
     echo "comment sent to GH pull request: $TRAVIS_BRANCH $TRAVIS_PULL_REQUEST_BRANCH PR $TRAVIS_PULL_REQUEST"
 else
     echo "comment was skipped not a pull request or comment already created."
