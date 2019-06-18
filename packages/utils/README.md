@@ -1,6 +1,6 @@
 # Utils
 
-Common utils for Exchange Sandbox and its extensions.
+Common utils for Capsulahub.
 
 # Exports
 

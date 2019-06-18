@@ -61,9 +61,3 @@ Link to the PR with test cases, that are written in _**[Gherkin Syntax](https://
 - [ ] Manual QA
 - [ ] Documentation
 - [ ] Release notes
-
-## RoadMap
-
-In case there is more than one mergeable point you can specify it here.
-
-<!--NOTICE that DoD is one unit, you CAN'T do implementation then notes then documentation etc.-->
