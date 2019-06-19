@@ -1,4 +1,3 @@
-import '@babel/polyfill';
 import WorkspaceFactory, { API } from '../';
 
 let workspace: API.Workspace;
