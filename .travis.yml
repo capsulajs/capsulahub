@@ -13,6 +13,9 @@ branches:
   only:
     - /.*/
 
+before_install:
+  - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
+
 install:
   - pip install --user awscli
   - yarn install --production=false

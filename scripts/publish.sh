@@ -24,7 +24,9 @@ if [[ "$TRAVIS_BRANCH" =~ ^feature\/.*$ ]]; then
     echo "|    Deploying snapshot on npm registry    |"
     echo "--------------------------------------------"
 
-    PACKAGE_VERSION="${TRAVIS_BRANCH}.$(date +%s)"
+    BRANCH_NAME=$(echo $TRAVIS_BRANCH | sed "s/[_/]/-/g")
+    echo $BRANCH_NAME
+    PACKAGE_VERSION="${BRANCH_NAME}.$(date +%s)"
     lerna publish --canary --dist-tag snapshot --preid "$PACKAGE_VERSION" --yes
     echo_result "$?"
     [[ "$?" -eq 0 ]] && lerna run publish:comment -- $(echo $npm_package_name) ${PACKAGE_VERSION}
