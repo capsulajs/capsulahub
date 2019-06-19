@@ -2,6 +2,7 @@
 .cache/
 dist/
 lib/
+public/
 doc/
 node_modules/
 yarn-error.log

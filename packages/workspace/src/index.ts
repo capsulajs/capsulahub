@@ -1,9 +1,9 @@
 import WorkspaceFactory from './WorkspaceFactory';
 import * as API from './api';
 
-// @ts-ignore
+declare let publicExports: object;
+
 if (typeof publicExports !== 'undefined') {
-  // @ts-ignore
   publicExports = WorkspaceFactory;
 }
 
