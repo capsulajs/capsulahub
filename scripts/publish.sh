@@ -4,6 +4,7 @@ set -e
 MSG_PUBLISH_SUCCESS="lerna publish: Succeed"
 MSG_PUBLISH_FAIL="lerna publish: Failed"
 
+echo "$TRAVIS_BRANCH"
 git status
 
 set_git_remote() {
