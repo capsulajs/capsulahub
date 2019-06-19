@@ -1,17 +1,17 @@
 import { take } from 'rxjs/operators';
 import * as configurationServiceItems from '@capsulajs/capsulajs-configuration-service';
 // @ts-ignore
-import serviceABootstrap from '@capsulajs/capsulahub-core-external-modules/src/services/serviceA';
+import serviceABootstrap from '@capsulajs/capsulahub-cdn/src/services/serviceA';
 // @ts-ignore
-import serviceBBootstrap from '@capsulajs/capsulahub-core-external-modules/src/services/serviceB';
+import serviceBBootstrap from '@capsulajs/capsulahub-cdn/src/services/serviceB';
 // @ts-ignore
-import serviceCBootstrap, { ServiceC } from '@capsulajs/capsulahub-core-external-modules/src/services/serviceC';
+import serviceCBootstrap, { ServiceC } from '@capsulajs/capsulahub-cdn/src/services/serviceC';
 // @ts-ignore
-import serviceDBootstrap from '@capsulajs/capsulahub-core-external-modules/src/services/serviceD';
+import serviceDBootstrap from '@capsulajs/capsulahub-cdn/src/services/serviceD';
 // @ts-ignore
-import gridComponentBootstrap from '@capsulajs/capsulahub-core-external-modules/src/components/Grid';
+import gridComponentBootstrap from '@capsulajs/capsulahub-cdn/src/components/Grid';
 // // @ts-ignore
-import requestFormComponentBootstrap from '@capsulajs/capsulahub-core-external-modules/src/components/RequestForm';
+import requestFormComponentBootstrap from '@capsulajs/capsulahub-cdn/src/components/RequestForm';
 import WorkspaceFactory from '../../src/WorkspaceFactory';
 import {
   configRepositoryName,

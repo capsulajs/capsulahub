@@ -6,8 +6,8 @@ module.exports = (env) => ({
   entry: {
     'services/serviceA': './src/services/serviceA.ts',
     'services/serviceB': './src/services/serviceB.ts',
-    'components/Grid': './src/components/Grid.tsx',
-    'components/RequestForm': './src/components/RequestForm.tsx',
+    'widgets/Grid': './src/widgets/Grid.tsx',
+    'widgets/RequestForm': './src/widgets/RequestForm.tsx',
   },
   output: {
     path: path.resolve(__dirname, 'public'),

@@ -10,9 +10,9 @@ The list of all the packages that are included in the repository.
 
 Core packages, that are used for the internal implementation of Capsulahub.
 
-| Package name          | Description                                                                                                                                                    |
-|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| workspace             | The core package of Capsulahub. Includes the implementation of Workspace, that inits the application and keeps track of service and widgets extensions.        |
+| Package name                    | Description                                                                                                                                                    |
+|---------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [workspace](packages/workspace) | The core package of Capsulahub. Includes the implementation of Workspace, that inits the application and keeps track of service and widgets extensions.        |
 
 ### CLI
 
@@ -20,7 +20,7 @@ The packages, that implement an ability to run Capsulahub from CLI (from a termi
 
 | Package name          | Description                                                                                                                                                    |
 |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cli                   | The package, that provides an ability to use CLI to run and build Capsulahub application.                                                                                                                                 |
+| cdn                   | The package, that provides an ability to use CLI to run and build Capsulahub application.                                                                                                                                 |
 
 ### Service extensions
 
@@ -58,4 +58,4 @@ Additional packages, that provide useful common utilities.
 |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ui                    | Common reusable ui components.                                                                                                                                 |
 | utils                 | Common reusable helpers, consts, types.                                                                                                                        |
-| cdn                   | Util package, that includes separate files, that will be served on localhost to imitate cdn links.                                                             |
+| [cdn](packages/cdn)   | Util package, that includes separate files, that will be served on localhost to imitate cdn links.                                                             |

@@ -1,10 +1,11 @@
 module.exports = {
   setupFiles: [],
+  testEnvironment: 'jsdom',
   transform: {
     '\\.(ts|tsx)$': 'ts-jest',
   },
-  testRegex: '.*\\.test\\.ts$',
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   moduleDirectories: ['src', 'node_modules'],
-  testPathIgnorePatterns: ['<rootDir>/es/', '<rootDir>/lib/', '<rootDir>/packages/workspace/node_modules/'],
+  testMatch: ['**/tests/**/*.test.[jt]s?(x)'],
+  testPathIgnorePatterns: ['<rootDir>/lib/'],
 };

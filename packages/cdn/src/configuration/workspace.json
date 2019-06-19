@@ -29,7 +29,7 @@
       "grid": {
         "componentName": "web-grid",
         "nodeId": "root",
-        "path": "http://localhost:3000/components/Grid.js",
+        "path": "http://localhost:3000/widgets/Grid.js",
         "config": { "title": "Base Grid" }
       }
     },
@@ -37,7 +37,7 @@
       "request-form": {
         "componentName": "web-request-form",
         "nodeId": "request-form",
-        "path": "http://localhost:3000/components/RequestForm.js",
+        "path": "http://localhost:3000/widgets/RequestForm.js",
         "config": { "title": "Base Request Form" }
       }
     }
