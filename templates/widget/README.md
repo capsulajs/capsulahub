@@ -4,7 +4,7 @@ Widget detailed info
 
 # WorkspaceConfiguration example
 
-```json
+```
   "components": {
     "layouts": {
         // ...some widget for layout
