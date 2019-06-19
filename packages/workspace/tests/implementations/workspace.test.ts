@@ -9,9 +9,9 @@ import serviceCBootstrap, { ServiceC } from '@capsulajs/capsulahub-cdn/src/servi
 // @ts-ignore
 import serviceDBootstrap from '@capsulajs/capsulahub-cdn/src/services/serviceD';
 // @ts-ignore
-import gridComponentBootstrap from '@capsulajs/capsulahub-cdn/src/components/Grid';
+import gridComponentBootstrap from '@capsulajs/capsulahub-cdn/src/widgets/Grid';
 // // @ts-ignore
-import requestFormComponentBootstrap from '@capsulajs/capsulahub-cdn/src/components/RequestForm';
+import requestFormComponentBootstrap from '@capsulajs/capsulahub-cdn/src/widgets/RequestForm';
 import WorkspaceFactory from '../../src/WorkspaceFactory';
 import {
   configRepositoryName,
