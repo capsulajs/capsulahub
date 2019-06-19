@@ -15,7 +15,7 @@
     "lint": "yarn lint:md && yarn lint:ts",
     "prettier": "prettier --write '{src,tests}/**/*.{js,ts,tsx}'",
     "clean": "rimraf lib dist node_modules",
-    "doc": "typedoc src/api --out ./doc --mode file --hideGenerator --readme ./documentation.md",
+    "doc": "typedoc src/api --out ./doc --mode file --hideGenerator",
     "build:dist": "rimraf dist && webpack --env.production=true",
     "build:lib": "rimraf lib && tsc",
     "cypress:run": "cypress run --browser chrome",
