@@ -1,0 +1,32 @@
+sudo: true
+language: node_js
+node_js:
+  - '10'
+
+addons:
+  apt:
+    packages:
+      - libgconf-2-4
+  chrome: stable
+
+branches:
+  only:
+    - /.*/
+
+install:
+  - pip install --user awscli
+  - yarn install --production=false
+
+before_script:
+  - yarn bootstrap
+  - yarn link
+
+script:
+  - yarn lint
+  - yarn build
+  - yarn doc
+  - yarn test
+
+notifications:
+  email:
+    on_failure: always

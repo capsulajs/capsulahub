@@ -1,0 +1,7 @@
+.idea/
+.cache/
+dist/
+lib/
+doc/
+node_modules/
+yarn-error.log
