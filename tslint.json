@@ -7,5 +7,11 @@
     "ordered-imports": false,
     "no-unused-expression": [true, "allow-fast-null-checks", "allow-new"],
     "no-console": [true, "log"]
+  },
+  "jsRules": {
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "no-unused-expression": [true, "allow-fast-null-checks", "allow-new"],
+    "no-console": [true, "log"]
   }
 }

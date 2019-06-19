@@ -1,7 +1,7 @@
- # CDN
- 
-Allows to serve services, widgets, configuration for Workspace on http://localhost:3000/ to imitate CDN functionality.
- 
+# CDN
+
+Allows to serve services, widgets, configuration for Workspace on <http://localhost:3000/> to imitate CDN functionality.
+
 ## Usage
 
 This package is used in [workspace](../workspace) package in order to imitate cdn for configuration and extensions, that
@@ -14,7 +14,4 @@ WorkspaceConfiguration can be changed in [./src/configurations/workspace.json](w
 
 In order to build extensions and serve them on localhost you should run
 
-```
-yarn start
-```
-
+    yarn start

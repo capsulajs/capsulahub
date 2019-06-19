@@ -5,6 +5,7 @@ Common utils for Capsulahub.
 # Exports
 
 ### Named (helpers)
+
 An object with all the helper functions.
 
 # Usage
@@ -20,4 +21,3 @@ To make the changes automatically be applied in other packages (the users of **_
 `yarn start`
 
 It will turn on watch mode.
-

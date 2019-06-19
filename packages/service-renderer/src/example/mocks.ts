@@ -1,5 +1,5 @@
 class LayoutABC extends HTMLElement {
-  connectedCallback() {
+  public connectedCallback() {
     this.innerHTML = `<div data-cy="layout-abc">
       <div id="item-a"></div>
       <div id="item-b"></div>
@@ -8,20 +8,22 @@ class LayoutABC extends HTMLElement {
   }
 }
 
+// tslint:disable:max-classes-per-file
+
 class ItemA extends HTMLElement {
-  connectedCallback() {
+  public connectedCallback() {
     this.innerHTML = `<div data-cy=item-a>Item A</div>`;
   }
 }
 
 class ItemB extends HTMLElement {
-  connectedCallback() {
+  public connectedCallback() {
     this.innerHTML = `<div data-cy=item-b>Item B</div>`;
   }
 }
 
 class ItemC extends HTMLElement {
-  connectedCallback() {
+  public connectedCallback() {
     this.innerHTML = `<div data-cy=item-c>Item C</div>`;
   }
 }
