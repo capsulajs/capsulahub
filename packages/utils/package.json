@@ -7,7 +7,7 @@
   "types": "lib/index.d.ts",
   "author": "CapsulaJS",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "rimraf lib && tsc",
     "start": "rimraf lib && tsc --watch",
