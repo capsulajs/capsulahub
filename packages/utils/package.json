@@ -1,0 +1,20 @@
+{
+  "name": "@capsulajs/capsulahub-utils",
+  "version": "0.0.1",
+  "description": "Different common utils for Calsulahub",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "author": "CapsulaJS",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "rimraf lib && tsc",
+    "start": "rimraf lib && tsc --watch",
+    "clean": "rimraf lib node_modules",
+    "lint": "yarn lint:md && yarn lint:ts",
+    "prettier": "prettier --write '{src,tests}/**/*.{js,ts,tsx}'",
+    "lint:md": "remark . --rc-path ../../.remarkrc --output",
+    "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix"
+  }
+}

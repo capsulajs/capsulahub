@@ -1,0 +1,61 @@
+{
+  "name": "@capsulajs/capsulahub",
+  "version": "0.0.1",
+  "description": "The main repository of Capsulahub",
+  "main": "index.js",
+  "repository": "git@github.com:capsulajs/capsulahub",
+  "author": "CapsulaJS",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "bootstrap": "lerna bootstrap --npm-client=yarn",
+    "build": "lerna run build && node ./afterBuild.js --stream",
+    "doc": "lerna run doc --stream",
+    "start": "lerna run start --stream",
+    "lint": "lerna run lint --stream",
+    "test": "lerna run test --concurrency=1 --stream",
+    "clean": "lerna run clean && rimraf node_modules",
+    "deploy": "lerna run deploy --stream"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "homepage": "https://github.com/capsulajs/capsulahub",
+  "bugs": {
+    "url": "https://github.com/capsulajs/capsulahub/issues"
+  },
+  "devDependencies": {
+    "@cypress/webpack-preprocessor": "^4.0.4",
+    "@types/node": "^12.0.2",
+    "css-loader": "^2.1.1",
+    "cypress": "^3.3.1",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^2.2.0",
+    "lerna": "^3.13.4",
+    "node-sass": "^4.12.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.17.0",
+    "pretty-quick": "^1.10.0",
+    "remark-cli": "^6.0.1",
+    "remark-lint": "^6.0.4",
+    "remark-preset-lint-recommended": "^3.0.2",
+    "rimraf": "^2.6.3",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^6.0.1",
+    "tslint": "^5.16.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-react": "^4.0.0",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.4.5",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2",
+    "webpack-dev-server": "^3.4.1",
+    "wrapper-webpack-plugin": "^2.1.0"
+  }
+}
