@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 if [ "x$PIPELINEDEBUG" != "x" ]; then
     set -x
 fi

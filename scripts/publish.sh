@@ -12,9 +12,9 @@ set_git_remote() {
 
 echo_result() {
     if [[ "$1" == 0 ]]; then
-        echo "$MSG_PUBLISH_SUCCESS"
+        echo "$MSG_PUBLISH_SUCCESS" && return 0
     else
-        echo "$MSG_PUBLISH_FAIL"
+        echo "$MSG_PUBLISH_FAIL" && return 1
     fi
 }
 
@@ -23,8 +23,10 @@ if [[ "$TRAVIS_BRANCH" =~ ^feature\/.*$ ]]; then
     echo "|    Deploying snapshot on npm registry    |"
     echo "--------------------------------------------"
 
-    lerna publish --canary --dist-tag snapshot --preid snapshot.${TRAVIS_BRANCH}.$(date +%s) --yes
+    PACKAGE_VERSION="snapshot.${TRAVIS_BRANCH}.$(date +%s)"
+    lerna publish --canary --dist-tag snapshot --preid "$PACKAGE_VERSION" --yes
     echo_result "$?"
+    [[ "$?" -eq 0 ]] && lerna run publish:comment
 
 elif [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
     echo "--------------------------------------------"
