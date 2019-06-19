@@ -2,6 +2,24 @@
 
 Widget detailed info
 
+# WorkspaceConfiguration example
+
+```json
+  "components": {
+    "layouts": {
+        // ...some widget for layout
+    },
+    "items": {
+      "test-widget-id": {
+        "componentName": "web-test-widget",
+        "nodeId": "test-widget-id",
+        "path": "http://cdnhost.com/widgets/TestWidget.js",
+        "config": { "title": "Base Test Widget" }
+      }
+    }
+  }
+```
+
 # Exports
 
 ### Default

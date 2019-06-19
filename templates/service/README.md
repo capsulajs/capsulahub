@@ -2,6 +2,22 @@
 
 Service detailed info
 
+# WorkspaceConfiguration example
+
+```json
+  "services": {
+      "serviceName": "TestService",
+      "path": "http://cdnhost.com/services/TestService.js",
+      "definition": {
+        "serviceName": "TestService",
+        "methods": {
+          "showMessage": { "asyncModel": "requestResponse" }
+        }
+      },
+      "config": { "message": "Test message" }
+  }
+```
+
 # Exports
 
 ### Default
