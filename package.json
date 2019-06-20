@@ -15,7 +15,7 @@
     "lint": "lerna run lint --stream --parallel",
     "test": "lerna run test --parallel --stream",
     "clean": "lerna run clean && rimraf node_modules",
-    "deploy": "lerna run deploy --stream"
+    "deploy": "lerna run deploy --parallel --stream"
   },
   "husky": {
     "hooks": {
