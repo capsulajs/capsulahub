@@ -53,6 +53,22 @@ Bootstrap function of the extension.
 
 The public API of the extension.
 
+## API
+
+### CDN
+
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/service-renderer/doc/index.html)
+
+### Local
+
+Run 
+
+```bash
+yarn doc
+```
+
+And open [doc/index.html](./doc/index.html) in browser.
+
 ## Example
 
 All of the manual debugging should be provided only in _**test:debug**_ mode. Example folder is required only for Cypress needs.
@@ -64,7 +80,7 @@ All of the manual debugging should be provided only in _**test:debug**_ mode. Ex
 1) `yarn test`
 2) `yarn test:debug`
 
-## Recommendations for testing
+### Recommendations for testing
 
 **_getServiceRef()_** checks that the service has been bootstrapped correctly and returns the instance of the service.
 
@@ -83,3 +99,7 @@ expect(getConfigStub).to.be.called;
 Expectations for stubs and spies:
 
 <https://docs.cypress.io/guides/references/assertions.html#Sinon-Chai>
+
+## Licence
+
+[CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.

@@ -46,11 +46,11 @@ The public API of Workspace.
 Then you can create a Workspace as following:
 
 ```js
-import WorkspaceFactory from '@capsulajs/capsulahub-workspace';
+import WorkspaceFactory, { API } from '@capsulajs/capsulahub-workspace';
 
 const workspaceFactory = new WorkspaceFactory();
 
-let workspace;
+let workspace: API.Workspace;
 workspaceFactory.createWorkspace({ 
   token: 'http://localhost:3000/configuration/workspace.json',
   configProvider: 'httpFile'
@@ -66,7 +66,19 @@ workspaceFactory.createWorkspace({
 
 ## API
 
+### CDN
+
 [The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/workspace/doc/index.html)
+
+### Local
+
+Run 
+
+```bash
+yarn doc
+```
+
+And open [doc/index.html](./doc/index.html) in browser.
 
 ## Configuration
 
@@ -153,3 +165,7 @@ And run:
 You will be able to open an example on [localhost:1234](http://localhost:1234/).
 
 This example is also being used for running Cypress tests on it.
+
+## Licence
+
+[CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.

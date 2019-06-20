@@ -92,3 +92,7 @@ Possible dispatchers [More](https://github.com/capsulajs/capsulajs-transport-pro
 
 - AxiosDispatcher
 - WebSocketDispatcher
+
+## Licence
+
+[CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.

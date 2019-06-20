@@ -1,7 +1,5 @@
 ## Selector service
 
-Selector service for the Capsulahub.
-
 The purpose of this service is to provide a utility tool that allows user to select a specific data 
 inside a collection of data.
 
@@ -38,16 +36,7 @@ Bootstrap function of the extension.
 
 The public API of the extension.
 
-## API
-
-| method          | description                                                      |
-| --------------- | ---------------------------------------------------------------- |
-| `setItems`      | set array of Items in the Selector instance                      |
-| `items$`        | get Observable of Items array currently in the Selector instance |
-| `selectItem`    | define an Item from items$ as selected Item                      |
-| `selectedItem$` | get Observable of currently selected Item                        |
-
-## Example
+## Usage
 
 This service takes two typed elements (`Item` and `Key`).
 
@@ -89,6 +78,23 @@ selector.selectedItem$({}).subscribe(console.log);
 // Output
 // { name: 'Pim', age: 22, role: 'first' }
 ```
+
+## API
+
+### CDN
+
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/service-selector/doc/index.html)
+
+### Local
+
+Run 
+
+```bash
+yarn doc
+```
+
+And open [doc/index.html](./doc/index.html) in browser.
+
 
 ## Test
 

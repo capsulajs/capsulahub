@@ -52,6 +52,23 @@ Bootstrap function of the extension.
 
 The public API of the extension.
 
+## API
+
+### CDN
+
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/service-template/doc/index.html)
+
+### Local
+
+Run 
+
+```bash
+yarn doc
+```
+
+And open [doc/index.html](./doc/index.html) in browser.
+
+
 ## Example
 
 All of the manual debugging should be provided only in _**test:debug**_ mode. Example folder is required only for Cypress needs.
@@ -82,3 +99,7 @@ expect(getConfigStub).to.be.called;
 Expectations for stubs and spies:
 
 <https://docs.cypress.io/guides/references/assertions.html#Sinon-Chai>
+
+## Licence
+
+[CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.
