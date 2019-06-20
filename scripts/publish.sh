@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 set -e
-if [[ "x$PIPELINEDEBUG" != "x" ]]; then
-    set -x
-fi
 
 MSG_PUBLISH_SUCCESS="lerna publish: Succeed"
 MSG_PUBLISH_FAIL="lerna publish: Failed"
@@ -28,7 +25,7 @@ if [[ "$TRAVIS_PULL_REQUEST_BRANCH" =~ ^feature\/.*$ ]]; then
     echo "|    Deploying snapshot on npm registry    |"
     echo "--------------------------------------------"
 
-    BRANCH_NAME=$(echo $TRAVIS_BRANCH | sed "s/[_/]/-/g")
+    BRANCH_NAME=$(echo $TRAVIS_PULL_REQUEST_BRANCH | sed "s/[_/]/-/g")
     echo $BRANCH_NAME
     PACKAGE_VERSION="${BRANCH_NAME}.$(date +%s)"
     lerna publish --canary --dist-tag snapshot --preid "$PACKAGE_VERSION" --yes

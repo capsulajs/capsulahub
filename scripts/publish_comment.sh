@@ -27,11 +27,10 @@ echo """
 # check if there is already a comment about npm publication
 commentAlreadyExists() {
     comments=$(curl -s -u "$GH_USER:$GH_ACCESS_TOKEN" "$COMMENTS_CREATION_URL" | jq -r '.[].body')
-    echo "comments --> $comments"
-    [[ -z "$comments" ]] && echo "no comments" && return 1
+    [[ -z "$comments" ]] && echo "No comments yet" && exist_code=0
     COMMENT_ID=$(curl -u "$GH_USER:$GH_ACCESS_TOKEN" "$COMMENTS_CREATION_URL" | jq -r '.[] | select(.body | contains('\"$1\"')) | .id')
     echo "COMMENT_ID -> $COMMENT_ID"
-    [[ "$COMMENT_ID" -eq 0 ]] && return 1 || return 0
+    [[ "$COMMENT_ID" -eq 0 ]] && exist_code=2 || exist_code=1
 }
 
 comment(){
@@ -39,15 +38,19 @@ comment(){
     COMMENT_TEXT="**Travis-CI** has published $PACKAGE_NAME-$PACKAGE_VERSION to $PACKAGE_PAGE"
     echo "$COMMENT_TEXT"
 
-    # Post comment about service if it's not posted yet
-    if [[ $(commentAlreadyExists ${PACKAGE_NAME}) -eq 0  ]]; then
+    # Post comment about package if not commented yet or update it
+    exist_code="-1"
+    commentAlreadyExists ${PACKAGE_NAME}
+    if [[ "$exist_code" -eq 0  ]]; then
+        echo "Creating comments"
+        curl -d '{"body":"'"$COMMENT_TEXT"'"}' -u "$GH_USER:$GH_ACCESS_TOKEN" -X POST "$COMMENTS_CREATION_URL"
+    elif [[ "$exist_code" -eq 1 ]]; then
         echo "Updating comments"
         curl -d '{"body":"'"$COMMENT_TEXT"'"}' -u "$GH_USER:$GH_ACCESS_TOKEN" -X PATCH "$COMMENTS_UPDATE_URL/$COMMENT_ID"
     else
-        echo "Creating comments"
-        curl -d '{"body":"'"$COMMENT_TEXT"'"}' -u "$GH_USER:$GH_ACCESS_TOKEN" -X POST "$COMMENTS_CREATION_URL"
+        echo "Something went wrong, comment not posted"
+        exit 1
     fi
-    echo "done."
 }
 
 comment
