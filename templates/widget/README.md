@@ -2,7 +2,30 @@
 
 Widget detailed info
 
-# WorkspaceConfiguration example
+## Install
+
+### NPM
+
+To install the package from NPM registry you should run
+
+```
+yarn add @capsulajs/capsulahub-widget-template
+```
+
+or
+```
+npm install @capsulajs/capsulahub-widget-template
+```
+
+### CDN
+
+You can get the default export from the link
+
+```
+https://capsulajs.s3.amazonaws.com/develop/widget-template/index.js
+```
+
+## WorkspaceConfiguration example
 
 ```
   "components": {
@@ -13,14 +36,14 @@ Widget detailed info
       "test-widget-id": {
         "componentName": "web-test-widget",
         "nodeId": "test-widget-id",
-        "path": "http://cdnhost.com/widgets/TestWidget.js",
+        "path": "https://capsulajs.s3.amazonaws.com/develop/widget-template/index.js",
         "config": { "title": "Base Test Widget" }
       }
     }
   }
 ```
 
-# Exports
+## Exports
 
 ### Default
 
@@ -30,7 +53,7 @@ Bootstrap function of the extension.
 
 The public API of the extension.
 
-# Example
+## Example
 
 Internally example prepares the widget almost in the same way as **Workspace** does it.
 
@@ -41,14 +64,14 @@ It will use the local version of extension from local **_src_**.
 
 The bundle is being loaded statically in order to provide **_watch mode_**.
 
-# Tests
+## Tests
 
 ### Run
 
 1) `yarn test`
 2) `yarn test:debug`
 
-## Add new commands (in Cypress)
+### Add new commands (in Cypress)
 
 New commands have to be typed correctly in typescript.
 

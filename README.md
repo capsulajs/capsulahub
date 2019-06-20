@@ -58,4 +58,4 @@ Additional packages, that provide useful common utilities.
 |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ui                    | Common reusable ui components.                                                                                                                                 |
 | utils                 | Common reusable helpers, consts, types.                                                                                                                        |
-| [cdn](packages/cdn)   | Util package, that includes separate files, that will be served on localhost to imitate cdn links.                                                             |
+| [cdn](packages/cdn-emulator)   | Util package, that includes separate files, that will be served on localhost to imitate cdn links.                                                             |

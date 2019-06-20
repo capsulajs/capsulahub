@@ -2,12 +2,35 @@
 
 Service extension, that renders all the web-components, that are registered in Workspace.
 
-# WorkspaceConfiguration example
+## Install
+
+### NPM
+
+To install the package from NPM registry you should run
+
+```
+yarn add @capsulajs/capsulahub-service-renderer
+```
+
+or
+```
+npm install @capsulajs/capsulahub-service-renderer
+```
+
+### CDN
+
+You can get the default export from the link
+
+```
+https://capsulajs.s3.amazonaws.com/develop/service-renderer/index.js
+```
+
+## WorkspaceConfiguration example
 
 ```json
   "services": {
       "serviceName": "RendererService",
-      "path": "http://cdnhost.com/services/RendererService.js",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/service-renderer/index.js",
       "definition": {
         "serviceName": "RendererService",
         "methods": {
@@ -20,7 +43,7 @@ Service extension, that renders all the web-components, that are registered in W
   }
 ```
 
-# Exports
+## Exports
 
 ### Default
 
@@ -30,11 +53,11 @@ Bootstrap function of the extension.
 
 The public API of the extension.
 
-# Example
+## Example
 
 All of the manual debugging should be provided only in _**test:debug**_ mode. Example folder is required only for Cypress needs.
 
-# Tests
+## Tests
 
 ### Run
 

@@ -1,5 +1,5 @@
 {
-  "name": "@capsulajs/capsulahub-cdn",
+  "name": "@capsulajs/capsulahub-cdn-emulator",
   "version": "0.0.1",
   "description": "Util package, that includes separate files, that will be served on localhost to imitate cdn links",
   "main": "lib/index.js",

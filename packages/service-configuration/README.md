@@ -3,6 +3,29 @@
 Service that you can use for managing different configurations across your projects.
 Configuration service gives you possibility to easily manage your configurations.
 
+## Install
+
+### NPM
+
+To install the package from NPM registry you should run
+
+```
+yarn add @capsulajs/capsulahub-service-configuration
+```
+
+or
+```
+npm install @capsulajs/capsulahub-service-configuration
+```
+
+### CDN
+
+You can get the default export from the link
+
+```
+https://capsulajs.s3.amazonaws.com/develop/service-configuration/index.js
+```
+
 ## API
 
 - [createRepository()](#createRepository--api)
@@ -19,10 +42,6 @@ Configuration service gives you possibility to easily manage your configurations
 
 ## Usage
 
-```bash
-yarn add @capsulajs/capsulahub-core-workspace @capsulajs/capsulahub-extensions-configuration
-```
-
 ```javascript
 # ./config.js
 
@@ -30,16 +49,16 @@ module.exports = {
   name: 'my-app',
   services: [
     {
-      serviceName: 'configurationService',
-      path: 'https://configuration-service-http.genesis.om2.com',
+      serviceName: 'ConfigurationService',
+      path: 'https://capsulajs.s3.amazonaws.com/develop/service-configuration/index.js',
       definition: {
         serviceName: 'ConfigurationService',
         methods: {
-          createRepository: { asyncModel: 'CreateRepositoryResponse' },
-          delete: { asyncModel: 'DeleteResponse' },
-          entries: { asyncModel: 'EntriesResponse' },
-          fetch: { asyncModel: 'FetchResponse' },
-          save: { asyncModel: 'SaveResponse' },
+          createRepository: { asyncModel: 'requestResponse' },
+          delete: { asyncModel: 'requestResponse' },
+          entries: { asyncModel: 'requestResponse' },
+          fetch: { asyncModel: 'requestResponse' },
+          save: { asyncModel: 'requestResponse' },
         }
       },
       config: {

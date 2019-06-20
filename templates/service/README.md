@@ -2,12 +2,36 @@
 
 Service detailed info
 
-# WorkspaceConfiguration example
+## Install
+
+### NPM
+
+To install the package from NPM registry you should run
+
+```
+yarn add @capsulajs/capsulahub-service-template
+```
+
+
+or
+```
+npm install @capsulajs/capsulahub-service-template
+```
+
+### CDN
+
+You can get the default export from the link
+
+```
+https://capsulajs.s3.amazonaws.com/develop/service-template/index.js
+```
+
+## WorkspaceConfiguration example
 
 ```json
   "services": {
       "serviceName": "TestService",
-      "path": "http://cdnhost.com/services/TestService.js",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/service-template/index.js",
       "definition": {
         "serviceName": "TestService",
         "methods": {
@@ -18,7 +42,7 @@ Service detailed info
   }
 ```
 
-# Exports
+## Exports
 
 ### Default
 
@@ -28,18 +52,18 @@ Bootstrap function of the extension.
 
 The public API of the extension.
 
-# Example
+## Example
 
 All of the manual debugging should be provided only in _**test:debug**_ mode. Example folder is required only for Cypress needs.
 
-# Tests
+## Tests
 
 ### Run
 
 1) `yarn test`
 2) `yarn test:debug`
 
-## Recommendations for testing
+### Recommendations for testing
 
 **_getServiceRef()_** checks that the service has been bootstrapped correctly and returns the instance of the service.
 
