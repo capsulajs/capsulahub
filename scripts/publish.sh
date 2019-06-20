@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -e
+if [[ "x$PIPELINEDEBUG" != "x" ]]; then
+    set -x
+fi
 
 MSG_PUBLISH_SUCCESS="lerna publish: Succeed"
 MSG_PUBLISH_FAIL="lerna publish: Failed"
 
-echo "$TRAVIS_BRANCH"
+echo "travis branch    -> $TRAVIS_BRANCH"
+echo "travis PR branch -> $TRAVIS_PULL_REQUEST_BRANCH"
 git status
 
 set_git_remote() {
@@ -19,7 +23,7 @@ echo_result() {
     fi
 }
 
-if [[ "$TRAVIS_BRANCH" =~ ^feature\/.*$ ]]; then
+if [[ "$TRAVIS_PULL_REQUEST_BRANCH" =~ ^feature\/.*$ ]]; then
     echo "--------------------------------------------"
     echo "|    Deploying snapshot on npm registry    |"
     echo "--------------------------------------------"
