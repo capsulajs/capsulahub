@@ -51,18 +51,19 @@ main() {
     aws s3 cp dist "$SERVICE_FULL_PATH" --recursive
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
-    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$CONFIG_PATH" --recursive
+    comment_args=""
+    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$CONFIG_PATH" --recursive && comment_args=" ${comment_args}-c"
     [[ "$?" -eq 0 ]] && echo "Configuration was uploaded to S3 url: $CONFIG_PATH"
 
-    [[ "$HAS_DOCS" == "true" ]] && aws s3 cp doc "$DOC_PATH" --recursive
+    [[ "$HAS_DOCS" == "true" ]] && aws s3 cp doc "$DOC_PATH" --recursive && comment_args=" ${comment_args}-d"
     [[ "$?" -eq 0 ]] && echo "Documentation was uploaded to S3 url: $DOC_PATH"
 
-    [[ "$HAS_EXAMPLE" == "true" ]] && aws s3 cp example "$EXAMPLE_PATH" --recursive
+    [[ "$HAS_EXAMPLE" == "true" ]] && aws s3 cp example "$EXAMPLE_PATH" --recursive && comment_args=" ${comment_args}-e"
     [[ "$?" -eq 0 ]] && echo "Example was uploaded to S3 url: $EXAMPLE_PATH"
 
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
         # add comment on github pull request.
-        source ../../scripts/deploy_comment.sh -s "$SERVICE" -u "$FINAL_URL" -c -d -e
+        source ../../scripts/deploy_comment.sh -s "$SERVICE" -u "$FINAL_URL" "$comment_args"
         echo "Comment sent to GH pull request: $TRAVIS_BRANCH $TRAVIS_PULL_REQUEST_BRANCH PR $TRAVIS_PULL_REQUEST"
     else
         echo "Comment was skipped not a pull request or comment already created."
