@@ -29,7 +29,7 @@ if [[ "$TRAVIS_BRANCH" =~ ^feature\/.*$ ]]; then
     PACKAGE_VERSION="${BRANCH_NAME}.$(date +%s)"
     lerna publish --canary --dist-tag snapshot --preid "$PACKAGE_VERSION" --yes
     echo_result "$?"
-    [[ "$?" -eq 0 ]] && lerna run publish:comment -- $(echo $npm_package_name) ${PACKAGE_VERSION}
+    [[ "$?" -eq 0 ]] && lerna run publish:comment -- ${PACKAGE_VERSION}
 
 elif [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
     echo "--------------------------------------------"

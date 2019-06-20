@@ -16,6 +16,6 @@
     "prettier": "prettier --write '{src,tests}/**/*.{js,ts,tsx}'",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
     "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix",
-    "publish:comment": "bash ../../scripts/publish_comment.sh"
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)"
   }
 }
