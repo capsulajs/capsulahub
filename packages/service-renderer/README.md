@@ -8,22 +8,17 @@ Service extension, that renders all the web-components, that are registered in W
 
 To install the package from NPM registry you should run
 
-```
-yarn add @capsulajs/capsulahub-service-renderer
-```
+    yarn add @capsulajs/capsulahub-service-renderer
 
 or
-```
-npm install @capsulajs/capsulahub-service-renderer
-```
+
+    npm install @capsulajs/capsulahub-service-renderer
 
 ### CDN
 
 You can get the default export from the link
 
-```
-https://capsulajs.s3.amazonaws.com/develop/service-renderer/index.js
-```
+    https://capsulajs.s3.amazonaws.com/develop/service-renderer/index.js
 
 ## WorkspaceConfiguration example
 

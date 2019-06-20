@@ -13,23 +13,17 @@ The main core service of Capsulahub, it is responsible for:
 
 To install the package from NPM registry you should run
 
-```
-yarn add @capsulajs/capsulahub-workspace
-```
-
+    yarn add @capsulajs/capsulahub-workspace
 
 or
-```
-npm install @capsulajs/capsulahub-workspace
-```
+
+    npm install @capsulajs/capsulahub-workspace
 
 ### CDN
 
 You can get the default export from the link
 
-```
-https://capsulajs.s3.amazonaws.com/develop/workspace/index.js
-```
+    https://capsulajs.s3.amazonaws.com/develop/workspace/index.js
 
 ## Exports
 

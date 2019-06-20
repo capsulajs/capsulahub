@@ -9,22 +9,17 @@ inside a collection of data.
 
 To install the package from NPM registry you should run
 
-```
-yarn add @capsulajs/capsulahub-service-selector
-```
+    yarn add @capsulajs/capsulahub-service-selector
 
 or
-```
-npm install @capsulajs/capsulahub-service-selector
-```
+
+    npm install @capsulajs/capsulahub-service-selector
 
 ### CDN
 
 You can get the default export from the link
 
-```
-https://capsulajs.s3.amazonaws.com/develop/service-selector/index.js
-```
+    https://capsulajs.s3.amazonaws.com/develop/service-selector/index.js
 
 ## Exports
 
@@ -94,7 +89,6 @@ yarn doc
 ```
 
 And open [doc/index.html](./doc/index.html) in browser.
-
 
 ## Test
 
