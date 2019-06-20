@@ -13,6 +13,11 @@ branches:
   only:
     - /.*/
 
+# Keep the npm cache around to speed up installs
+cache:
+  directories:
+    - '$HOME/.npm'
+
 before_install:
   - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
 
