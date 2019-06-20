@@ -44,8 +44,8 @@ main() {
     [[ -z "$SERVICE_PATH" ]] && echo "Error: Empty SERVICE_PATH" && exit 1
 
     # upload to s3
-    aws s3 rm "$SERVICE_FULL_PATH" --recursive --region "$S3_REGION"
-    aws s3 cp dist "$SERVICE_FULL_PATH" --recursive
+    aws s3 rm "$SERVICE_FULL_PATH" --recursive --region "$S3_REGION" && echo "rm $SERVICE_FULL_PATH done" || echo "rm $SERVICE_FULL_PATH failed"
+    aws s3 cp dist "$SERVICE_FULL_PATH" --recursive && echo "cp dist $SERVICE_FULL_PATH done" || echo "cp dist $SERVICE_FULL_PATH failed"
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
     comment_args=""
