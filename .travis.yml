@@ -15,6 +15,7 @@ branches:
 
 # Keep the npm cache around to speed up installs
 cache:
+  npm: true
   directories:
     - '$HOME/.npm'
 
