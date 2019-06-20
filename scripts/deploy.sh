@@ -62,7 +62,7 @@ main() {
 
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
         # add comment on github pull request.
-        source ../../scripts/deploy_comment.sh "$SERVICE" "$FINAL_URL" "$INCLUDE_DOC"
+        source ../../scripts/deploy_comment.sh -s "$SERVICE" -u "$FINAL_URL" -c -d -e
         echo "Comment sent to GH pull request: $TRAVIS_BRANCH $TRAVIS_PULL_REQUEST_BRANCH PR $TRAVIS_PULL_REQUEST"
     else
         echo "Comment was skipped not a pull request or comment already created."
