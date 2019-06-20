@@ -18,7 +18,8 @@
     "build:dist": "rimraf dist && webpack --env.production=true",
     "build:lib": "rimraf lib && tsc",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
-    "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix"
+    "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix",
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)"
   },
   "dependencies": {
     "@capsulajs/capsulahub-workspace": "0.0.1",

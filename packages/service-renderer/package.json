@@ -23,7 +23,8 @@
     "cypress:debug": "cypress open",
     "jest": "cross-env NODE_ENV=test jest",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
-    "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix"
+    "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix",
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)"
   },
   "dependencies": {
     "@capsulajs/capsulahub-workspace": "0.0.1",
