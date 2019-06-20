@@ -148,7 +148,7 @@ In order to open a simple example you should run localhost:3000 with extensions 
 
 In order to do it you should go to **[cdn-emulator](../cdn-emulator)** package:
 
-    cd ../cdn
+    cd ../cdn-emulator
 
 And run:
 

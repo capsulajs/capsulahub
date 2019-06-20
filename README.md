@@ -54,8 +54,8 @@ These extensions have UI representation and can be connected to the data within 
 
 Additional packages, that provide useful common utilities.
 
-| Package name          | Description                                                                                                                                                    |
-|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ui                    | Common reusable ui components.                                                                                                                                 |
-| utils                 | Common reusable helpers, consts, types.                                                                                                                        |
-| [cdn](packages/cdn-emulator)   | Util package, that includes separate files, that will be served on localhost to imitate cdn links.                                                             |
+| Package name                            | Description                                                                                                                                                    |
+|-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ui                                      | Common reusable ui components.                                                                                                                                 |
+| utils                                   | Common reusable helpers, consts, types.                                                                                                                        |
+| [cdn-emulator](packages/cdn-emulator)   | Util package, that includes separate files, that will be served on localhost to imitate cdn links.                                                             |
