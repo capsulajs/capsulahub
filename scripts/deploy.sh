@@ -95,8 +95,7 @@ while [[ $# -gt 0 ]]; do
             EXAMPLE_PATH="${SERVICE_FULL_PATH}example"
             ;;
         *)
-            echo "Invalid argument $arg."
-            return 1
+            echo "Invalid argument ($arg) not taken into account."
             ;;
     esac
     shift
