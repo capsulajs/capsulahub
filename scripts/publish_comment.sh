@@ -18,7 +18,7 @@ echo """
  package page      -> ${PACKAGE_PAGE}
  comments creation -> ${COMMENTS_CREATION_URL}
  comments update   -> ${COMMENTS_UPDATE_URL}
- /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+
  travis repo slug  -> ${TRAVIS_REPO_SLUG}
  travis PR         -> ${TRAVIS_PULL_REQUEST}
 ---------------------------------------------
@@ -37,6 +37,7 @@ commentAlreadyExists() {
 comment(){
     echo "Links to the published packages generation for PR"
     COMMENT_TEXT="**Travis-CI** has published $PACKAGE_NAME-$PACKAGE_VERSION to $PACKAGE_PAGE"
+    echo "$COMMENT_TEXT"
 
     # Post comment about service if it's not posted yet
     if [[ $(commentAlreadyExists ${PACKAGE_NAME}) -eq 0  ]]; then

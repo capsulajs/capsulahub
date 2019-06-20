@@ -34,7 +34,7 @@ script:
   - yarn build
   - yarn doc
   - yarn test
-  - 'if [ "$TRAVIS_BRANCH" != "develop" ]; then bash scripts/publish.sh; fi'
+  - 'if [[ "$TRAVIS_PULL_REQUEST_BRANCH" != "develop" && $TRAVIS_PULL_REQUEST != "false" ]]; then bash scripts/publish.sh; fi'
 
 notifications:
   email:
