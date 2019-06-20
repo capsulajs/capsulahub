@@ -1,7 +1,7 @@
 const WrapperPlugin = require('wrapper-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = (env) => {
+module.exports = (env = {}) => {
   const packagePath = process.cwd();
   const plugins = [];
   const isProduction = env.production === 'true';
