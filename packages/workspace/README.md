@@ -169,3 +169,5 @@ This example is also being used for running Cypress tests on it.
 ## Licence
 
 [CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.
+
+## [Back to the Main Page](../..)

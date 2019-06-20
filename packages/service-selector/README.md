@@ -103,3 +103,5 @@ And open [doc/index.html](./doc/index.html) in browser.
 ## Licence
 
 [CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.
+
+## [Back to the Main Page](../..)

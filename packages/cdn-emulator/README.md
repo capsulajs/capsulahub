@@ -1,4 +1,4 @@
-# CDN
+# CDN-Emulator
 
 Allows to serve services, widgets, configuration for Workspace on <http://localhost:3000/> to imitate CDN functionality.
 
@@ -19,3 +19,5 @@ In order to build extensions and serve them on localhost you should run
 ## Licence
 
 [CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.
+
+## [Back to the Main Page](../..)

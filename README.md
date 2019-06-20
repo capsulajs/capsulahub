@@ -33,7 +33,7 @@ These extensions add some logic to an application, don't have a UI representatio
 | [service-renderer](packages/service-renderer)           | Service extension, that renders all the web-components, that are registered in Workspace.                                                                      |
 | [service-configuration](packages/service-configuration) | Service extension, that providers an ability to use ConfigurationService, that you can use for managing different configurations across your projects.         |
 | service-env-registry                                    | Service extension, that providers an ability to use EnvironmentRegistry, that allows to register and load different versions of a project/service environment. |
-| service-selector                                        | Service extension, that allows a user to select a specific item inside a collection of data.                                                                   |
+| [service-selector](packages/service-selector)           | Service extension, that allows a user to select a specific item inside a collection of data.                                                                   |
 
 ### Widget extensions
 

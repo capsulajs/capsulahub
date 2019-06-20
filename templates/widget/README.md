@@ -108,3 +108,5 @@ declare namespace Cypress {
 ## Licence
 
 [CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.
+
+## [Back to the Main Page](../..)

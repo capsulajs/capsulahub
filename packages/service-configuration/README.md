@@ -28,17 +28,7 @@ https://capsulajs.s3.amazonaws.com/develop/service-configuration/index.js
 
 ## API
 
-- [createRepository()](#createRepository--api)
-
-- [delete()](#delete--api)
-
-- [entries()](#entries-api)
-
-- [fetch()](#fetch--api)
-
-- [save()](#save--api)
-
-- [More](https://github.com/capsulajs/configuration-service/blob/develop/src/api/ConfigurationServiceTypes.ts)
+[ConfigurationService API in src of ConfigurationService](https://github.com/capsulajs/configuration-service/blob/develop/src/api/ConfigurationService.ts)
 
 ## Usage
 
@@ -96,3 +86,5 @@ Possible dispatchers [More](https://github.com/capsulajs/capsulajs-transport-pro
 ## Licence
 
 [CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.
+
+## [Back to the Main Page](../..)
