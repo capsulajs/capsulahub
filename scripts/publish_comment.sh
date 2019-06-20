@@ -32,7 +32,7 @@ commentAlreadyExists() {
     [[ -z "$comments" ]] && echo "No comments yet" && exist_code=0
     COMMENT_ID=$(curl -u "$GH_USER:$GH_ACCESS_TOKEN" "$COMMENTS_CREATION_URL" | jq -r '.[] | select(.body | contains('\"$1\"')) | .id')
     echo "COMMENT_ID -> $COMMENT_ID"
-    [[ "$COMMENT_ID" -eq 0 ]] && exist_code=2 || exist_code=1
+    [[ "$COMMENT_ID" -eq 0 ]] && exist_code=0 || exist_code=1
 }
 
 comment(){
