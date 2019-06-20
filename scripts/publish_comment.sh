@@ -6,6 +6,7 @@ fi
 
 PACKAGE_NAME=$1
 PACKAGE_VERSION=$2
+PACKAGE_SNAPSHOT=$3
 PACKAGE_PAGE="[**npm**](https://www.npmjs.com/package/${PACKAGE_NAME})"
 COMMENTS_CREATION_URL="https://api.github.com/repos/$TRAVIS_REPO_SLUG/issues/$TRAVIS_PULL_REQUEST/comments"
 COMMENTS_UPDATE_URL="https://api.github.com/repos/$TRAVIS_REPO_SLUG/issues/comments"
@@ -15,6 +16,7 @@ echo """
 ---------------------------------------------
  package name      -> ${PACKAGE_NAME}
  package version   -> ${PACKAGE_VERSION}
+ package snapshot  -> ${PACKAGE_SNAPSHOT}
  package page      -> ${PACKAGE_PAGE}
  comments creation -> ${COMMENTS_CREATION_URL}
  comments update   -> ${COMMENTS_UPDATE_URL}
@@ -35,7 +37,7 @@ commentAlreadyExists() {
 
 comment(){
     echo "Links to the published packages generation for PR"
-    COMMENT_TEXT="**Travis-CI** has published $PACKAGE_NAME-$PACKAGE_VERSION to $PACKAGE_PAGE"
+    COMMENT_TEXT="**Travis-CI** has published $PACKAGE_NAME@$PACKAGE_VERSION-$PACKAGE_SNAPSHOT to $PACKAGE_PAGE"
     echo "$COMMENT_TEXT"
 
     # Post comment about package if not commented yet or update it
