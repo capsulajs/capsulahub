@@ -5,7 +5,7 @@ import RequestForm from '../';
 
 declare global {
   interface Window {
-    requestFormPropsSubject: BehaviorSubject<RequestFormUIProps>;
+    requestFormPropsSubject?: BehaviorSubject<RequestFormUIProps>;
   }
 }
 
@@ -26,7 +26,7 @@ export const getProps$ = () => {
   if (!window.requestFormPropsSubject) {
     window.requestFormPropsSubject = new BehaviorSubject(basicProps);
   }
-  return window.requestFormPropsSubject!.asObservable();
+  return window.requestFormPropsSubject.asObservable();
 };
 
 export const mountWebComponentRequest = {

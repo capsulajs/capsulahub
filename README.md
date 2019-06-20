@@ -47,8 +47,8 @@ These extensions have UI representation and can be connected to the data within 
 | widget-env-selection                                  | Widget item extension, that provides a web-component with the list of environments and an ability to select an env and connect/disconnect.                     |
 | [widget-logger](packages/widget-logger)               | Widget item extension, that provides a web-component with the logs of all the events, that happen in the application.                                          |
 | widget-modal                                          | Widget item extension, that provides a web-component with the modal, that can include any given content.                                                       |
-| widget-request-form                                   | Widget item extension, that provides a web-component with an editor, that allows to create JS or JSON code snippets.                                           |
-| widget-table                                          | Widget item extension, that provides a web-component with a table of data.                                                                                     |
+| [widget-request-form](packages/widget-request-form)   | Widget item extension, that provides a web-component with an editor, that allows to create JS or JSON code snippets.                                           |
+| [widget-table](packages/widget-table)                 | Widget item extension, that provides a web-component with a table of data.                                                                                     |
 
 ### Helper packages
 
