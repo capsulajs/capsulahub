@@ -22,4 +22,4 @@ To make the changes automatically be applied in other packages (the users of **_
 
 It will turn on watch mode.
 
-## [Back to the Main Page](../..)
+## [Back to the Main Page](../../README.md)
