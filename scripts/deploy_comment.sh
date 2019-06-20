@@ -78,8 +78,7 @@ while [[ $# -gt 0 ]]; do
             HAS_EXAMPLE=true
             ;;
         *)
-            echo "Invalid argument $arg."
-            return 1
+            echo "Invalid argument ($arg) not taken into account."
             ;;
     esac
     shift
