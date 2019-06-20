@@ -1,7 +1,7 @@
-# Widget Canvas
+# Widget Logger
 
-Widget layout extension, that provides the canvas web-component,
-where all the other elements can be flexibly situated.
+Widget item extension, that provides a web-component with the logs of all the events,
+that happen in the application.
 
 ## Install
 
@@ -9,31 +9,31 @@ where all the other elements can be flexibly situated.
 
 To install the package from NPM registry you should run
 
-    yarn add @capsulajs/capsulahub-widget-canvas
+    yarn add @capsulajs/capsulahub-widget-logger
 
 or
 
-    npm install @capsulajs/capsulahub-widget-canvas
+    npm install @capsulajs/capsulahub-widget-logger
 
 ### CDN
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/widget-canvas/index.js
+    https://capsulajs.s3.amazonaws.com/develop/widget-logger/index.js
 
 ## WorkspaceConfiguration example
 
       "components": {
         "layouts": {
-          "web-canvas": {
-            "componentName": "web-canvas",
-            "nodeId": "web-canvas",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-canvas/index.js",
-            "config": {}
-          }
+            // ...some widget for layout
         },
         "items": {
-            // ...some items widgets
+          "web-logger": {
+            "componentName": "web-logger",
+            "nodeId": "web-logger",
+            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-logger/index.js",
+            "config": {}
+          }
         }
       }
 
@@ -51,7 +51,7 @@ The public API of the extension.
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-canvas/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-logger/doc/index.html)
 
 ### Local
 

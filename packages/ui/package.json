@@ -25,22 +25,5 @@
     "react-table": "^6.10.0",
     "rxjs": "6.5.2",
     "styled-components": "^3.4.5"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/preset-env": "^7.2.3",
-    "@babel/preset-react": "^7.0.0",
-    "@storybook/addon-actions": "^4.1.13",
-    "@storybook/addon-links": "^4.1.13",
-    "@storybook/addons": "^4.1.13",
-    "@storybook/react": "^4.1.13",
-    "babel-eslint": "^10.0.1",
-    "babel-loader": "^8.0.5",
-    "codacy-coverage": "^3.4.0",
-    "eslint": "^5.14.1",
-    "eslint-config-prettier": "^4.0.0",
-    "eslint-plugin-prettier": "^3.0.1"
   }
 }

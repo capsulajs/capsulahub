@@ -9,22 +9,17 @@ Configuration service gives you possibility to easily manage your configurations
 
 To install the package from NPM registry you should run
 
-```
-yarn add @capsulajs/capsulahub-service-configuration
-```
+    yarn add @capsulajs/capsulahub-service-configuration
 
 or
-```
-npm install @capsulajs/capsulahub-service-configuration
-```
+
+    npm install @capsulajs/capsulahub-service-configuration
 
 ### CDN
 
 You can get the default export from the link
 
-```
-https://capsulajs.s3.amazonaws.com/develop/service-configuration/index.js
-```
+    https://capsulajs.s3.amazonaws.com/develop/service-configuration/index.js
 
 ## API
 
@@ -67,21 +62,21 @@ For RemoteProvider you should probide dispatcher as well.
 
 Possible providers [More](https://github.com/capsulajs/configuration-service/tree/develop/src/provider):
 
-- RemoteProvider
-- LocalStorageProvider
-- FileProvider
-- HttpProvider
+-   RemoteProvider
+-   LocalStorageProvider
+-   FileProvider
+-   HttpProvider
 
 Default provider:
 
-- FileProvider
+-   FileProvider
 
 Use different transport providers to setup communication over http or web sockets.
 
 Possible dispatchers [More](https://github.com/capsulajs/capsulajs-transport-providers):
 
-- AxiosDispatcher
-- WebSocketDispatcher
+-   AxiosDispatcher
+-   WebSocketDispatcher
 
 ## Licence
 
