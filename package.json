@@ -30,6 +30,12 @@
     "url": "https://github.com/capsulajs/capsulahub/issues"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^5.0.11",
+    "@storybook/addons": "^5.0.11",
+    "@storybook/react": "^5.0.11",
+    "@types/react": "^16.8.14",
+    "@types/react-dom": "^16.8.4",
+    "@types/storybook__react": "^4.0.1",
     "@cypress/webpack-preprocessor": "^4.0.4",
     "@types/jest": "^24.0.15",
     "@types/jsdom": "^12.2.3",
