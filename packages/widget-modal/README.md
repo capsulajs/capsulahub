@@ -1,9 +1,8 @@
-# Widget Table
+# Widget Modal
 
-Widget item extension, that provides a web-component with a table of data.
+Widget item extension, that provides a web-component with the modal, that can include any given content.
 
 ### TODO
-
 Prepare the bootstrap of the extension 
 
 ## Install
@@ -12,17 +11,17 @@ Prepare the bootstrap of the extension
 
 To install the package from NPM registry you should run
 
-    yarn add @capsulajs/capsulahub-widget-table
+    yarn add @capsulajs/capsulahub-widget-modal
 
 or
 
-    npm install @capsulajs/capsulahub-widget-table
+    npm install @capsulajs/capsulahub-widget-modal
 
 ### CDN
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/widget-table/index.js
+    https://capsulajs.s3.amazonaws.com/develop/widget-modal/index.js
 
 ## WorkspaceConfiguration example
 
@@ -31,10 +30,10 @@ You can get the default export from the link
             // ...some widget for layout
         },
         "items": {
-          "web-table": {
-            "componentName": "web-table",
-            "nodeId": "web-table",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-table/index.js",
+          "web-modal": {
+            "componentName": "web-modal",
+            "nodeId": "web-modal",
+            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-modal/index.js",
             "config": {}
           }
         }
@@ -54,7 +53,7 @@ The public API of the extension.
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-table/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-modal/doc/index.html)
 
 ### Local
 

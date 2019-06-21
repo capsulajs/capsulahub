@@ -3,6 +3,9 @@
 Widget item extension, that provides a web-component with the logs of all the events,
 that happen in the application.
 
+### TODO
+Prepare the bootstrap of the extension 
+
 ## Install
 
 ### NPM
