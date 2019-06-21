@@ -2,6 +2,9 @@
 
 Widget item extension, that provides a web-component with an editor, that allows to create JS or JSON code snippets.
 
+### TODO
+Prepare the bootstrap of the extension 
+
 ## Install
 
 ### NPM
