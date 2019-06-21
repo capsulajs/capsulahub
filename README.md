@@ -20,7 +20,7 @@ The packages, that implement an ability to run Capsulahub from CLI (from a termi
 
 | Package name          | Description                                                                                                                                                    |
 |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cli                   | The package, that provides an ability to use CLI to run and build Capsulahub application.                                                                                                                                 |
+| [cli](packages/cli)   | The package, that provides an ability to use CLI to run and build Capsulahub application.                                                                                                                                 |
 
 ### Service extensions
 
