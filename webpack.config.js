@@ -46,6 +46,14 @@ module.exports = (env = {}) => {
           },
         },
         {
+          test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+          loaders: 'file-loader',
+          options: {
+            name: '[name].[hash].[ext]',
+            outputPath: 'assets/',
+          },
+        },
+        {
           test: /\.scss$/,
           loader: [
             'style-loader',
@@ -55,6 +63,17 @@ module.exports = (env = {}) => {
               options: {
                 sourceMap: true,
               },
+            },
+          ],
+        },
+        {
+          test: /\.css$/,
+          use: [
+            {
+              loader: 'style-loader',
+            },
+            {
+              loader: 'css-loader',
             },
           ],
         },

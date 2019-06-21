@@ -15,7 +15,7 @@ WorkspaceConfiguration can be changed in [./src/configurations/workspace.json](w
 In order to build extensions and serve them on localhost you should run
 
     yarn start
-    
+
 ## Licence
 
 [CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.
