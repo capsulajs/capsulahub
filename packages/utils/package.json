@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "_build": "rimraf lib && tsc",
+    "build": "rimraf lib && tsc",
     "start": "rimraf lib && tsc --watch",
     "clean": "rimraf lib node_modules",
     "lint": "yarn lint:md && yarn lint:ts",

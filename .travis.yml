@@ -34,7 +34,7 @@ script:
   - yarn lint
   - yarn build
   - yarn doc
-  #  - 'if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then bash scripts/publish.sh; fi'
+    - 'if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then bash scripts/publish.sh; fi'
   - 'if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then yarn deploy; fi'
   - yarn test
 

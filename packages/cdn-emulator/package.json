@@ -10,7 +10,7 @@
   "private": false,
   "scripts": {
     "start": "yarn build && http-server -p 3000 --cors",
-    "_build": "rimraf public && webpack --env.production=true && cpy src/configuration/workspace.json public/configuration",
+    "build": "rimraf public && webpack --env.production=true && cpy src/configuration/workspace.json public/configuration",
     "lint": "yarn lint:md && yarn lint:ts",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
     "lint:ts": "tslint 'src/**/*.{ts,tsx}' --fix",
