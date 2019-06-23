@@ -11,11 +11,11 @@ Usage: ./deploy_comment -s SERVICE [ OPTIONS ]
     -u --url
         Specify the url where deploy has been done.
     -c --conf
-        Trigger the deployment for service configuration.
+        Has service configuration.
     -d --docs
-        Trigger the deployment for service documentation.
+        Has service documentation.
     -e --example
-        Trigger the deployment for service examples.
+        Has service examples.
 """
 
 commentAlreadyExists() {

@@ -5,12 +5,6 @@ USAGE="""
 Usage: ./deploy -s SERVICE [ OPTIONS ]
     -s --service
         Specify the service to deploy.
-    -c --conf
-        Trigger the deployment for service configuration.
-    -d --docs
-        Trigger the deployment for service documentation.
-    -e --example
-        Trigger the deployment for service examples.
 """
 
 replace_special_char() {
@@ -53,14 +47,9 @@ main() {
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
     comment_args=""
-    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$SERVICE_FULL_PATH" --recursive && comment_args="${comment_args} -c"
-    [[ "$?" -eq 0 ]] && echo "Configuration was uploaded to S3 url: $SERVICE_FULL_PATH"
-
-    [[ "$HAS_DOCS" == "true" ]] && aws s3 cp doc "$SERVICE_FULL_PATH" --recursive && comment_args="${comment_args} -d"
-    [[ "$?" -eq 0 ]] && echo "Documentation was uploaded to S3 url: $SERVICE_FULL_PATH"
-
-    [[ "$HAS_EXAMPLE" == "true" ]] && aws s3 cp example "$SERVICE_FULL_PATH" --recursive && comment_args="${comment_args} -e"
-    [[ "$?" -eq 0 ]] && echo "Example was uploaded to S3 url: $SERVICE_FULL_PATH"
+    [[ -d "dist/configuration" ]] && comment_args=$"{comment_args} --conf"
+    [[ -d "dist/doc" ]] && comment_args=$"{comment_args} --docs"
+    [[ -d "dist/example" ]] && comment_args=$"{comment_args} --example"
 
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
         # add comment on github pull request.
@@ -86,15 +75,6 @@ while [[ $# -gt 0 ]]; do
             SERVICE="$2"
             shift
             ;;
-        -c|--conf)
-            HAS_CONFIG=true
-            ;;
-        -d|--docs)
-            HAS_DOCS=true
-            ;;
-        -e|--example)
-            HAS_EXAMPLE=true
-            ;;
         *)
             echo "Invalid argument ($arg) not taken into account."
             ;;
@@ -103,8 +83,5 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ -z "$SERVICE" ]] && echo "Missing required parameter.$USAGE" && exit 1
-[[ -z "$HAS_CONFIG" ]] && HAS_CONFIG=false
-[[ -z "$HAS_DOCS" ]] && HAS_DOCS=false
-[[ -z "$HAS_EXAMPLE" ]] && HAS_EXAMPLE=false
 
 main
