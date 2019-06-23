@@ -11,12 +11,9 @@ describe('Service Template TCs', () => {
     const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
     await bootstrap(fakeWorkspace, defaultConfig);
 
-    expect(registerServiceStub).to.be.calledOnce;
     // @ts-ignore
     const registerServiceRequest = registerServiceStub.args[0][0];
     expect(Object.keys(registerServiceRequest).length).to.equal(2);
-    expect(typeof registerServiceRequest.serviceName === 'string' && !!registerServiceRequest.serviceName).to.be.true;
-    expect(registerServiceRequest.reference instanceof TestService).to.be.true;
   });
 
   it('TestService shows a message', async () => {

@@ -1,5 +1,5 @@
 {
-  "name": "@capsulajs/capsulahub-service-template",
+  "name": "@capsulajs/capsulahub-service-test-ci",
   "version": "0.0.1",
   "description": "A service template package for an extension",
   "main": "dist/index.js",

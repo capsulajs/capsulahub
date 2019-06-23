@@ -14,7 +14,6 @@ or
 
     npm install @capsulajs/capsulahub-service-template
 
-
 ### CDN
 
 You can get the default export from the link
@@ -60,7 +59,6 @@ Run
     yarn doc
 
 And open [doc/index.html](./doc/index.html) in browser.
-
 
 ## Example
 
