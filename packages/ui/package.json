@@ -9,7 +9,7 @@
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "build": "rimraf lib && cross-env BABEL_ENV=commonjs babel src --out-dir lib --copy-files",
+    "_build": "rimraf lib && cross-env BABEL_ENV=commonjs babel src --out-dir lib --copy-files",
     "lint": "eslint src/components/**",
     "lint:fix": "yarn lint --fix",
     "prettier": "prettier --write '{src,stories}/**/*.{js,jsx}'"

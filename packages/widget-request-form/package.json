@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "yarn build:lib && yarn build:dist",
+    "_build": "yarn build:lib && yarn build:dist",
     "start": "webpack-dev-server --env.production=false",
     "test": "npm-run-all -p -r start cypress:run",
     "test:debug": "npm-run-all -p -r start cypress:debug",
