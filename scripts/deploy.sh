@@ -13,17 +13,20 @@ Usage: ./deploy -s SERVICE [ OPTIONS ]
         Trigger the deployment for service examples.
 """
 
+replace_special_char() {
+    echo $(echo $1 | sed -re "s/[ _*+=’'\"/|$&\`;<>\(\)\?#]/-/g")
+}
+
 main() {
     export PATH="$PATH:$HOME/.local/bin"
 
     # PR
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
-        SLUG="/PR/$TRAVIS_PULL_REQUEST_BRANCH"
+        branch_name=$(replace_special_char $TRAVIS_PULL_REQUEST_BRANCH)
+        SLUG="/PR/$branch_name"
     # master # develop
-    elif [[ "$TRAVIS_BRANCH" == "develop" ]]; then
+    elif [[ "$TRAVIS_BRANCH" == "develop" || "$TRAVIS_BRANCH" == "master" ]]; then
         SLUG="/$TRAVIS_BRANCH"
-    elif [[ "$TRAVIS_BRANCH" == "master" ]]; then
-        SLUG="/rc"
     fi;
 
     S3_PATH="s3://$S3_BUCKET"
@@ -44,12 +47,12 @@ main() {
     [[ -z "$SERVICE_PATH" ]] && echo "Error: Empty SERVICE_PATH" && exit 1
 
     # upload to s3
-    aws s3 rm "$SERVICE_FULL_PATH" --recursive --region "$S3_REGION" && echo "rm $SERVICE_FULL_PATH done" || echo "rm $SERVICE_FULL_PATH failed"
-    aws s3 cp dist "$SERVICE_FULL_PATH" --recursive && echo "cp dist $SERVICE_FULL_PATH done" || echo "cp dist $SERVICE_FULL_PATH failed"
+    aws s3 rm "$SERVICE_FULL_PATH" --recursive --region "$S3_REGION"
+    aws s3 cp dist "$SERVICE_FULL_PATH" --recursive
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
     comment_args=""
-    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$CONFIG_PATH" --recursive && comment_args=" ${comment_args}-c"
+    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$CONFIG_PATH" --recursive && comment_args="${comment_args}-c"
     [[ "$?" -eq 0 ]] && echo "Configuration was uploaded to S3 url: $CONFIG_PATH"
 
     [[ "$HAS_DOCS" == "true" ]] && aws s3 cp doc "$DOC_PATH" --recursive && comment_args=" ${comment_args}-d"
@@ -85,14 +88,17 @@ while [[ $# -gt 0 ]]; do
         -c|--conf)
             HAS_CONFIG=true
             CONFIG_PATH="${SERVICE_FULL_PATH}configuration"
+            shift
             ;;
         -d|--docs)
             HAS_DOCS=true
             DOC_PATH="${SERVICE_FULL_PATH}doc"
+            shift
             ;;
         -e|--example)
             HAS_EXAMPLE=true
             EXAMPLE_PATH="${SERVICE_FULL_PATH}example"
+            shift
             ;;
         *)
             echo "Invalid argument ($arg) not taken into account."

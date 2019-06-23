@@ -32,17 +32,17 @@ comment(){
     COMMENT_TEXT="**Travis-CI** has deployed $SERVICE_LINK"
 
     [[ "$HAS_CONFIG" == "true" ]] \
-        && CONFIG_LINK="[**$SERVICE configuration**](${URL}configuration/index.json)" \
+        && CONFIG_LINK="[**$SERVICE configuration**](${URL}configuration/)" \
         && COMMENT_TEXT+=" and $CONFIG_LINK" \
         && echo "included configuration"
 
     [[ "$HAS_DOCS" == "true" ]] \
-        && DOC_LINK="[**$SERVICE documentation**](${URL}doc/index.html)" \
+        && DOC_LINK="[**$SERVICE documentation**](${URL}doc/)" \
         && COMMENT_TEXT+=" and $DOC_LINK" \
         && echo "included documentation"
 
     [[ "$HAS_EXAMPLE" == "true" ]] \
-        && EXAMPLE_LINK="[**$SERVICE documentation**](${URL}example/index.html)" \
+        && EXAMPLE_LINK="[**$SERVICE documentation**](${URL}example/)" \
         && COMMENT_TEXT+=" and $EXAMPLE_LINK" \
         && echo "included example"
 
