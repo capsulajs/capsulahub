@@ -47,9 +47,9 @@ main() {
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
     comment_args=""
-    [[ -d "dist/configuration" ]] && comment_args=$"{comment_args} --conf"
-    [[ -d "dist/doc" ]] && comment_args=$"{comment_args} --docs"
-    [[ -d "dist/example" ]] && comment_args=$"{comment_args} --example"
+    [[ -d "dist/configuration" ]] && comment_args="${comment_args} --conf"
+    [[ -d "dist/doc" ]] && comment_args="${comment_args} --docs"
+    [[ -d "dist/example" ]] && comment_args="${comment_args} --example"
 
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
         # add comment on github pull request.

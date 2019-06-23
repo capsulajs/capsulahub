@@ -27,6 +27,6 @@
     "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix",
     "start": "webpack-dev-server --env.production=false",
     "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
-    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE --conf --docs --example"
+    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   }
 }
