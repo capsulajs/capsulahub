@@ -89,17 +89,14 @@ while [[ $# -gt 0 ]]; do
         -c|--conf)
             HAS_CONFIG=true
             CONFIG_PATH="${SERVICE_FULL_PATH}configuration"
-            shift
             ;;
         -d|--docs)
             HAS_DOCS=true
             DOC_PATH="${SERVICE_FULL_PATH}doc"
-            shift
             ;;
         -e|--example)
             HAS_EXAMPLE=true
             EXAMPLE_PATH="${SERVICE_FULL_PATH}example"
-            shift
             ;;
         *)
             echo "Invalid argument ($arg) not taken into account."
