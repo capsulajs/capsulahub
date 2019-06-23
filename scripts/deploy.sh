@@ -52,18 +52,14 @@ main() {
     [[ -d "public" ]] && aws s3 cp public "$SERVICE_FULL_PATH" --recursive
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
-    echo "+++++++++++++++++++++++++++++++++++++++++++"
-    ls
-    echo "+++++++++++++++++++++++++++++++++++++++++++"
-
     comment_args=""
-    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$SERVICE_FULL_PATH" --recursive && comment_args="${comment_args}-c"
+    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$SERVICE_FULL_PATH" --recursive && comment_args="${comment_args} -c"
     [[ "$?" -eq 0 ]] && echo "Configuration was uploaded to S3 url: $SERVICE_FULL_PATH"
 
-    [[ "$HAS_DOCS" == "true" ]] && aws s3 cp doc "$SERVICE_FULL_PATH" --recursive && comment_args=" ${comment_args}-d"
+    [[ "$HAS_DOCS" == "true" ]] && aws s3 cp doc "$SERVICE_FULL_PATH" --recursive && comment_args="${comment_args} -d"
     [[ "$?" -eq 0 ]] && echo "Documentation was uploaded to S3 url: $SERVICE_FULL_PATH"
 
-    [[ "$HAS_EXAMPLE" == "true" ]] && aws s3 cp example "$SERVICE_FULL_PATH" --recursive && comment_args=" ${comment_args}-e"
+    [[ "$HAS_EXAMPLE" == "true" ]] && aws s3 cp example "$SERVICE_FULL_PATH" --recursive && comment_args="${comment_args} -e"
     [[ "$?" -eq 0 ]] && echo "Example was uploaded to S3 url: $SERVICE_FULL_PATH"
 
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
@@ -92,15 +88,12 @@ while [[ $# -gt 0 ]]; do
             ;;
         -c|--conf)
             HAS_CONFIG=true
-#            CONFIG_PATH="${SERVICE_FULL_PATH}configuration"
             ;;
         -d|--docs)
             HAS_DOCS=true
-#            DOC_PATH="${SERVICE_FULL_PATH}doc"
             ;;
         -e|--example)
             HAS_EXAMPLE=true
-#            EXAMPLE_PATH="${SERVICE_FULL_PATH}example"
             ;;
         *)
             echo "Invalid argument ($arg) not taken into account."
