@@ -52,6 +52,10 @@ main() {
     [[ -d "public" ]] && aws s3 cp public "$SERVICE_FULL_PATH" --recursive
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
+    echo "+++++++++++++++++++++++++++++++++++++++++++"
+    ls
+    echo "+++++++++++++++++++++++++++++++++++++++++++"
+
     comment_args=""
     [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$CONFIG_PATH" --recursive && comment_args="${comment_args}-c"
     [[ "$?" -eq 0 ]] && echo "Configuration was uploaded to S3 url: $CONFIG_PATH"

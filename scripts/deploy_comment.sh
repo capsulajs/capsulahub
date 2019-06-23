@@ -20,7 +20,7 @@ Usage: ./deploy_comment -s SERVICE [ OPTIONS ]
 
 commentAlreadyExists() {
     comments=$(curl -s -u "$GH_USER:$GH_ACCESS_TOKEN" "$COMMENTS_URL" | jq -r '.[].body')
-    echo "comments --> $comments"
+
     [[ -z "$comments" ]] && echo "no comments" && return 1
     [[ "$comments" == *"$1"* ]]
     return $?
