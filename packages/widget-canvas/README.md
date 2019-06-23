@@ -4,6 +4,7 @@ Widget layout extension, that provides the canvas web-component,
 where all the other elements can be flexibly situated.
 
 ### TODO
+
 Prepare the bootstrap of the extension
 
 ## Install

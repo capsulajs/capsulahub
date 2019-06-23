@@ -3,6 +3,7 @@
 Widget item extension, that provides a web-component with the modal, that can include any given content.
 
 ### TODO
+
 Prepare the bootstrap of the extension 
 
 ## Install
