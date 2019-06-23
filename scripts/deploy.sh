@@ -57,14 +57,14 @@ main() {
     echo "+++++++++++++++++++++++++++++++++++++++++++"
 
     comment_args=""
-    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$CONFIG_PATH" --recursive && comment_args="${comment_args}-c"
-    [[ "$?" -eq 0 ]] && echo "Configuration was uploaded to S3 url: $CONFIG_PATH"
+    [[ "$HAS_CONFIG" == "true" ]] && aws s3 cp configuration "$SERVICE_FULL_PATH" --recursive && comment_args="${comment_args}-c"
+    [[ "$?" -eq 0 ]] && echo "Configuration was uploaded to S3 url: $SERVICE_FULL_PATH"
 
-    [[ "$HAS_DOCS" == "true" ]] && aws s3 cp doc "$DOC_PATH" --recursive && comment_args=" ${comment_args}-d"
-    [[ "$?" -eq 0 ]] && echo "Documentation was uploaded to S3 url: $DOC_PATH"
+    [[ "$HAS_DOCS" == "true" ]] && aws s3 cp doc "$SERVICE_FULL_PATH" --recursive && comment_args=" ${comment_args}-d"
+    [[ "$?" -eq 0 ]] && echo "Documentation was uploaded to S3 url: $SERVICE_FULL_PATH"
 
-    [[ "$HAS_EXAMPLE" == "true" ]] && aws s3 cp example "$EXAMPLE_PATH" --recursive && comment_args=" ${comment_args}-e"
-    [[ "$?" -eq 0 ]] && echo "Example was uploaded to S3 url: $EXAMPLE_PATH"
+    [[ "$HAS_EXAMPLE" == "true" ]] && aws s3 cp example "$SERVICE_FULL_PATH" --recursive && comment_args=" ${comment_args}-e"
+    [[ "$?" -eq 0 ]] && echo "Example was uploaded to S3 url: $SERVICE_FULL_PATH"
 
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
         # add comment on github pull request.
@@ -92,15 +92,15 @@ while [[ $# -gt 0 ]]; do
             ;;
         -c|--conf)
             HAS_CONFIG=true
-            CONFIG_PATH="${SERVICE_FULL_PATH}configuration"
+#            CONFIG_PATH="${SERVICE_FULL_PATH}configuration"
             ;;
         -d|--docs)
             HAS_DOCS=true
-            DOC_PATH="${SERVICE_FULL_PATH}doc"
+#            DOC_PATH="${SERVICE_FULL_PATH}doc"
             ;;
         -e|--example)
             HAS_EXAMPLE=true
-            EXAMPLE_PATH="${SERVICE_FULL_PATH}example"
+#            EXAMPLE_PATH="${SERVICE_FULL_PATH}example"
             ;;
         *)
             echo "Invalid argument ($arg) not taken into account."
