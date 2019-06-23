@@ -8,22 +8,17 @@ Widget detailed info
 
 To install the package from NPM registry you should run
 
-```
-yarn add @capsulajs/capsulahub-widget-template
-```
+    yarn add @capsulajs/capsulahub-widget-template
 
 or
-```
-npm install @capsulajs/capsulahub-widget-template
-```
+
+    npm install @capsulajs/capsulahub-widget-template
 
 ### CDN
 
 You can get the default export from the link
 
-```
-https://capsulajs.s3.amazonaws.com/develop/widget-template/index.js
-```
+    https://capsulajs.s3.amazonaws.com/develop/widget-template/index.js
 
 ## WorkspaceConfiguration example
 
@@ -63,9 +58,7 @@ The public API of the extension.
 
 Run 
 
-```bash
-yarn doc
-```
+    yarn doc
 
 And open [doc/index.html](./doc/index.html) in browser.
 
