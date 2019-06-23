@@ -48,7 +48,8 @@ main() {
 
     # upload to s3
     aws s3 rm "$SERVICE_FULL_PATH" --recursive --region "$S3_REGION"
-    aws s3 cp dist "$SERVICE_FULL_PATH" --recursive
+    [[ -d "dist" ]] && aws s3 cp dist "$SERVICE_FULL_PATH" --recursive
+    [[ -d "public" ]] && aws s3 cp public "$SERVICE_FULL_PATH" --recursive
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
     comment_args=""
