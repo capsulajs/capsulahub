@@ -21,5 +21,8 @@
     "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix",
     "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
+  },
+  "dependencies": {
+    "lodash": "4.17.11"
   }
 }
