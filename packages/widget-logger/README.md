@@ -23,7 +23,7 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/widget-logger/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-logger/index.js
 
 ## WorkspaceConfiguration example
 
@@ -35,7 +35,7 @@ You can get the default export from the link
           "web-logger": {
             "componentName": "web-logger",
             "nodeId": "web-logger",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-logger/index.js",
+            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-logger/index.js",
             "config": {}
           }
         }
@@ -55,7 +55,7 @@ The public API of the extension.
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-logger/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-logger/doc/index.html)
 
 ### Local
 

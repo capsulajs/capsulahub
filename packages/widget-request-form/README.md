@@ -22,7 +22,7 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/widget-request-form/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-request-form/index.js
 
 ## WorkspaceConfiguration example
 
@@ -34,7 +34,7 @@ You can get the default export from the link
           "web-request-form": {
             "componentName": "web-request-form",
             "nodeId": "web-request-form",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-request-form/index.js",
+            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-request-form/index.js",
             "config": {}
           }
         }
@@ -54,7 +54,7 @@ The public API of the extension.
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-request-form/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-request-form/doc/index.html)
 
 ### Local
 

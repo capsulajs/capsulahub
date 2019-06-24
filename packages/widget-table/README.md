@@ -22,7 +22,7 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/widget-table/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-table/index.js
 
 ## WorkspaceConfiguration example
 
@@ -34,7 +34,7 @@ You can get the default export from the link
           "web-table": {
             "componentName": "web-table",
             "nodeId": "web-table",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-table/index.js",
+            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-table/index.js",
             "config": {}
           }
         }
@@ -54,7 +54,7 @@ The public API of the extension.
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-table/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-table/doc/index.html)
 
 ### Local
 
