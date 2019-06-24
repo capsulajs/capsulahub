@@ -42,7 +42,7 @@ describe('Modal TCs', () => {
     });
   });
 
-  it('Click on background - isOpen became false', () => {
+  it.only('Click on background - isOpen became false', () => {
     cy.fixture('modal.js').then((modal) => {
       return cy
         .visit('/')
@@ -55,7 +55,7 @@ describe('Modal TCs', () => {
 
           return cy
             .get('body')
-            .click()
+            .click({ force: true })
             .expectIsModalClosed(modal);
         });
     });
