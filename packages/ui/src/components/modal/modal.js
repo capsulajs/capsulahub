@@ -1,7 +1,7 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import enhanceWithClickOutside from 'react-click-outside';
 import { defaultFontFamily } from '../constants';
 
 const Container = styled.div`
@@ -28,7 +28,7 @@ const Header = styled.div`
   font-size: 10px;
 `;
 
-class Modal extends React.Component {
+export default class Modal extends React.Component {
   static propTypes = {
     onToggle: PropTypes.func,
     isOpen: PropTypes.bool,
@@ -43,6 +43,8 @@ class Modal extends React.Component {
   };
 
   isToggledFromInside = false;
+
+  setNode = (ref) => (this.node = ReactDOM.findDOMNode(ref));
 
   handleClickOutside = (e) => {
     const { onToggle } = this.props;
@@ -61,6 +63,12 @@ class Modal extends React.Component {
     }
   };
 
+  handleClick = (e) => {
+    if (!this.node || !this.node.contains(e.target)) {
+      this.handleClickOutside(e);
+    }
+  };
+
   componentDidUpdate(prevProps) {
     const { onToggle, isOpen } = this.props;
 
@@ -75,6 +83,10 @@ class Modal extends React.Component {
     }
   }
 
+  componentDidMount() {
+    document.addEventListener('click', this.handleClick, true);
+  }
+
   render() {
     const { children, title } = this.props;
 
@@ -83,7 +95,7 @@ class Modal extends React.Component {
     }
 
     return (
-      <Container data-cy="modal-container">
+      <Container data-cy="modal-container" ref={this.setNode}>
         <Header>
           <div>{title}</div>
           <Close data-cy="modal-close" onClick={this.handleClickOutside}>
@@ -94,6 +106,8 @@ class Modal extends React.Component {
       </Container>
     );
   }
-}
 
-export default enhanceWithClickOutside(Modal);
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClick, true);
+  }
+}
