@@ -60,17 +60,17 @@ Additional packages, that provide useful common utilities.
 | [utils](packages/utils)                 | Common reusable helpers, consts, types.                                                                                                                        |
 | [cdn-emulator](packages/cdn-emulator)   | Util package, that includes separate files, that will be served on localhost to imitate cdn links.                                                             |
 
-### CI/CD
+## CI/CD
 
 The CI/CD will perform: 
 * deployment on [S3 Bucket](https://capsulajs.s3.amazonaws.com/) 
 * publishing on [npm registry](https://www.npmjs.com/org/capsulajs)
 
-#### Deploy
+### Deploy
 In order to deploy to S3, you need to add this npm script to the `package.json`
 
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
-It will deploy all that is in the `dist/` folder which is built during the CI.  
+It will deploy all the content from `dist/` folder which is built during the CI.  
 If you want to add some specific directories in it (`doc/`, `configuration/`, `example/`, ...), 
 you can add those npm scripts to the `package.json`
 
