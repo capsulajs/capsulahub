@@ -85,6 +85,11 @@ However, you need to **manually publish it for the first time**.
 If you don't, you will get this error: `lerna ERR! E402 You must sign up for private packages` 
 because of the scoped package name.
 
+This script will create a new package version each time, according to the CI CD built branch:
+* on PR, it will publish a `snapshot` version `x.x.x-<branch_name>.<timestamp>`
+* on develop, it will publish a `next` version `x.x.x-beta`
+* on master, it will publish a `latest` version `x.x.x` (only `patch` for now)
+
 If you want, you can enable comments after publishing on npm by adding this npm script to your `package.json`
 
     "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)"
