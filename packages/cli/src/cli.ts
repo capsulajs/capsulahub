@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import commander from 'commander';
+import path from 'path';
 
 commander
   .command('run')
@@ -14,8 +15,10 @@ commander
     const runner = require('./helpers/runner').default;
     const { token, port } = args;
     runner({
+      entryFilesPath: path.join(__dirname, '..', 'app', 'index.html'),
       token,
       port: port || 5555,
+      entryFile: path.resolve(),
     });
   });
 

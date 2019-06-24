@@ -16,7 +16,7 @@ capsulahub run --token=http://localhost:3000/configuration --configProvider=http
 ## Install
 
 In your project, run `$ npm install --save-dev @capsulajs/capsula-hub` or `$ yarn add -D @capsulajs/capsula-hub`.
-If you want to use `capsula-hub` command directly, you can install it globally.
+If you want to use `capsulahub` command directly, you can install it globally.
 
 ## Usage
 
