@@ -58,7 +58,7 @@ main() {
         url      -> $FINAL_URL
         args     -> $comment_args
         """
-        source ../../scripts/deploy_comment.sh -s "$SERVICE" -u "$FINAL_URL" "$comment_args"
+        source ../../scripts/deploy_comment.sh "-s $SERVICE -u $FINAL_URL $comment_args"
         echo "Comment sent to GH pull request: $TRAVIS_BRANCH $TRAVIS_PULL_REQUEST_BRANCH PR $TRAVIS_PULL_REQUEST"
     else
         echo "Comment was skipped not a pull request or comment already created."
