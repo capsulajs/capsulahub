@@ -42,7 +42,7 @@ comment(){
         && echo "included documentation"
 
     [[ "$HAS_EXAMPLE" == "true" ]] \
-        && EXAMPLE_LINK="[**$SERVICE documentation**](${URL}example/)" \
+        && EXAMPLE_LINK="[**$SERVICE example**](${URL}example/)" \
         && COMMENT_TEXT+=" and $EXAMPLE_LINK" \
         && echo "included example"
 
