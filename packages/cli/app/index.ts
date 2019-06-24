@@ -1,12 +1,10 @@
+import { API } from '@capsulajs/capsulajs-configuration-service';
 import WorkspaceFactory from '@capsulajs/capsulahub-workspace';
-import { filter } from 'lodash';
-
-filter([1, 2, 3], () => true);
 
 new WorkspaceFactory()
   .createWorkspace({
-    token: `http://localhost:3000/configuration`,
-    configProvider: 'httpFile',
+    token: process.env.TOKEN!,
+    configProvider: process.env.CONFIG_PROVIDER! as API.ConfigurationProvider,
   })
   .then((workspace) => {
     console.info('Workspace has been created', workspace);

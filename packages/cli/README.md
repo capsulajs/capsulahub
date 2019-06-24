@@ -9,7 +9,7 @@ An awesome tool to develop and test your micro-frontend services !
 ## Local development
 ```bash
 yarn link
-chmod +x lib/cli.js
+chmod +x bin/cli.js
 capsulahub run --token=http://localhost:3000/configuration --configProvider=httpFile --port=8888
 ```
 

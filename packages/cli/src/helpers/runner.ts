@@ -1,15 +1,15 @@
 const Bundler = require('parcel-bundler');
+const express = require('express');
+const utils = require('./utils').default;
+
+const server = express();
 
 export default (args: any) => {
-  console.log('args in runner', args);
+  server.use(utils.allowCrossDomainMiddleware);
+  server.use(express.static('dist'));
 
-  const { entryFilesPath: entryFiles } = args;
+  const { entryFile, port } = args;
 
-  // Single entrypoint file location:
-
-  console.log('entryFiles', entryFiles);
-
-  // Bundler options
   const options = {
     outDir: './dist', // The out directory to put the build files in, defaults to dist
     outFile: 'index.html', // The name of the outputFile
@@ -25,18 +25,16 @@ export default (args: any) => {
     sourceMaps: true, // Enable or disable sourcemaps, defaults to enabled (minified builds currently always create sourcemaps)
   };
 
-  // Initializes a bundler using the entrypoint location and options provided
-  const bundler = new Bundler(entryFiles, options);
+  const bundler = new Bundler(entryFile, options);
 
-  // Run the bundler, this returns the main bundle
-  // Use the events if you're using watch mode as this promise will only trigger once and not for every rebuild
-
-  bundler.on('bundled', (bundle: any) => {
-    console.log('bundled!', bundle);
+  bundler.on('bundled', () => {
+    server.listen(port, () => {
+      console.info(`Capsulahub application is ready to use on http://localhost:${port}`);
+    });
   });
 
   bundler.on('buildError', (error: Error) => {
-    console.log('bundle error!', error);
+    console.info('Error while bundling Capsulahub application', error);
   });
 
   bundler.bundle();
