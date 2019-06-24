@@ -42,7 +42,7 @@ describe('Modal TCs', () => {
     });
   });
 
-  it.only('Click on background - isOpen became false', () => {
+  it('Click on background - isOpen became false', () => {
     cy.fixture('modal.js').then((modal) => {
       return cy
         .visit('/')
