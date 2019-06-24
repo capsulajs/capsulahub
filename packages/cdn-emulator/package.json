@@ -18,6 +18,7 @@
     "clean": "rimraf public node_modules"
   },
   "dependencies": {
-    "rxjs": "6.5.2"
+    "rxjs": "6.5.2",
+    "@capsulajs/capsulahub-cli": "0.0.1"
   }
 }
