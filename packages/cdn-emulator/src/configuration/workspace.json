@@ -22,21 +22,34 @@
         }
       },
       "config": { "name": "serviceB" }
+    },
+    {
+      "serviceName": "RendererService",
+      "path": "https://capsulajs.s3.amazonaws.com/PR/feature-set-CI-CD/capsulahub-service-renderer/index.js",
+      "definition": {
+        "serviceName": "RendererService",
+        "methods": {
+          "renderLayouts": { "asyncModel": "requestResponse" },
+          "renderItems": { "asyncModel": "requestResponse" },
+          "renderItem": { "asyncModel": "requestResponse" }
+        }
+      },
+      "config": {}
     }
   ],
   "components": {
     "layouts": {
-      "grid": {
+      "web-grid": {
         "componentName": "web-grid",
-        "nodeId": "root",
+        "nodeId": "web-grid",
         "path": "http://localhost:3000/widgets/Grid.js",
         "config": { "title": "Base Grid" }
       }
     },
     "items": {
-      "request-form": {
+      "web-request-form": {
         "componentName": "web-request-form",
-        "nodeId": "request-form",
+        "nodeId": "web-request-form",
         "path": "http://localhost:3000/widgets/RequestForm.js",
         "config": { "title": "Base Request Form" }
       }

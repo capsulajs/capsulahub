@@ -1,4 +1,7 @@
 import WorkspaceFactory from '@capsulajs/capsulahub-workspace';
+import { filter } from 'lodash';
+
+filter([1, 2, 3], () => true);
 
 new WorkspaceFactory()
   .createWorkspace({

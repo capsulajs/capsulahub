@@ -27,6 +27,7 @@
   "dependencies": {
     "@capsulajs/capsulahub-workspace": "0.0.1",
     "commander": "^2.20.0",
+    "lodash": "^4.17.11",
     "parcel-bundler": "^1.12.3"
   }
 }
