@@ -46,19 +46,18 @@ main() {
     [[ -d "public" ]] && aws s3 cp public "$SERVICE_FULL_PATH" --recursive
     [[ "$?" -eq 0 ]] && echo "Service was uploaded to S3 url: $SERVICE_FULL_PATH"
 
-    comment_args=""
-    [[ -d "dist/configuration" ]] && comment_args="${comment_args} --conf"
-    [[ -d "dist/doc" ]] && comment_args="${comment_args} --docs"
-    [[ -d "dist/example" ]] && comment_args="${comment_args} --example"
+    [[ -d "dist/configuration" ]] && comment_conf="--conf"
+    [[ -d "dist/doc" ]] && comment_docs="--docs"
+    [[ -d "dist/example" ]] && comment_example="--example"
 
     if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
         # add comment on github pull request.
         echo """
         service  -> $SERVICE
         url      -> $FINAL_URL
-        args     -> $comment_args
+        args     -> $comment_conf $comment_docs $comment_example
         """
-        source ../../scripts/deploy_comment.sh "-s $SERVICE -u $FINAL_URL $comment_args"
+        source ../../scripts/deploy_comment.sh "-s" "$SERVICE" "-u" "$FINAL_URL" "$comment_conf" "$comment_docs" "$comment_example"
         echo "Comment sent to GH pull request: $TRAVIS_BRANCH $TRAVIS_PULL_REQUEST_BRANCH PR $TRAVIS_PULL_REQUEST"
     else
         echo "Comment was skipped not a pull request or comment already created."

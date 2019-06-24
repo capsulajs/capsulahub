@@ -5,7 +5,7 @@ if [[ "x$PIPELINEDEBUG" != "x" ]]; then
 fi
 
 USAGE="""
-Usage: ./deploy_comment -s SERVICE [ OPTIONS ]
+Usage: ./deploy_comment -s SERVICE -u URL [ OPTIONS ]
     -s --service
         Specify the deployed service.
     -u --url
@@ -78,7 +78,7 @@ while [[ $# -gt 0 ]]; do
             HAS_EXAMPLE=true
             ;;
         *)
-            echo "Invalid argument ($arg) not taken into account."
+            echo "Invalid or empty argument ($arg), not taken into account."
             ;;
     esac
     shift
