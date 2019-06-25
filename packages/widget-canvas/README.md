@@ -4,6 +4,7 @@ Widget layout extension, that provides the canvas web-component,
 where all the other elements can be flexibly situated.
 
 ### TODO
+
 Prepare the bootstrap of the extension
 
 ## Install
@@ -22,7 +23,7 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/widget-canvas/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-canvas/index.js
 
 ## WorkspaceConfiguration example
 
@@ -31,7 +32,7 @@ You can get the default export from the link
           "web-canvas": {
             "componentName": "web-canvas",
             "nodeId": "web-canvas",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-canvas/index.js",
+            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-canvas/index.js",
             "config": {}
           }
         },
@@ -54,7 +55,7 @@ The public API of the extension.
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-canvas/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-canvas/doc/index.html)
 
 ### Local
 

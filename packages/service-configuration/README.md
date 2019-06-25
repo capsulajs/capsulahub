@@ -19,7 +19,7 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/service-configuration/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-configuration/index.js
 
 ## API
 
@@ -35,7 +35,7 @@ module.exports = {
   services: [
     {
       serviceName: 'ConfigurationService',
-      path: 'https://capsulajs.s3.amazonaws.com/develop/service-configuration/index.js',
+      path: 'https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-configuration/index.js',
       definition: {
         serviceName: 'ConfigurationService',
         methods: {

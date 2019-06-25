@@ -8,23 +8,18 @@ Service detailed info
 
 To install the package from NPM registry you should run
 
-```
-yarn add @capsulajs/capsulahub-service-template
-```
-
+    yarn add @capsulajs/capsulahub-service-template
 
 or
-```
-npm install @capsulajs/capsulahub-service-template
-```
+
+    npm install @capsulajs/capsulahub-service-template
+
 
 ### CDN
 
 You can get the default export from the link
 
-```
-https://capsulajs.s3.amazonaws.com/develop/service-template/index.js
-```
+    https://capsulajs.s3.amazonaws.com/develop/service-template/index.js
 
 ## WorkspaceConfiguration example
 
@@ -62,9 +57,7 @@ The public API of the extension.
 
 Run 
 
-```bash
-yarn doc
-```
+    yarn doc
 
 And open [doc/index.html](./doc/index.html) in browser.
 

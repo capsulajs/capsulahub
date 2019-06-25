@@ -1,13 +1,13 @@
 {
   "name": "@capsulajs/capsulahub-utils",
   "version": "0.0.1",
-  "description": "Different common utils for Calsulahub",
+  "description": "Different common utils for Capsulahub",
   "main": "lib/index.js",
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "author": "CapsulaJS",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "build": "rimraf lib && tsc",
     "start": "rimraf lib && tsc --watch",
@@ -15,6 +15,8 @@
     "lint": "yarn lint:md && yarn lint:ts",
     "prettier": "prettier --write '{src,tests}/**/*.{js,ts,tsx}'",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
-    "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix"
+    "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix",
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
+    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   }
 }

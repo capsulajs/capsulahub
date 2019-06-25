@@ -24,7 +24,9 @@
     "cypress:debug": "cypress open",
     "jest": "jest",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
-    "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix"
+    "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix",
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
+    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
     "@capsulajs/capsulajs-configuration-service": "0.1.11",

@@ -15,7 +15,9 @@
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
     "lint:ts": "tslint 'src/**/*.{ts,tsx}' --fix",
     "prettier": "prettier --write 'src/**/*.{ts,tsx}'",
-    "clean": "rimraf public node_modules"
+    "clean": "rimraf public node_modules",
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
+    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
     "rxjs": "6.5.2",
