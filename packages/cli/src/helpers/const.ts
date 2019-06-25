@@ -18,3 +18,12 @@ export const args = {
     description: 'The url of the dispatcher for those providers that use dispatcher (optional)',
   },
 };
+
+export const messages = {
+  appIsPending: 'Starting Capsulahub application...',
+  appIsBundled: 'Capsulahub application has been bundled successfully',
+  getAppIsReady: (port: number) => `Capsulahub application is ready to be used on http://localhost:${port}`,
+  appHasBundleError: 'Error while bundling Capsulahub application',
+  getAppTempFilesAreNotDeletedError: (tempPath: string) =>
+    `Temporary Capsulahub files were not deleted from ${tempPath}`,
+};
