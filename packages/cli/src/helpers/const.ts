@@ -17,10 +17,15 @@ export const args = {
     title: 'dispatcherUrl',
     description: 'The url of the dispatcher for those providers that use dispatcher (optional)',
   },
+  output: {
+    title: 'output',
+    description: 'Relative path to the output folder (optional - default is "./dist")',
+  },
 };
 
 export const messages = {
   appIsPending: 'Starting Capsulahub application...',
+  appIsBundling: 'Starting the bundle of Capsulahub application...',
   appIsBundled: 'Capsulahub application has been bundled successfully',
   getAppIsReady: (port: number) => `Capsulahub application is ready to be used on http://localhost:${port}`,
   appHasBundleError: 'Error while bundling Capsulahub application',

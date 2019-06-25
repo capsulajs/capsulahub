@@ -7,7 +7,7 @@ import { args } from './helpers/const';
 
 commander
   .command('run')
-  .description('Run a Capsulahub instance')
+  .description('Run a Capsulahub application locally in development mode')
   .option(`-t, --${args.token.title} <${args.token.title}>`, args.token.description)
   .option(`-c, --${args.configProvider.title} <${args.configProvider.title}>`, args.configProvider.description)
   .option(`-p, --${args.port.title} <${args.port.title}>`, args.port.description)
@@ -22,6 +22,26 @@ commander
       entryFile: path.join(__dirname, '..', 'app', 'index.html'),
       token,
       port,
+    });
+  });
+
+commander
+  .command('build')
+  .description('Build Capsulahub application files in a specific folder (ready to deploy)')
+  .option(`-t, --${args.token.title} <${args.token.title}>`, args.token.description)
+  .option(`-c, --${args.configProvider.title} <${args.configProvider.title}>`, args.configProvider.description)
+  .option(`-p, --${args.output.title} <${args.output.title}>`, args.output.description)
+  .option(`-d, --${args.dispatcherUrl.title} <${args.dispatcherUrl.title}>`, args.dispatcherUrl.description)
+  .action((args) => {
+    const builder = require('./helpers/builder').default;
+    const { token, output = './dist', configProvider = configurationTypes.httpFile } = args;
+    process.env.CAPSULAHUB_TOKEN = token;
+    process.env.CAPSULAHUB_CONFIG_PROVIDER = configProvider;
+
+    builder({
+      entryFile: path.join(__dirname, '..', 'app', 'index.html'),
+      token,
+      output,
     });
   });
 

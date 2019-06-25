@@ -2,6 +2,7 @@
 .cache/
 dist/
 lib/
+bin/
 public/
 doc/
 node_modules/
