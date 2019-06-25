@@ -59,3 +59,39 @@ Additional packages, that provide useful common utilities.
 | [ui](packages/ui)                       | Common reusable ui components.                                                                                                                                 |
 | [utils](packages/utils)                 | Common reusable helpers, consts, types.                                                                                                                        |
 | [cdn-emulator](packages/cdn-emulator)   | Util package, that includes separate files, that will be served on localhost to imitate cdn links.                                                             |
+
+## CI/CD
+
+The CI/CD will perform: 
+* deployment on [S3 Bucket](https://capsulajs.s3.amazonaws.com/) 
+* publishing on [npm registry](https://www.npmjs.com/org/capsulajs)
+
+### Deploy
+In order to deploy to S3, you need to add this npm script to the `package.json`
+
+    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
+It will deploy all the content from `dist/` folder which is built during the CI.  
+If you want to add some specific directories in it (`doc/`, `configuration/`, `example/`, ...), 
+you can add those npm scripts to the `package.json`
+
+    "build:dist": "<your command> && yarn dist:configuration && yarn dist:doc && yarn dist:example",
+    "dist:configuration": "cpy --parents configuration/ dist/",
+    "dist:doc": "cpy --parents doc/ dist/",
+    "dist:example": "cpy --parents example/ dist/"
+
+#### Publish
+The npm publishing will be performed automatically during the CI/CD process.  
+However, you need to **manually publish it for the first time**.  
+If you don't, you will get this error: `lerna ERR! E402 You must sign up for private packages` 
+because of the scoped package name.
+
+This script will create a new package version each time, according to the CI CD built branch:
+* on PR, it will publish a `snapshot` version `x.x.x-<branch_name>.<timestamp>`
+* on develop, it will publish a `next` version `x.x.x-beta`
+* on master, it will publish a `latest` version `x.x.x` (only `patch` for now)
+
+If you want, you can enable comments after publishing on npm by adding this npm script to your `package.json`
+
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)"
+In this case, a bot will comment after publishing the package and will update this comment each time 
+a new package is built for your PR.

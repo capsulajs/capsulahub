@@ -23,7 +23,7 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/workspace/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-workspace/index.js
 
 ## Exports
 
@@ -62,7 +62,7 @@ workspaceFactory.createWorkspace({
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/workspace/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/capsulahub-workspace/doc/index.html)
 
 ### Local
 

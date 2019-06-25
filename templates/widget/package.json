@@ -22,7 +22,9 @@
     "cypress:run": "cypress run --browser chrome",
     "cypress:debug": "cypress open",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
-    "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix"
+    "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix",
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
+    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
     "@capsulajs/capsulahub-utils": "^0.0.1"

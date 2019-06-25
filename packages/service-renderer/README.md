@@ -18,14 +18,14 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/service-renderer/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-renderer/index.js
 
 ## WorkspaceConfiguration example
 
 ```json
   "services": {
       "serviceName": "RendererService",
-      "path": "https://capsulajs.s3.amazonaws.com/develop/service-renderer/index.js",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-renderer/index.js",
       "definition": {
         "serviceName": "RendererService",
         "methods": {
@@ -52,7 +52,7 @@ The public API of the extension.
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/service-renderer/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-renderer/doc/index.html)
 
 ### Local
 

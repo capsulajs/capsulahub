@@ -3,6 +3,7 @@
 Widget item extension, that provides a web-component with the modal, that can include any given content.
 
 ### TODO
+
 Prepare the bootstrap of the extension 
 
 ## Install
@@ -21,7 +22,7 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/widget-modal/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-modal/index.js
 
 ## WorkspaceConfiguration example
 
@@ -33,7 +34,7 @@ You can get the default export from the link
           "web-modal": {
             "componentName": "web-modal",
             "nodeId": "web-modal",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/widget-modal/index.js",
+            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-modal/index.js",
             "config": {}
           }
         }
@@ -53,7 +54,7 @@ The public API of the extension.
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/widget-modal/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-modal/doc/index.html)
 
 ### Local
 
