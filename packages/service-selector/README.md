@@ -19,7 +19,7 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/service-selector/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-selector/index.js
 
 ## Exports
 
@@ -78,7 +78,7 @@ selector.selectedItem$({}).subscribe(console.log);
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/service-selector/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-selector/doc/index.html)
 
 ### Local
 
