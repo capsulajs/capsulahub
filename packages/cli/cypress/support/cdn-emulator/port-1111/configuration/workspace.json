@@ -1,0 +1,58 @@
+{
+  "name": "baseWorkspace",
+  "services": [
+    {
+      "serviceName": "ServiceA",
+      "path": "http://localhost:1111/services/serviceA.js",
+      "definition": {
+        "serviceName": "ServiceA",
+        "methods": {
+          "greet": { "asyncModel": "requestResponse" }
+        }
+      },
+      "config": { "name": "serviceA", "message": "what pill would you choose: red or blue?" }
+    },
+    {
+      "serviceName": "ServiceB",
+      "path": "http://localhost:1111/services/serviceB.js",
+      "definition": {
+        "serviceName": "ServiceB",
+        "methods": {
+          "getRandomNumbers": { "asyncModel": "requestStream" }
+        }
+      },
+      "config": { "name": "serviceB" }
+    },
+    {
+      "serviceName": "RendererService",
+      "path": "https://capsulajs.s3.amazonaws.com/PR/feature-set-CI-CD/capsulahub-service-renderer/index.js",
+      "definition": {
+        "serviceName": "RendererService",
+        "methods": {
+          "renderLayouts": { "asyncModel": "requestResponse" },
+          "renderItems": { "asyncModel": "requestResponse" },
+          "renderItem": { "asyncModel": "requestResponse" }
+        }
+      },
+      "config": {}
+    }
+  ],
+  "components": {
+    "layouts": {
+      "web-grid": {
+        "componentName": "web-grid",
+        "nodeId": "web-grid",
+        "path": "http://localhost:1111/widgets/Grid.js",
+        "config": { "title": "Base Grid" }
+      }
+    },
+    "items": {
+      "web-request-form": {
+        "componentName": "web-request-form",
+        "nodeId": "web-request-form",
+        "path": "http://localhost:1111/widgets/RequestForm.js",
+        "config": { "title": "Base Request Form" }
+      }
+    }
+  }
+}

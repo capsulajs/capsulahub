@@ -6,4 +6,5 @@ bin/
 public/
 doc/
 node_modules/
+packages/cli/cdn-emulator/
 yarn-error.log
