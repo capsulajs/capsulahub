@@ -10484,11 +10484,6 @@ node-addon-api@^1.6.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.6.3.tgz#3998d4593e2dca2ea82114670a4eb003386a9fe1"
   integrity sha512-FXWH6mqjWgU8ewuahp4spec8LkroFZK2NicOv6bNwZC3kcwZUI8LeZdG80UzTSLLhK4T7MsgNwlYDVRlDdfTDg==
 
-node-cmd@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/node-cmd/-/node-cmd-3.0.0.tgz#38fff70a4aaa4f659d203eb57862737018e24f6f"
-  integrity sha1-OP/3CkqqT2WdID61eGJzcBjiT28=
-
 node-dir@^0.1.10:
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/node-dir/-/node-dir-0.1.17.tgz#5f5665d93351335caabef8f1c554516cf5f1e4e5"
@@ -15742,11 +15737,6 @@ w3c-hr-time@^1.0.1:
   integrity sha1-gqwr/2PZUOqeMYmlimViX+3xkEU=
   dependencies:
     browser-process-hrtime "^0.1.2"
-
-wait-for-localhost@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/wait-for-localhost/-/wait-for-localhost-3.2.0.tgz#d071e7228e2a0978742778fe060dae67417bc9d4"
-  integrity sha512-rs63O/IKjxyPTPyFlCoZrzrefmxQATfPwkvrKsZNRIla4rVWvn/HVvbYRPmi5mZEWCui4OUU2HtEhYXa44X8qQ==
 
 walker@^1.0.7, walker@~1.0.5:
   version "1.0.7"

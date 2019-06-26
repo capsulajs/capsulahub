@@ -7,21 +7,19 @@
       "definition": {
         "serviceName": "ServiceA",
         "methods": {
-          "greet": { "asyncModel": "requestResponse" }
+          "getMessage": { "asyncModel": "requestResponse" }
         }
       },
-      "config": { "name": "serviceA", "message": "what pill would you choose: red or blue?" }
+      "config": { "message": "Message from ServiceA from PORT 1111" }
     },
     {
-      "serviceName": "ServiceB",
-      "path": "http://localhost:1111/services/serviceB.js",
+      "serviceName": "ServiceFlows",
+      "path": "http://localhost:1111/services/serviceFlows.js",
       "definition": {
-        "serviceName": "ServiceB",
-        "methods": {
-          "getRandomNumbers": { "asyncModel": "requestStream" }
-        }
+        "serviceName": "ServiceFlows",
+        "methods": {}
       },
-      "config": { "name": "serviceB" }
+      "config": {}
     },
     {
       "serviceName": "RendererService",
@@ -43,15 +41,15 @@
         "componentName": "web-grid",
         "nodeId": "web-grid",
         "path": "http://localhost:1111/widgets/Grid.js",
-        "config": { "title": "Base Grid" }
+        "config": { "title": "Base Grid from PORT 1111" }
       }
     },
     "items": {
-      "web-request-form": {
-        "componentName": "web-request-form",
-        "nodeId": "web-request-form",
-        "path": "http://localhost:1111/widgets/RequestForm.js",
-        "config": { "title": "Base Request Form" }
+      "web-component-a": {
+        "componentName": "web-component-a",
+        "nodeId": "web-component-a",
+        "path": "http://localhost:1111/widgets/ComponentA.js",
+        "config": { "name": "ComponentA(PORT 1111)" }
       }
     }
   }
