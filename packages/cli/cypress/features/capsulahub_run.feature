@@ -25,8 +25,8 @@ Feature: Build and Run commands for CapsulaHub CLI
           |LocalFileConfigurationProvider     |(empty)                |
           |ScalecubeConfigurationProvider     |'http://localhost:3000'|
           |HttpServerConfigurationProvider    |(empty)                |
-          |LocalStorageConfigurationProvider  |(empty)                | 
-    When  I run the command `capsulahub run --token="tokenB" --configProvider="<configProvider>"  --port="8888" --dispatcherUrl="<dispatcherUrl>"`# add dispatcherUrl argument in the command only for Scalecube 
+          |LocalStorageConfigurationProvider  |(empty)                |
+    When  I run the command `capsulahub run --token="tokenB" --configProvider="<configProvider>"  --port="8888" --dispatcherUrl="<dispatcherUrl>"`# add dispatcherUrl argument in the command only for Scalecube
     Then  an workspace is created using the right configuration provider
 
   #3
@@ -70,10 +70,10 @@ Feature: Build and Run commands for CapsulaHub CLI
 #______________________________________NEGATIVE______________________________________
 
   #1
-  Scenario: Run CapsulaHub instance with non-existent token throws an error
+  Scenario: Run CapsulaHub instance without token throws an error
     Given a configuration that includes component A
     And   token B that allow access to this configuration
-    When  I run the command `capsulahub run --token="invalidToken"`
+    When  I run the command `capsulahub run`
     Then  a relevant error is received
 
   #2

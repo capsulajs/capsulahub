@@ -14,6 +14,11 @@ commander
   .option(`-p, --${args.port.title} <${args.port.title}>`, args.port.description)
   .option(`-d, --${args.dispatcherUrl.title} <${args.dispatcherUrl.title}>`, args.dispatcherUrl.description)
   .action((opts) => {
+    const { isValid, error } = argsValidator(opts);
+    if (!isValid) {
+      console.error(error);
+      process.exit(1);
+    }
     const runner = require('./helpers/runner').default;
     const { token, port = 55555, configProvider = configurationTypes.httpFile } = opts;
     process.env.CAPSULAHUB_TOKEN = token;
