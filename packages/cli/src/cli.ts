@@ -13,9 +13,9 @@ commander
   .option(`-c, --${args.configProvider.title} <${args.configProvider.title}>`, args.configProvider.description)
   .option(`-p, --${args.port.title} <${args.port.title}>`, args.port.description)
   .option(`-d, --${args.dispatcherUrl.title} <${args.dispatcherUrl.title}>`, args.dispatcherUrl.description)
-  .action((args) => {
+  .action((opts) => {
     const runner = require('./helpers/runner').default;
-    const { token, port = 55555, configProvider = configurationTypes.httpFile } = args;
+    const { token, port = 55555, configProvider = configurationTypes.httpFile } = opts;
     process.env.CAPSULAHUB_TOKEN = token;
     process.env.CAPSULAHUB_CONFIG_PROVIDER = configProvider;
 
@@ -33,14 +33,14 @@ commander
   .option(`-c, --${args.configProvider.title} <${args.configProvider.title}>`, args.configProvider.description)
   .option(`-o, --${args.output.title} <${args.output.title}>`, args.output.description)
   .option(`-d, --${args.dispatcherUrl.title} <${args.dispatcherUrl.title}>`, args.dispatcherUrl.description)
-  .action((args) => {
-    const { isValid, error } = argsValidator(args);
+  .action((opts) => {
+    const { isValid, error } = argsValidator(opts);
     if (!isValid) {
       console.error(error);
       process.exit(1);
     }
     const builder = require('./helpers/builder').default;
-    const { token, output = './dist', configProvider = configurationTypes.httpFile } = args;
+    const { token, output = './dist', configProvider = configurationTypes.httpFile } = opts;
     process.env.CAPSULAHUB_TOKEN = token;
     process.env.CAPSULAHUB_CONFIG_PROVIDER = configProvider;
 

@@ -7,6 +7,7 @@
 An awesome tool to develop and test your micro-frontend services !
 
 ## Local development
+
 ```bash
 yarn link
 chmod +x bin/cli.js
