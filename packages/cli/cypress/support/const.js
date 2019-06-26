@@ -27,3 +27,7 @@ export const args = {
     error: "Output directory name couldn't be empty",
   },
 };
+
+export const messages = {
+  portAlreadyInUse: (port) => `The selected port ${port} is already in use. Please try another one.`,
+};
