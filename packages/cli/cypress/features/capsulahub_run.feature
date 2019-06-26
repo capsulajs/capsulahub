@@ -34,7 +34,7 @@ Feature: Build and Run commands for CapsulaHub CLI
     Given a configuration that includes component A
     And   token B that allow access to this configuration
     When  I run the command `capsulahub run --token="tokenB"`
-    And   the app is running on the default port "5555"
+    And   the app is running on the default port "55555"
     And   I open the app in the browser
     Then  I see component A rendered in the app
     And   HttpFile is the provider used to get configuration of token B
