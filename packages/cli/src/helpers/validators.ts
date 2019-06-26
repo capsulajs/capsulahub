@@ -1,6 +1,6 @@
 import { args as constants } from './const';
 
-export const argsValidator = (args: { token: string; configProvider?: string; port?: number }) => {
+export const argsValidator = (args: { token: string; configProvider?: string; port?: number; output?: string }) => {
   const validator = { isValid: true, error: '' };
   if (!args.token) {
     validator.isValid = false;
@@ -9,11 +9,20 @@ export const argsValidator = (args: { token: string; configProvider?: string; po
   const configProviders = ['localFile', 'httpFile', 'scalecube', 'httpServer', 'localStorage'];
   if (args.configProvider && !configProviders.includes(args.configProvider)) {
     validator.isValid = false;
-    validator.error = `\n${constants.configProvider.error}`;
+    validator.error =
+      validator.error === ''
+        ? `${constants.configProvider.error}`
+        : `${validator.error}\n${constants.configProvider.error}`;
   }
   if (args.port && (!Number.isInteger(args.port) || args.port < 1 || args.port > 65535)) {
     validator.isValid = false;
-    validator.error = `\n${constants.port.error}`;
+    validator.error =
+      validator.error === '' ? `${constants.port.error}` : `${validator.error}\n${constants.port.error}`;
+  }
+  if (args.output === '') {
+    validator.isValid = false;
+    validator.error =
+      validator.error === '' ? `${constants.output.error}` : `${validator.error}\n${constants.output.error}`;
   }
   return validator;
 };

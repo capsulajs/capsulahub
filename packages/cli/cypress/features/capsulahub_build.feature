@@ -4,7 +4,7 @@ Feature: Build and Run commands for CapsulaHub CLI
     Given an npm package called @capsulajs/capsulahub
     And   a default configProvider httpFile
     And   a default path to the output folder "./dist"
-    
+
 #______________________________________POSITIVE______________________________________
 
   #1
@@ -46,10 +46,10 @@ Feature: Build and Run commands for CapsulaHub CLI
     Then  a relevant error is received
 
   #2
-  Scenario: Run `capsulahub build` with non-existent token throws an error
+  Scenario: Run `capsulahub build` without token throws an error
     Given configuration A
     And   token B that allow access to this configuration
-    When  I run the command `capsulahub build --token="invalidToken"`
+    When  I run the command `capsulahub build` without token
     Then  a relevant error is received
 
   #3
