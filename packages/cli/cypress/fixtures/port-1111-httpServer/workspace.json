@@ -10,7 +10,7 @@
           "getMessage": { "asyncModel": "requestResponse" }
         }
       },
-      "config": { "message": "Message from ServiceA from PORT 1111" }
+      "config": { "message": "Message from ServiceA from PORT 1111 HTTP Server" }
     },
     {
       "serviceName": "ServiceFlows",
@@ -41,7 +41,7 @@
         "componentName": "web-grid",
         "nodeId": "web-grid",
         "path": "http://localhost:1111/widgets/Grid.js",
-        "config": { "title": "Base Grid from PORT 1111" }
+        "config": { "title": "Base Grid from PORT 1111 HTTP Server" }
       }
     },
     "items": {
@@ -49,7 +49,7 @@
         "componentName": "web-component-a",
         "nodeId": "web-component-a",
         "path": "http://localhost:1111/widgets/ComponentA.js",
-        "config": { "name": "ComponentA(PORT 1111)" }
+        "config": { "name": "ComponentA(PORT 1111 HTTP Server)" }
       }
     }
   }
