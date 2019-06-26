@@ -9,17 +9,17 @@ Cypress.Commands.add('testCapsulahubAppRender', (customText) => {
     .should('have.text', `Message from Service A: Message from ServiceA from ${customText}`);
 });
 
-Cypress.Commands.add('testDefaultCapsulahubApp', (port) => {
+Cypress.Commands.add('testDefaultCapsulahubApp', (appPort, cdnPort = 1111) => {
   let fetchSpy;
 
   return cy
-    .visit(`http://localhost:${port}`, {
+    .visit(`http://localhost:${appPort}`, {
       onBeforeLoad(win) {
         fetchSpy = cy.spy(win, 'fetch');
       },
     })
-    .testCapsulahubAppRender('PORT 1111 HTTP File')
+    .testCapsulahubAppRender(`PORT ${cdnPort} HTTP File`)
     .then(() => {
-      expect(fetchSpy.firstCall.args[0]).to.equal('http://localhost:1111/port-1111/configuration/workspace.json');
+      expect(fetchSpy.firstCall.args[0]).to.equal(`http://localhost:1111/port-${cdnPort}/configuration/workspace.json`);
     });
 });

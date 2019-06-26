@@ -43,13 +43,13 @@ Feature: Build and Run commands for CapsulaHub CLI
   Scenario: Run CapsulaHub instance with the same token on two different ports
     Given a configuration that includes component A
     And   token B that allow access to this configuration
-    And   two valid ports "8888" and "8888"
-    When  I run the command `capsulahub run --token="tokenB" --port="8888"`
-    And   I run the command `capsulahub run --token="tokenB" --port="8888"`
-    And   two apps are running on two different ports "8888" and "8888"`
+    And   two valid ports "1234" and "4321"
+    When  I run the command `capsulahub run --token="tokenB" --port="1234"`
+    And   I run the command `capsulahub run --token="tokenB" --port="4321"`
+    And   two apps are running on two different ports "1234" and "4321"`
     And   I open the apps in the browser
-    Then  I see component A rendered in the app on port "8888"
-    And   I see component A rendered in the other app on port "8888"
+    Then  I see component A rendered in the app on port "1234"
+    And   I see component A rendered in the other app on port "4321"
     And   HttpFile is the provider used to get configuration of token B for both workspaces
 
    #5
@@ -58,13 +58,13 @@ Feature: Build and Run commands for CapsulaHub CLI
     And   a configuration that includes component A2
     And   token B1 that allow access to configuration with component A1
     And   token B2 that allow access to configuration with component A2
-    And   two valid ports "8888" and "8888"
-    When  I run the command `capsulahub run --token="tokenB1" --port="8888"`
-    And   I run the command `capsulahub run --token="tokenB2" --port="8888"`
-    And   two apps are running on two different ports "8888" and "8888"`
+    And   two valid ports "1234" and "4321"
+    When  I run the command `capsulahub run --token="tokenB1" --port="1234"`
+    And   I run the command `capsulahub run --token="tokenB2" --port="4321"`
+    And   two apps are running on two different ports "1234" and "4321"`
     And   I open the apps in the browser
-    Then  I see component A1 rendered in the app on port "8888"
-    And   I see component A2 rendered in the other app on port "8888"
+    Then  I see component A1 rendered in the app on port "1234"
+    And   I see component A2 rendered in the other app on port "4321"
     And   HttpFile is the provider used to get configuration of token B for both workspaces
 
 #______________________________________NEGATIVE______________________________________
