@@ -15,16 +15,12 @@ module.exports = {
       },
       {
         test: /\.(css|less)$/,
-        include: includePath,
         use: [
           {
             loader: 'style-loader',
           },
           {
             loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
           },
         ],
       },
