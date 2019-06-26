@@ -4,6 +4,7 @@ import { configurationTypes } from '@capsulajs/capsulajs-configuration-service';
 import commander from 'commander';
 import path from 'path';
 import { args } from './helpers/const';
+import { argsValidator } from './helpers/validators';
 
 commander
   .command('run')
@@ -30,9 +31,14 @@ commander
   .description('Build Capsulahub application files in a specific folder (ready to deploy)')
   .option(`-t, --${args.token.title} <${args.token.title}>`, args.token.description)
   .option(`-c, --${args.configProvider.title} <${args.configProvider.title}>`, args.configProvider.description)
-  .option(`-p, --${args.output.title} <${args.output.title}>`, args.output.description)
+  .option(`-o, --${args.output.title} <${args.output.title}>`, args.output.description)
   .option(`-d, --${args.dispatcherUrl.title} <${args.dispatcherUrl.title}>`, args.dispatcherUrl.description)
   .action((args) => {
+    const { isValid, error } = argsValidator(args);
+    if (!isValid) {
+      console.error(error);
+      process.exit(1);
+    }
     const builder = require('./helpers/builder').default;
     const { token, output = './dist', configProvider = configurationTypes.httpFile } = args;
     process.env.CAPSULAHUB_TOKEN = token;
