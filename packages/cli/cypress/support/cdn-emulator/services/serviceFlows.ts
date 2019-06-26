@@ -1,0 +1,36 @@
+import { of } from 'rxjs';
+import { API } from '@capsulajs/capsulahub-workspace';
+
+declare var publicExports: object;
+
+const bootstrap = (WORKSPACE: API.Workspace) => {
+  return new Promise((resolve) => {
+    class ServiceFlows {
+      constructor() {
+        const componentReferencePromise = WORKSPACE.components({})
+          .then((components) => components['web-component-a'])
+          .then((component) => component.reference);
+
+        const serviceAMessagePromise = WORKSPACE.services({})
+          .then((services) => services.ServiceA)
+          .then((service) => service.proxy.getMessage());
+
+        Promise.all([componentReferencePromise, serviceAMessagePromise]).then(
+          ([componentReference, serviceAMessage]) => {
+            componentReference.setProps!(of({ message: serviceAMessage }));
+          }
+        );
+      }
+    }
+
+    new ServiceFlows();
+
+    resolve();
+  });
+};
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = bootstrap;
+}
+
+export default bootstrap;

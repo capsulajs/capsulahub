@@ -11,8 +11,8 @@ Feature: Build and Run commands for CapsulaHub CLI
   Scenario: Run CapsulaHub instance with specifying valid arguments (check for HttpFile provider)
     Given a configuration that includes component A
     And   token B that allow access to this configuration using HttpFile config provider
-    When  I run the command `capsulahub run --token="tokenB" --configProvider="HttpFile"  --port="6666"`
-    And   the app is running on the specified port "6666"
+    When  I run the command `capsulahub run --token="tokenB" --configProvider="HttpFile"  --port="8888"`
+    And   the app is running on the specified port "8888"
     And   I open the app in the browser
     Then  I see component A rendered in the app
     And   HttpFile is the provider used to get configuration of token B
@@ -26,7 +26,7 @@ Feature: Build and Run commands for CapsulaHub CLI
           |ScalecubeConfigurationProvider     |'http://localhost:3000'|
           |HttpServerConfigurationProvider    |(empty)                |
           |LocalStorageConfigurationProvider  |(empty)                | 
-    When  I run the command `capsulahub run --token="tokenB" --configProvider="<configProvider>"  --port="6666" --dispatcherUrl="<dispatcherUrl>"`# add dispatcherUrl argument in the command only for Scalecube 
+    When  I run the command `capsulahub run --token="tokenB" --configProvider="<configProvider>"  --port="8888" --dispatcherUrl="<dispatcherUrl>"`# add dispatcherUrl argument in the command only for Scalecube 
     Then  an workspace is created using the right configuration provider
 
   #3
@@ -43,12 +43,12 @@ Feature: Build and Run commands for CapsulaHub CLI
   Scenario: Run CapsulaHub instance with the same token on two different ports
     Given a configuration that includes component A
     And   token B that allow access to this configuration
-    And   two valid ports "6666" and "8888"
-    When  I run the command `capsulahub run --token="tokenB" --port="6666"`
+    And   two valid ports "8888" and "8888"
+    When  I run the command `capsulahub run --token="tokenB" --port="8888"`
     And   I run the command `capsulahub run --token="tokenB" --port="8888"`
-    And   two apps are running on two different ports "6666" and "8888"`
+    And   two apps are running on two different ports "8888" and "8888"`
     And   I open the apps in the browser
-    Then  I see component A rendered in the app on port "6666"
+    Then  I see component A rendered in the app on port "8888"
     And   I see component A rendered in the other app on port "8888"
     And   HttpFile is the provider used to get configuration of token B for both workspaces
 
@@ -58,12 +58,12 @@ Feature: Build and Run commands for CapsulaHub CLI
     And   a configuration that includes component A2
     And   token B1 that allow access to configuration with component A1
     And   token B2 that allow access to configuration with component A2
-    And   two valid ports "6666" and "8888"
-    When  I run the command `capsulahub run --token="tokenB1" --port="6666"`
+    And   two valid ports "8888" and "8888"
+    When  I run the command `capsulahub run --token="tokenB1" --port="8888"`
     And   I run the command `capsulahub run --token="tokenB2" --port="8888"`
-    And   two apps are running on two different ports "6666" and "8888"`
+    And   two apps are running on two different ports "8888" and "8888"`
     And   I open the apps in the browser
-    Then  I see component A1 rendered in the app on port "6666"
+    Then  I see component A1 rendered in the app on port "8888"
     And   I see component A2 rendered in the other app on port "8888"
     And   HttpFile is the provider used to get configuration of token B for both workspaces
 
@@ -95,7 +95,7 @@ Feature: Build and Run commands for CapsulaHub CLI
   Scenario: Run CapsulaHub instance twice on the same port
     Given a configuration that includes component A
     And   token B that allow access to this configuration
-    And   a port "6666"
-    When  I run the command `capsulahub run --token="tokenB" --port="6666" `
-    And   I run the command `capsulahub run --token="tokenB" --port="6666" `
+    And   a port "8888"
+    When  I run the command `capsulahub run --token="tokenB" --port="8888" `
+    And   I run the command `capsulahub run --token="tokenB" --port="8888" `
     Then  a relevant error is received

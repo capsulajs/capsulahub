@@ -1,4 +1,8 @@
-const bootstrap = (WORKSPACE: any, SERVICE_CONFIG: any) => {
+import { API } from '@capsulajs/capsulahub-workspace';
+
+declare var publicExports: object;
+
+const bootstrap = (WORKSPACE: API.Workspace, SERVICE_CONFIG: { message: string }) => {
   return new Promise((resolve) => {
     class ServiceA {
       private message: string;
@@ -6,13 +10,8 @@ const bootstrap = (WORKSPACE: any, SERVICE_CONFIG: any) => {
         this.message = message;
       }
 
-      public greet(name: string) {
-        return new Promise((greetResolve, reject) => {
-          if (!name) {
-            reject('No name to greet has been provided :-(');
-          }
-          greetResolve(`Dear ${name}, ${this.message}`);
-        });
+      public getMessage() {
+        return Promise.resolve(`Message from Service A: ${this.message}`);
       }
     }
 
@@ -28,9 +27,7 @@ const bootstrap = (WORKSPACE: any, SERVICE_CONFIG: any) => {
   });
 };
 
-// @ts-ignore
 if (typeof publicExports !== 'undefined') {
-  // @ts-ignore
   publicExports = bootstrap;
 }
 

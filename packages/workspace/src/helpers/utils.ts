@@ -31,9 +31,7 @@ export const getModuleDynamically = <BootstrapResponse>(
 
 export const bootstrapComponent = (componentName: string, WebComponent: INTERNAL_TYPES.CustomWebComponentClass) => {
   customElements.define(componentName, WebComponent);
-  const webComponent = new WebComponent();
-  typeof webComponent.setProps === 'function' && webComponent.setProps();
-  return webComponent;
+  return new WebComponent();
 };
 
 export const initComponent = (
