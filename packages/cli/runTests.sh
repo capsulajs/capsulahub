@@ -15,5 +15,5 @@ pid_server_8888=$!
 "$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/1-capsulahub_run.test.js"
 
 echo "done"
-#kill "$pid_server_1111"
-#kill "$pid_server_8888"
+kill "$pid_server_1111"
+kill "$pid_server_8888"
