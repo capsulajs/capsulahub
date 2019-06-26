@@ -1,4 +1,4 @@
-import { args as constants } from '../../src/helpers/const';
+import { args as constants } from './const';
 
 export const argsValidator = (args: { token: string; configProvider?: string; port?: number }) => {
   const validator = { isValid: true, error: '' };
