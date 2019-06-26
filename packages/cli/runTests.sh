@@ -19,16 +19,20 @@ pid_server_8888=$!
 kill "$pid_server_8888"
 
 ## Success scenario #2
+
 ## localStorage configProvider
-## capsulahub run --token=configuration --configProvider=localStorage --port=8888
-nohup "$BIN"capsulahub run --token=configuration --configProvider=localStorage --port=8888 &>/dev/null &
-pid_server_8888=$!
+## capsulahub run --token=configuration --configProvider=localStorage --port=7777
+nohup "$BIN"capsulahub run --token=configuration --configProvider=localStorage --port=7777 &>/dev/null &
+pid_server_7777=$!
+"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run-local-storage.test.js"
+kill "$pid_server_7777"
+
 ## httpServer configProvider
-## capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpServer --port=8889
-nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpServer --port=8889 &>/dev/null &
-pid_server_8889=$!
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run.test.js"
-kill "$pid_server_8889"
+## capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpServer --port=7778
+nohup "$BIN"capsulahub run --token=http://localhost:1111/configuration --configProvider=httpServer --port=7778 &>/dev/null &
+pid_server_7778=$!
+"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run-http-server.test.js"
+kill "$pid_server_7778"
 
 ## Success scenario #3
 ## capsulahub run --token=http://localhost:1111/port-1111/configuration
