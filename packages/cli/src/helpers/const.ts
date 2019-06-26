@@ -36,4 +36,6 @@ export const messages = {
   appHasBundleError: 'Error while bundling Capsulahub application',
   getAppTempFilesAreNotDeletedError: (tempPath: string) =>
     `Temporary Capsulahub files were not deleted from ${tempPath}`,
+  checkingPort: 'Checking selected port...',
+  portAlreadyInUse: (port: number) => `The selected port ${port} is already in use. Please try another one.`,
 };

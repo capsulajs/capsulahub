@@ -1,4 +1,4 @@
-import { args } from '../../../support/const';
+import { args, messages } from '../../../support/const';
 
 const { cy, describe, it } = global;
 
@@ -43,7 +43,7 @@ describe('Capsulahub run TCs', () => {
         failOnNonZeroExit: false,
       }).then((obj) => {
         expect(obj.code).to.eq(1);
-        expect(obj.stderr).to.contain(args.configProvider.error);
+        expect(obj.stderr).to.contain(messages.portAlreadyInUse(8888));
       });
     });
   });
