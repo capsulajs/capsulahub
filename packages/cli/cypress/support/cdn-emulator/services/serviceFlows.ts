@@ -17,6 +17,7 @@ const bootstrap = (WORKSPACE: API.Workspace) => {
 
         Promise.all([componentReferencePromise, serviceAMessagePromise]).then(
           ([componentReference, serviceAMessage]) => {
+            // @ts-ignore
             componentReference.setProps!(of({ message: serviceAMessage }));
           }
         );

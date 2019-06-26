@@ -31,9 +31,15 @@ export default (runnerOptions: { entryFile: string; port: number }) => {
 
   bundler.on('bundled', () => {
     console.info(messages.appIsBundled);
-    server.listen(port, () => {
-      console.info(messages.getAppIsReady(port));
-    });
+    try {
+      server.listen(port, () => {
+        console.info(messages.getAppIsReady(port));
+      });
+    } catch (error) {
+      console.log('-------------');
+      console.log(error);
+      console.log('-------------');
+    }
   });
 
   bundler.on('buildError', (error: Error) => {
