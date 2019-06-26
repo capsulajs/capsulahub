@@ -55,7 +55,7 @@ describe('Modal TCs', () => {
 
           return cy
             .get('body')
-            .click({ force: true })
+            .click()
             .expectIsModalClosed(modal);
         });
     });

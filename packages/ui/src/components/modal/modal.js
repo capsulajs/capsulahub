@@ -16,10 +16,11 @@ const Container = styled.div`
   padding: 19px;
   width: 548px;
   height: 361px;
-  z-index: 9999;
+  z-index: 10;
 `;
 const Close = styled.div`
   cursor: pointer;
+  z-index: 11;
 `;
 const Header = styled.div`
   display: flex;
@@ -42,9 +43,9 @@ export default class Modal extends React.Component {
     isOpen: this.props.isOpen,
   };
 
-  isToggledFromInside = false;
+  ref = React.createRef();
 
-  setNode = (ref) => (this.node = ReactDOM.findDOMNode(ref));
+  isToggledFromInside = false;
 
   handleClickOutside = (e) => {
     const { onToggle } = this.props;
@@ -64,7 +65,9 @@ export default class Modal extends React.Component {
   };
 
   handleClick = (e) => {
-    if (!this.node || !this.node.contains(e.target)) {
+    const node = ReactDOM.findDOMNode(this.ref.current);
+
+    if (!node || !node.contains(e.target)) {
       this.handleClickOutside(e);
     }
   };
@@ -95,7 +98,7 @@ export default class Modal extends React.Component {
     }
 
     return (
-      <Container data-cy="modal-container" ref={this.setNode}>
+      <Container data-cy="modal-container" ref={this.ref}>
         <Header>
           <div>{title}</div>
           <Close data-cy="modal-close" onClick={this.handleClickOutside}>
