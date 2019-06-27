@@ -1,5 +1,6 @@
 import { API } from '@capsulajs/capsulajs-configuration-service';
 import WorkspaceFactory from '@capsulajs/capsulahub-workspace';
+// @ts-ignore
 import appConfig from '../capsulahub.json';
 
 const config = (appConfig as any)[window.location.port];
