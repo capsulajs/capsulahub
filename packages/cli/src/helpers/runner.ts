@@ -1,11 +1,9 @@
-const os = require('os');
 const rimraf = require('rimraf');
 const Bundler = require('parcel-bundler');
 const express = require('express');
 const net = require('net');
-
 import utils from './utils';
-import { messages } from './const';
+import { getTempPath, messages } from './const';
 
 const server = express();
 
@@ -23,7 +21,7 @@ const exitIfPortBusy = (port: number) => {
 export default (runnerOptions: { entryFile: string; port: number }) => {
   console.info(messages.appIsPending);
 
-  const tempPath = `${os.tmpdir()}/capsulahub`;
+  const tempPath = getTempPath();
   server.use(utils.allowCrossDomainMiddleware);
   server.use(express.static(tempPath));
 

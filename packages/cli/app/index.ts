@@ -1,10 +1,13 @@
 import { API } from '@capsulajs/capsulajs-configuration-service';
 import WorkspaceFactory from '@capsulajs/capsulahub-workspace';
+import appConfig from '../capsulahub.json';
+
+const config = (appConfig as any)[window.location.port];
 
 new WorkspaceFactory()
   .createWorkspace({
-    token: process.env.CAPSULAHUB_TOKEN!,
-    configProvider: process.env.CAPSULAHUB_CONFIG_PROVIDER! as API.ConfigurationProvider,
+    token: (config as any).token,
+    configProvider: (config as any).configProvider as API.ConfigurationProvider,
   })
   .then((workspace) => {
     console.info('Workspace has been created', workspace);

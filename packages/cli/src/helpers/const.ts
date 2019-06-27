@@ -1,3 +1,5 @@
+import os from 'os';
+
 export const args = {
   token: {
     title: 'token',
@@ -39,3 +41,5 @@ export const messages = {
   checkingPort: 'Checking selected port...',
   portAlreadyInUse: (port: number) => `The selected port ${port} is already in use. Please try another one.`,
 };
+
+export const getTempPath = () => `${os.tmpdir()}/capsulahub`;

@@ -23,6 +23,8 @@ Cypress.Commands.add('testDefaultCapsulahubApp', (appPort, cdnPort = 1111) => {
     })
     .testCapsulahubAppRender(`PORT ${cdnPort} HTTP File`)
     .then(() => {
-      expect(fetchSpy.firstCall.args[0]).to.equal(`http://localhost:1111/port-${cdnPort}/configuration/workspace.json`);
+      expect(fetchSpy.firstCall.args[0]).to.equal(
+        `http://localhost:${cdnPort}/port-${cdnPort}/configuration/workspace.json`
+      );
     });
 });

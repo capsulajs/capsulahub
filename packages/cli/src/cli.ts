@@ -2,9 +2,11 @@
 
 import { configurationTypes } from '@capsulajs/capsulajs-configuration-service';
 import commander from 'commander';
+import fs from 'fs';
 import path from 'path';
 import { args } from './helpers/const';
 import { argsValidator } from './helpers/validators';
+import * as API from './helpers/types';
 
 commander
   .command('run')
@@ -21,13 +23,33 @@ commander
     }
     const runner = require('./helpers/runner').default;
     const { token, port = 55555, configProvider = configurationTypes.httpFile } = opts;
-    process.env.CAPSULAHUB_TOKEN = token;
-    process.env.CAPSULAHUB_CONFIG_PROVIDER = configProvider;
 
-    runner({
-      entryFile: path.join(__dirname, '..', 'app', 'index.html'),
-      token,
-      port,
+    const appConfigPath = './capsulahub.json';
+
+    fs.readFile(appConfigPath, (_, oldAppConfigBuffer) => {
+      let content: API.AppConfig;
+      const newContent: API.AppConfig = {
+        [port]: {
+          token,
+          configProvider,
+        },
+      };
+      content = newContent;
+
+      if (oldAppConfigBuffer) {
+        content = {
+          ...JSON.parse(oldAppConfigBuffer.toString()),
+          ...newContent,
+        };
+      }
+
+      fs.writeFile(appConfigPath, JSON.stringify(content), () => {
+        runner({
+          entryFile: path.join(__dirname, '..', 'app', 'index.html'),
+          token,
+          port,
+        });
+      });
     });
   });
 
