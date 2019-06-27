@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e -v
 
 BIN='../../node_modules/.bin/'
 
@@ -68,6 +69,13 @@ pid_server_4321=$!
 "$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/5-capsulahub_run.test.js"
 kill "$pid_server_1234"
 kill "$pid_server_4321"
+
+## Negative scenario #4
+## capsulahub run --token=http://localhost:1111/port-1111/configuration --port=1234
+nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration --port=8888 &>/dev/null &
+pid_server_8888=$!
+"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/negative/4-capsulahub_run.test.js"
+kill "$pid_server_8888"
 
 ## Close CDN-emulator
 kill "$pid_server_1111"
