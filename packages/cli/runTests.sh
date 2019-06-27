@@ -5,7 +5,7 @@ BIN='../../node_modules/.bin/'
 EXIT_CODE=0
 
 did_test_failed() {
-    [[ -ne 0 ]] && (($EX_CODE++)) && echo "Last test exited with non-zer0 code."
+    [[ "$?" -ne 0 ]] && (($EX_CODE++)) && echo "Last test exited with non-zer0 code."
 }
 
 ## Building extensions
@@ -27,7 +27,7 @@ pid_server_1111=$!
 
 ## Run Success scenario #1
 ## capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpFile --port=8888
-nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpFile --port=8889 &>/dev/null &
+nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpFile --port=8888 &>/dev/null &
 pid_server_8888=$!
 "$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/1-capsulahub_run.test.js"
 did_test_failed
