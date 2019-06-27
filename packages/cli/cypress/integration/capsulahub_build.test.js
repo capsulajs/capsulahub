@@ -3,6 +3,7 @@ import { args } from '../support/const';
 const { cy, describe, it } = global;
 
 describe('Capsulahub build TCs', () => {
+  // ++++++++++++++ Positive Test Cases ++++++++++++++
   it('Run `capsulahub build` with specifying valid arguments (check for HttpFile provider)', () => {
     cy.exec('capsulahub build --token=http://localhost:3000/configuration --output=outputDir').then(() => {
       cy.exec('ls').then(({ stdout }) => expect(stdout).to.contain('outputDir'));
@@ -51,6 +52,7 @@ describe('Capsulahub build TCs', () => {
     });
   });
 
+  // -------------- Negative Test Cases --------------
   it('Run `capsulahub build` with a non-existent configProvider throws an error', () => {
     cy.exec('capsulahub build --token=http://localhost:3000/configuration --configProvider=test', {
       failOnNonZeroExit: false,
