@@ -8,6 +8,7 @@ module.exports = (env) => ({
     'services/serviceFlows': './cypress/support/cdn-emulator/services/serviceFlows.ts',
     'widgets/Grid': './cypress/support/cdn-emulator/widgets/Grid.tsx',
     'widgets/ComponentA': './cypress/support/cdn-emulator/widgets/ComponentA.tsx',
+    'widgets/ComponentB': './cypress/support/cdn-emulator/widgets/ComponentB.tsx',
   },
   output: {
     path: path.resolve(__dirname, 'cdn-emulator'),

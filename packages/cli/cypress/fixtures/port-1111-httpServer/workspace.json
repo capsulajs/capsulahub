@@ -41,7 +41,10 @@
         "componentName": "web-grid",
         "nodeId": "web-grid",
         "path": "http://localhost:1111/widgets/Grid.js",
-        "config": { "title": "Base Grid from PORT 1111 HTTP Server" }
+        "config": {
+          "title": "Base Grid from PORT 1111 HTTP Server",
+          "innerComponentId": "web-component-a"
+        }
       }
     },
     "items": {

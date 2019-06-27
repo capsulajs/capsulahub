@@ -41,15 +41,18 @@
         "componentName": "web-grid",
         "nodeId": "web-grid",
         "path": "http://localhost:4444/widgets/Grid.js",
-        "config": { "title": "Base Grid from PORT 4444 HTTP File" }
+        "config": {
+          "title": "Base Grid from PORT 4444 HTTP File",
+          "innerComponentId": "web-component-b"
+        }
       }
     },
     "items": {
-      "web-component-a": {
-        "componentName": "web-component-a",
-        "nodeId": "web-component-a",
-        "path": "http://localhost:4444/widgets/ComponentA.js",
-        "config": { "name": "ComponentA(PORT 4444 HTTP File)" }
+      "web-component-b": {
+        "componentName": "web-component-b",
+        "nodeId": "web-component-b",
+        "path": "http://localhost:4444/widgets/ComponentB.js",
+        "config": {}
       }
     }
   }

@@ -1,4 +1,4 @@
-import { args, messages } from '../../../support/const';
+import { args } from '../../../support/const';
 
 const { cy, describe, it } = global;
 
