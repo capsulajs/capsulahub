@@ -9,7 +9,11 @@ describe('Capsulahub run TCs #2 success (HTTPServer)', () => {
           response: configuration,
           url: 'http://localhost:1111/configuration/workspace',
         })
-        .visit(`http://localhost:7778`)
+        .visit('http://localhost:7778', {
+          retryOnNetworkFailure: true,
+          retryOnStatusCodeFailure: true,
+          timeout: 30000,
+        })
         .testCapsulahubAppRender('PORT 1111 HTTP Server');
     });
   });

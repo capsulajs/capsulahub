@@ -53,16 +53,23 @@ kill "$pid_server_1234"
 kill "$pid_server_4321"
 
 ## Success scenario #5
-## capsulahub run --token=http://localhost:1111/port-1111/configuration --port=1234
+
+## Preparing CDN emulation for extensions and configuration for HTTPFile provider on PORT 4444
+"$BIN"cpy cypress/fixtures/port-4444-httpFile/workspace.json cdn-emulator/port-4444/configuration
+nohup "$BIN"http-server cdn-emulator -p 4444 --cors &>/dev/null &
+pid_server_4444=$!
+
+# capsulahub run --token=http://localhost:1111/port-1111/configuration --port=1234
 nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration --port=1234 &>/dev/null &
 pid_server_1234=$!
 ## capsulahub run --token=http://localhost:4444/port-1111/configuration --port=4321
-nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration --port=4321 &>/dev/null &
+nohup "$BIN"capsulahub run --token=http://localhost:4444/port-4444/configuration --port=4321 &>/dev/null &
 pid_server_4321=$!
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/4-capsulahub_run.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/5-capsulahub_run.test.js"
 kill "$pid_server_1234"
 kill "$pid_server_4321"
 
 ## Close CDN-emulator
 kill "$pid_server_1111"
+kill "$pid_server_4444"
 

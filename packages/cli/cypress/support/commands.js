@@ -14,6 +14,9 @@ Cypress.Commands.add('testDefaultCapsulahubApp', (appPort, cdnPort = 1111) => {
 
   return cy
     .visit(`http://localhost:${appPort}`, {
+      retryOnNetworkFailure: true,
+      retryOnStatusCodeFailure: true,
+      timeout: 30000,
       onBeforeLoad(win) {
         fetchSpy = cy.spy(win, 'fetch');
       },
