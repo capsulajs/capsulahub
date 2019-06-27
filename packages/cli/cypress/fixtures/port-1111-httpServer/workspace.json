@@ -19,7 +19,9 @@
         "serviceName": "ServiceFlows",
         "methods": {}
       },
-      "config": {}
+      "config": {
+        "componentName": "web-component-a"
+      }
     },
     {
       "serviceName": "RendererService",
