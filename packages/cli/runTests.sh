@@ -5,7 +5,8 @@ BIN='../../node_modules/.bin/'
 EXIT_CODE=0
 
 did_test_failed() {
-    [[ "$?" -ne 0 ]] && (($EX_CODE++)) && echo "Last test exited with non-zer0 code."
+    [[ "$?" -gt 0 ]] && ((EXIT_CODE++))
+    echo "Last test exited with non-zer0 code."
 }
 
 ## Building extensions
@@ -113,6 +114,7 @@ did_test_failed
 ## Close CDN-emulator
 kill "$pid_server_1111"
 kill "$pid_server_4444"
+rm -rf dist/ outputDir/
 
 echo "$EXIT_CODE"
 exit "$EXIT_CODE"
