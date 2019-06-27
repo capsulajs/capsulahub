@@ -1,17 +1,16 @@
-import { API } from '@capsulajs/capsulajs-configuration-service';
+import { API as CONFIGURATION_SERVICE_API } from '@capsulajs/capsulajs-configuration-service';
 import WorkspaceFactory from '@capsulajs/capsulahub-workspace';
-// @ts-ignore
-import appConfig from '../capsulahub.json';
+import * as API from '../src/helpers/types';
 
-const config = (appConfig as any)[window.location.port];
+const appConfig: API.AppConfig = require('../capsulahub.json');
+const config = appConfig[window.location.port];
 
 new WorkspaceFactory()
   .createWorkspace({
-    token: (config as any).token,
-    configProvider: (config as any).configProvider as API.ConfigurationProvider,
-  })
-  .then((workspace) => {
-    console.info('Workspace has been created', workspace);
+    token: process.env.CAPSULAHUB_TOKEN || config.token,
+    configProvider:
+      (process.env.CAPSULAHUB_CONFIG_PROVIDER as CONFIGURATION_SERVICE_API.ConfigurationProvider) ||
+      config.configProvider,
   })
   .catch((error) => {
     console.info('error while creating a Workspace', error);
