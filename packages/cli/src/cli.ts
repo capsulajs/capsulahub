@@ -24,7 +24,7 @@ commander
     const runner = require('./helpers/runner').default;
     const { token, port = 55555, configProvider = configurationTypes.httpFile } = opts;
 
-    const appConfigPath = './capsulahub.json';
+    const appConfigPath = path.resolve(__filename, '..', 'capsulahub.json');
 
     fs.readFile(appConfigPath, (_, oldAppConfigBuffer) => {
       let content: API.AppConfig;
