@@ -35,16 +35,4 @@ describe('Capsulahub run TCs', () => {
       expect(obj.stderr).to.contain(args.configProvider.error);
     });
   });
-
-  // TODO Extract it in a separate file - need to run the app firstly
-  it('Run CapsulaHub instance twice on the same port', () => {
-    cy.exec('capsulahub run --token=http://localhost:3000/configuration --port=8888').then(() => {
-      cy.exec('capsulahub run --token=http://localhost:3000/configuration --port=8888', {
-        failOnNonZeroExit: false,
-      }).then((obj) => {
-        expect(obj.code).to.eq(1);
-        expect(obj.stderr).to.contain(messages.portAlreadyInUse(8888));
-      });
-    });
-  });
 });
