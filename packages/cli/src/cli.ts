@@ -22,7 +22,7 @@ commander
       process.exit(1);
     }
     const runner = require('./helpers/runner').default;
-    const { token, port = 55555, configProvider = configurationTypes.httpFile } = opts;
+    const { token, port = 55555, configProvider = configurationTypes.httpFile, dispatcherUrl } = opts;
 
     const tempPath = getTempPath();
     const appConfigPath = path.resolve(tempPath, 'app-config.json');
@@ -39,6 +39,7 @@ commander
         [port]: {
           token,
           configProvider,
+          dispatcherUrl,
         },
       };
       content = newContent;

@@ -11,7 +11,8 @@ new WorkspaceFactory()
     configProvider:
       (process.env.CAPSULAHUB_CONFIG_PROVIDER as CONFIGURATION_SERVICE_API.ConfigurationProvider) ||
       config.configProvider,
+    dispatcherUrl: process.env.CAPSULAHUB_DISPATCHER_URL || config.dispatcherUrl,
   })
-  .catch((error) => {
+  .catch((error: Error) => {
     console.info('error while creating a Workspace', error);
   });

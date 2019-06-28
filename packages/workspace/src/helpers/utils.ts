@@ -1,4 +1,5 @@
 import { ConfigurationService, API as CONFIGURATION_SERVICE_API } from '@capsulajs/capsulajs-configuration-service';
+import { AxiosDispatcher } from '@capsulajs/capsulajs-transport-providers';
 import { API } from '..';
 import * as INTERNAL_TYPES from './types';
 import {
@@ -11,8 +12,18 @@ import {
 
 export const getConfigurationService = (
   token: string,
-  ConfigurationServiceClass: CONFIGURATION_SERVICE_API.ConfigurationProviderClass
-): ConfigurationService<API.WorkspaceConfig> => new ConfigurationServiceClass(token);
+  ConfigurationServiceClass: CONFIGURATION_SERVICE_API.ConfigurationProviderClass,
+  dispatcherUrl?: string
+): ConfigurationService<API.WorkspaceConfig> => {
+  const args: (string | AxiosDispatcher)[] = [token];
+  if (dispatcherUrl) {
+    args.push(new AxiosDispatcher(dispatcherUrl));
+  }
+
+  console.log('create configuration service class', args);
+
+  return new ConfigurationServiceClass(...args);
+};
 
 export const dynamicImport = (path: string) => import(path).then((module) => module.default);
 

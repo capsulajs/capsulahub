@@ -9,4 +9,8 @@ export default interface CreateWorkspaceRequest {
    * @default "httpFile"
    */
   configProvider?: API.ConfigurationProvider;
+  /**
+   * Dispatcher url, that will be used in "scalecube" config provider
+   */
+  dispatcherUrl?: string;
 }

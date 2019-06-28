@@ -34,7 +34,8 @@ export default class WorkspaceFactory implements API.WorkspaceFactory {
               typeof createWorkspaceRequest.configProvider !== 'undefined'
                 ? createWorkspaceRequest.configProvider
                 : 'httpFile',
-          })
+          }),
+          createWorkspaceRequest.dispatcherUrl
         );
       } catch (error) {
         reject(getErrorWithModifiedMessage(error, configNotLoadedError(error)));

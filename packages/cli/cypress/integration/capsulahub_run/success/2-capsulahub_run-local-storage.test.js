@@ -8,7 +8,6 @@ describe('Capsulahub run TCs #2 success (Local Storage)', () => {
       cy.visit(`http://localhost:7777`, {
         retryOnNetworkFailure: true,
         retryOnStatusCodeFailure: true,
-        timeout: 30000,
         onBeforeLoad(win) {
           win.localStorage.setItem('configuration.workspace', JSON.stringify(configuration));
           getItemSpy = cy.spy(win.localStorage, 'getItem');

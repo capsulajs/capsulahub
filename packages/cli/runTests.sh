@@ -69,6 +69,15 @@ waitport 7779
 did_test_failed
 kill "$pid_server_7779"
 
+## scalecube configProvider
+## capsulahub run --token="secretToken" --configProvider=scalecube --port=7780
+nohup "$BIN"capsulahub run --token="secretToken" --dispatcherUrl="http//localhost:4000" --configProvider=scalecube --port=7780 &>/dev/null &
+pid_server_7780=$!
+waitport 7780
+"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run-scalecube.test.js"
+did_test_failed
+kill "$pid_server_7780"
+
 ## Run Success scenario #3
 ## capsulahub run --token=http://localhost:1111/port-1111/configuration
 nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration &>/dev/null &

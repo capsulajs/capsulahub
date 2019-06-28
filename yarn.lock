@@ -1098,7 +1098,7 @@
   dependencies:
     "@capsulajs/capsulajs-transport-providers" "^0.1.1"
 
-"@capsulajs/capsulajs-configuration-service@^0.1.12":
+"@capsulajs/capsulajs-configuration-service@0.1.12", "@capsulajs/capsulajs-configuration-service@^0.1.12":
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/@capsulajs/capsulajs-configuration-service/-/capsulajs-configuration-service-0.1.12.tgz#7ebec19b2b47ab0f1d57da22ce70f653faab0652"
   integrity sha512-IKk0/fUWiacO8kGr29i9GfXl0XDzsHz7kgRKsycnkN1yroe9TghGt8V8Kjz+4yIx5fZNZAeSOnCHhOOX/iUViQ==
