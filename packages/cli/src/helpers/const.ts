@@ -1,4 +1,4 @@
-import os from 'os';
+import path from 'path';
 
 export const args = {
   token: {
@@ -42,4 +42,4 @@ export const messages = {
   portAlreadyInUse: (port: number) => `The selected port ${port} is already in use. Please try another one.`,
 };
 
-export const getTempPath = () => `${os.tmpdir()}/capsulahub`;
+export const getTempPath = () => path.resolve(__filename, '..', '..', 'temp');

@@ -4,7 +4,7 @@ import { configurationTypes } from '@capsulajs/capsulajs-configuration-service';
 import commander from 'commander';
 import fs from 'fs';
 import path from 'path';
-import { args } from './helpers/const';
+import { args, getTempPath } from './helpers/const';
 import { argsValidator } from './helpers/validators';
 import * as API from './helpers/types';
 
@@ -24,7 +24,9 @@ commander
     const runner = require('./helpers/runner').default;
     const { token, port = 55555, configProvider = configurationTypes.httpFile } = opts;
 
-    const appConfigPath = path.resolve(__filename, '..', 'capsulahub.json');
+    const appConfigPath = path.resolve(getTempPath(), 'app-config.json');
+
+    console.log('appConfigPath', appConfigPath);
 
     fs.readFile(appConfigPath, (_, oldAppConfigBuffer) => {
       let content: API.AppConfig;

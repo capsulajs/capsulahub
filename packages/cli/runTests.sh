@@ -52,6 +52,14 @@ pid_server_7778=$!
 did_test_failed
 kill "$pid_server_7778"
 
+## localFile configProvider
+## capsulahub run --token="./cypress/fixtures/port-1111-localFile/workspace.json" --configProvider=localFile --port=7779
+nohup "$BIN"capsulahub run --token="./cypress/fixtures/port-1111-localFile/workspace.json" --configProvider=localFile --port=7779 &>/dev/null &
+pid_server_7779=$!
+"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run-local-file.test.js"
+did_test_failed
+kill "$pid_server_7779"
+
 ## Run Success scenario #3
 ## capsulahub run --token=http://localhost:1111/port-1111/configuration
 nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration &>/dev/null &

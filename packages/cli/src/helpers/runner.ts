@@ -1,4 +1,5 @@
 const rimraf = require('rimraf');
+const path = require('path');
 const Bundler = require('parcel-bundler');
 const express = require('express');
 const net = require('net');
@@ -21,11 +22,10 @@ const exitIfPortBusy = (port: number) => {
 export default (runnerOptions: { entryFile: string; port: number }) => {
   console.info(messages.appIsPending);
 
-  const tempPath = getTempPath();
+  const { entryFile, port } = runnerOptions;
+  const tempPath = path.resolve(getTempPath(), `port-${port}`);
   server.use(utils.allowCrossDomainMiddleware);
   server.use(express.static(tempPath));
-
-  const { entryFile, port } = runnerOptions;
 
   exitIfPortBusy(port);
 
