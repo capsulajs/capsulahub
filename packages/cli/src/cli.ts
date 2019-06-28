@@ -37,10 +37,15 @@ commander
       content = newContent;
 
       if (oldAppConfigBuffer) {
+        console.log('JSON.parse(oldAppConfigBuffer.toString())', JSON.parse(oldAppConfigBuffer.toString()));
+        console.log('newContent', newContent);
+
         content = {
           ...JSON.parse(oldAppConfigBuffer.toString()),
           ...newContent,
         };
+
+        console.log('content', content);
       }
 
       fs.writeFile(appConfigPath, JSON.stringify(content), () => {
