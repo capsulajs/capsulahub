@@ -24,9 +24,14 @@ commander
     const runner = require('./helpers/runner').default;
     const { token, port = 55555, configProvider = configurationTypes.httpFile } = opts;
 
-    const appConfigPath = path.resolve(getTempPath(), 'app-config.json');
+    const tempPath = getTempPath();
+    const appConfigPath = path.resolve(tempPath, 'app-config.json');
 
-    console.log('appConfigPath', appConfigPath);
+    try {
+      fs.readdirSync(tempPath);
+    } catch (error) {
+      fs.mkdirSync(tempPath);
+    }
 
     fs.readFile(appConfigPath, (_, oldAppConfigBuffer) => {
       let content: API.AppConfig;

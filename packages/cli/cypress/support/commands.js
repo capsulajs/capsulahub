@@ -37,7 +37,6 @@ Cypress.Commands.add('testCapsulahubAppHttpFile', (appPort, cdnPort = 1111, comp
     .visit(`http://localhost:${appPort}`, {
       retryOnNetworkFailure: true,
       retryOnStatusCodeFailure: true,
-      timeout: 30000,
       onBeforeLoad(win) {
         fetchSpy = cy.spy(win, 'fetch');
       },

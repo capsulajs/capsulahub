@@ -12,7 +12,7 @@
     "capsulahub": "./bin/cli.js"
   },
   "scripts": {
-    "build": "rimraf lib && tsc --build tsconfig-cli.json && node setBinPermission.js && cpy app-config.json bin/temp",
+    "build": "rimraf lib && tsc --build tsconfig-cli.json && node setBinPermission.js",
     "start": "rimraf lib && tsc --build tsconfig-cli.json --watch",
     "test": "npm-run-all -p -r start cypress:run",
     "test:debug": "npm-run-all -p -r start-cdn-emulator-1111 capsulahub-run cypress:debug",
