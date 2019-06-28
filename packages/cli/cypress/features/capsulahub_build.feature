@@ -44,19 +44,23 @@ Feature: Build and Run commands for CapsulaHub CLI
     When  I run the command `capsulahub build --token="tokenB" --configProvider="configProvider" `
     And   "configProvider" is not in the list of available configuration types
     Then  a relevant error is received
-
   #2
-  Scenario: Run `capsulahub build` without token throws an error
+  Scenario: Run `capsulahub build` with `--configProvider=` argument and without providing configProvider - throws an error
     Given configuration A
     And   token B that allow access to this configuration
-    When  I run the command `capsulahub build` without token
+    When  I run the command `capsulahub build --token="tokenB" --configProvider=`
+    Then  a relevant error is received
+  #3
+  Scenario: Run `capsulahub build` with `--token=` argument and without providing token - throws an error
+    Given configuration A
+    And   token B that allow access to this configuration
+    When  I run the command `capsulahub build --token=` without token
     Then  a relevant error is received
 
-  #3
-  Scenario: Run `capsulahub build` with non-existent output throws an error
+  #4
+  Scenario: Run `capsulahub build` with `--output=` argument and without providing an output path - throws an error
     Given configuration A
     And   token B that allow access to this configuration
-    And   "invalidOutput" is an output path that doesn't exist
-    When  I run the command `capsulahub build --token="tokenB" --output="invalidOutput" `
+    When  I run the command `capsulahub build --token="tokenB" --output= `
     Then  a relevant error is received
 
