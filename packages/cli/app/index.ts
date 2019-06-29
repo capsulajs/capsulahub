@@ -2,7 +2,7 @@ import { API as CONFIGURATION_SERVICE_API } from '@capsulajs/capsulajs-configura
 import WorkspaceFactory from '@capsulajs/capsulahub-workspace';
 import * as API from '../src/helpers/types';
 
-const appConfig: API.AppConfig = require('../bin/temp/app-config.json');
+const appConfig: API.AppConfig = require('../bin/app-config.json');
 const config = appConfig[window.location.port];
 
 new WorkspaceFactory()

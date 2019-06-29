@@ -24,37 +24,22 @@ commander
     const runner = require('./helpers/runner').default;
     const { token, port = 55555, configProvider = configurationTypes.httpFile, dispatcherUrl } = opts;
 
-    const tempPath = getTempPath();
-    const appConfigPath = path.resolve(tempPath, 'app-config.json');
+    const appConfigPath = path.resolve(getTempPath(), '..', 'app-config.json');
 
-    try {
-      fs.readdirSync(tempPath);
-    } catch (error) {
-      fs.mkdirSync(tempPath);
-    }
+    fs.readFile(appConfigPath, (readFileError, oldAppConfigBuffer) => {
+      if (readFileError) {
+        console.error(`Error while updating app configs: ${readFileError}`);
+        process.exit(1);
+      }
 
-    fs.readFile(appConfigPath, (_, oldAppConfigBuffer) => {
-      let content: API.AppConfig;
-      const newContent: API.AppConfig = {
+      const content: API.AppConfig = {
+        ...JSON.parse(oldAppConfigBuffer.toString()),
         [port]: {
           token,
           configProvider,
           dispatcherUrl,
         },
       };
-      content = newContent;
-
-      if (oldAppConfigBuffer) {
-        console.log('JSON.parse(oldAppConfigBuffer.toString())', JSON.parse(oldAppConfigBuffer.toString()));
-        console.log('newContent', newContent);
-
-        content = {
-          ...JSON.parse(oldAppConfigBuffer.toString()),
-          ...newContent,
-        };
-
-        console.log('content', content);
-      }
 
       fs.writeFile(appConfigPath, JSON.stringify(content), () => {
         runner({
@@ -80,9 +65,10 @@ commander
       process.exit(1);
     }
     const builder = require('./helpers/builder').default;
-    const { token, output = './dist', configProvider = configurationTypes.httpFile } = opts;
+    const { token, output = './dist', configProvider = configurationTypes.httpFile, dispatcherUrl } = opts;
     process.env.CAPSULAHUB_TOKEN = token;
     process.env.CAPSULAHUB_CONFIG_PROVIDER = configProvider;
+    process.env.CAPSULAHUB_DISPATCHER_URL = dispatcherUrl;
 
     builder({
       entryFile: path.join(__dirname, '..', 'app', 'index.html'),

@@ -20,6 +20,7 @@ export const args = {
   dispatcherUrl: {
     title: 'dispatcherUrl',
     description: 'The url of the dispatcher for those providers that use dispatcher (optional)',
+    error: '"scalecube" configProvider requires dispatcherUrl',
   },
   output: {
     title: 'output',

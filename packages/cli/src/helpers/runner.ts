@@ -1,8 +1,8 @@
-const rimraf = require('rimraf');
-const path = require('path');
-const Bundler = require('parcel-bundler');
-const express = require('express');
-const net = require('net');
+import rimraf from 'rimraf';
+import path from 'path';
+import Bundler from 'parcel-bundler';
+import express from 'express';
+import net from 'net';
 import utils from './utils';
 import { getTempPath, messages } from './const';
 
@@ -36,7 +36,7 @@ export default (runnerOptions: { entryFile: string; port: number }) => {
     contentHash: false,
     minify: false,
     sourceMaps: false,
-    logLevel: 1,
+    logLevel: 1 as 1,
   };
 
   const bundler = new Bundler(entryFile, options);
@@ -57,7 +57,7 @@ export default (runnerOptions: { entryFile: string; port: number }) => {
   process.on('SIGINT', () => {
     rimraf(tempPath, (err: Error) => {
       if (err) {
-        console.log(messages.getAppTempFilesAreNotDeletedError(tempPath), err);
+        console.error(messages.getAppTempFilesAreNotDeletedError(tempPath), err);
       }
       process.exit(0);
     });

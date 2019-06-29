@@ -1,3 +1,5 @@
+import { args } from './const';
+
 const { Cypress, cy } = global;
 
 Cypress.Commands.add('testCapsulahubAppRender', (customText, componentName = 'componentA') => {
@@ -47,4 +49,56 @@ Cypress.Commands.add('testCapsulahubAppHttpFile', (appPort, cdnPort = 1111, comp
         `http://localhost:${cdnPort}/port-${cdnPort}/configuration/workspace.json`
       );
     });
+});
+
+Cypress.Commands.add('testTokenValidation', (command, token = undefined) => {
+  let fullCommand = `capsulahub ${command}`;
+  if (typeof token !== 'undefined') {
+    fullCommand += ` --token=${token}`;
+  }
+  cy.exec(fullCommand, {
+    failOnNonZeroExit: false,
+  }).then((obj) => {
+    expect(obj.code).to.eq(1);
+    expect(obj.stderr).to.contain(args.token.error);
+  });
+});
+
+Cypress.Commands.add('testPortValidation', (command, port) => {
+  cy.exec(`capsulahub ${command} --token=http://localhost:3000/configuration --port=${port}`, {
+    failOnNonZeroExit: false,
+  }).then((obj) => {
+    expect(obj.code).to.eq(1);
+    expect(obj.stderr).to.contain(args.port.error);
+  });
+});
+
+Cypress.Commands.add('testConfigProviderValidation', (command, configProvider) => {
+  cy.exec(`capsulahub ${command} --token=http://localhost:3000/configuration --configProvider=${configProvider}`, {
+    failOnNonZeroExit: false,
+  }).then((obj) => {
+    expect(obj.code).to.eq(1);
+    expect(obj.stderr).to.contain(args.configProvider.error);
+  });
+});
+
+Cypress.Commands.add('testDispatcherUrlValidation', (command, dispatcherUrl) => {
+  cy.exec(
+    `capsulahub ${command} --token=http://localhost:3000/configuration --configProvider=scalecube --dispatcherUrl=${dispatcherUrl}`,
+    {
+      failOnNonZeroExit: false,
+    }
+  ).then((obj) => {
+    expect(obj.code).to.eq(1);
+    expect(obj.stderr).to.contain(args.dispatcherUrl.error);
+  });
+});
+
+Cypress.Commands.add('testOutputValidation', (command, output) => {
+  cy.exec(`capsulahub ${command} --token=http://localhost:3000/configuration --output=${output}`, {
+    failOnNonZeroExit: false,
+  }).then((obj) => {
+    expect(obj.code).to.eq(1);
+    expect(obj.stderr).to.contain(args.output.error);
+  });
 });

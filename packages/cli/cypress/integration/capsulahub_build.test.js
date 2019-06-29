@@ -20,14 +20,13 @@ describe('Capsulahub build TCs', () => {
         expect(code).to.eq(0)
       );
     });
-    // Note: dispatcherUrl is not checked by the cli
     cy.exec(
       'capsulahub build --token=http://localhost:3000/configuration --configProvider=scalecube --dispatcherUrl=http://dispatcher'
     ).then(() => {
       cy.exec('ls').then(({ stdout }) => expect(stdout).to.contain('dist'));
-      cy.exec('cat dist/app.*.js | grep \'createWorkspace({.*configProvider:"scalecube"\'').then(({ code }) =>
-        expect(code).to.eq(0)
-      );
+      cy.exec(
+        'cat dist/app.*.js | grep \'createWorkspace({.*configProvider:"scalecube".*dispatcherUrl:"http://dispatcher"\''
+      ).then(({ code }) => expect(code).to.eq(0));
     });
     cy.exec('capsulahub build --token=http://localhost:3000/configuration --configProvider=httpServer').then(() => {
       cy.exec('ls').then(({ stdout }) => expect(stdout).to.contain('dist'));
@@ -54,27 +53,22 @@ describe('Capsulahub build TCs', () => {
 
   // -------------- Negative Test Cases --------------
   it('Run `capsulahub build` with a non-existent configProvider throws an error', () => {
-    cy.exec('capsulahub build --token=http://localhost:3000/configuration --configProvider=test', {
-      failOnNonZeroExit: false,
-    }).then((obj) => {
-      expect(obj.code).to.eq(1);
-      expect(obj.stderr).to.contain(args.configProvider.error);
-    });
+    cy.testConfigProviderValidation('build', 'test')
+      .testConfigProviderValidation('build', '')
+      .testConfigProviderValidation('build', ' ');
   });
 
   it('Run `capsulahub build` without token throws an error', () => {
-    cy.exec('capsulahub build', { failOnNonZeroExit: false }).then((obj) => {
-      expect(obj.code).to.eq(1);
-      expect(obj.stderr).to.contain(args.token.error);
-    });
+    cy.testTokenValidation('build')
+      .testTokenValidation('build', '')
+      .testTokenValidation('build', ' ');
+  });
+
+  it('Build CapsulaHub instance with a non-existent dispatcherUrl for "scalecube" configProvider throws an error', () => {
+    cy.testDispatcherUrlValidation('build', '').testDispatcherUrlValidation('build', ' ');
   });
 
   it('Run `capsulahub build` with non-existent output throws an error', () => {
-    cy.exec('capsulahub build --token=http://localhost:3000/configuration --output= ', {
-      failOnNonZeroExit: false,
-    }).then((obj) => {
-      expect(obj.code).to.eq(1);
-      expect(obj.stderr).to.contain(args.output.error);
-    });
+    cy.testOutputValidation('build', '').testOutputValidation('build', ' ');
   });
 });

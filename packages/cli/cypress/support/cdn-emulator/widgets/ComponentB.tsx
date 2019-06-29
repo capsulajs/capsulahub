@@ -22,7 +22,7 @@ const bootstrap = (_: API.Workspace) => {
         this.props$ = new BehaviorSubject({ message: '' });
       }
 
-      connectedCallback() {
+      public connectedCallback() {
         this.props$.subscribe((props: { message: string }) => {
           document.getElementById(messageId)!.innerText = props.message;
         });

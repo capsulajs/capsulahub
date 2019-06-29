@@ -1,6 +1,5 @@
-const Bundler = require('parcel-bundler');
-const rimraf = require('rimraf');
-
+import Bundler from 'parcel-bundler';
+import rimraf from 'rimraf';
 import { messages } from './const';
 
 export default (builderOptions: { entryFile: string; output: string }) => {
@@ -16,7 +15,7 @@ export default (builderOptions: { entryFile: string; output: string }) => {
       contentHash: false,
       minify: true,
       sourceMaps: false,
-      logLevel: 3,
+      logLevel: 3 as 3,
       detailedReport: true,
     };
 
