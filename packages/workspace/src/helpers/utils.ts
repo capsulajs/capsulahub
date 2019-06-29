@@ -15,12 +15,10 @@ export const getConfigurationService = (
   ConfigurationServiceClass: CONFIGURATION_SERVICE_API.ConfigurationProviderClass,
   dispatcherUrl?: string
 ): ConfigurationService<API.WorkspaceConfig> => {
-  const args: (string | AxiosDispatcher)[] = [token];
+  const args: Array<string | AxiosDispatcher> = [token];
   if (dispatcherUrl) {
     args.push(new AxiosDispatcher(dispatcherUrl));
   }
-
-  console.log('create configuration service class', args);
 
   return new ConfigurationServiceClass(...args);
 };

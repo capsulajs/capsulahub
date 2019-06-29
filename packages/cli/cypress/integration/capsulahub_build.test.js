@@ -1,5 +1,3 @@
-import { args } from '../support/const';
-
 const { cy, describe, it } = global;
 
 describe('Capsulahub build TCs', () => {
