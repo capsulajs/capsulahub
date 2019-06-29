@@ -1,3 +1,4 @@
+import { configurationTypes } from '@capsulajs/capsulajs-configuration-service';
 import { API } from '..';
 
 export const validateWorkspaceConfig = (workspaceConfig: any): boolean => {
@@ -12,6 +13,16 @@ export const validateCreateWorkspaceRequestToken = (createWorkspaceRequest: any)
     typeof createWorkspaceRequest.token !== 'string' ||
     !createWorkspaceRequest.token.trim()
   );
+};
+
+export const validateCreateWorkspaceRequestScalecubeConfigProvider = (createWorkspaceRequest: any): boolean => {
+  const { configProvider, dispatcherUrl } = createWorkspaceRequest;
+  if (configProvider === configurationTypes.scalecube) {
+    if (!dispatcherUrl || typeof dispatcherUrl !== 'string' || !dispatcherUrl.trim()) {
+      return false;
+    }
+  }
+  return true;
 };
 
 export const validateRegisterServiceRequest = (registerServiceRequest: any): boolean => {

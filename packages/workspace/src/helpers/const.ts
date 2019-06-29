@@ -6,6 +6,9 @@ export const configNotLoadedError = (error: Error) => `Workspace configuration c
 
 export const createWorkspaceWrongRequestError = 'createWorkspace has been called with invalid token';
 
+export const createWorkspaceWrongRequestForScalecubeProviderError =
+  'createWorkspace has been called with invalid dispatcherUrl for configProvider: "scalecube"';
+
 export const getLoadingServiceError = (error: Error, serviceName: string) =>
   `Error while loading service "${serviceName}": ${error.message}`;
 

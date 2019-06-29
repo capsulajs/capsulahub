@@ -13,6 +13,7 @@ import gridComponentBootstrap from '@capsulajs/capsulahub-cdn-emulator/src/widge
 // // @ts-ignore
 import requestFormComponentBootstrap from '@capsulajs/capsulahub-cdn-emulator/src/widgets/RequestForm';
 import WorkspaceFactory from '../../src/WorkspaceFactory';
+import { API } from '../..';
 import {
   configRepositoryName,
   configWrongFormatError,
@@ -27,6 +28,7 @@ import {
   getBootstrapServiceError,
   getScalecubeCreationError,
   configNotLoadedError,
+  createWorkspaceWrongRequestForScalecubeProviderError,
 } from '../../src/helpers/const';
 import { mockBootstrapComponent, mockConfigurationService, mockGetModuleDynamically } from '../helpers/mocks';
 import baseConfigEntries, {
@@ -504,7 +506,11 @@ describe('Workspace tests', () => {
       ]);
       mockBootstrapComponent();
       const workspaceFactory = new WorkspaceFactory();
-      await workspaceFactory.createWorkspace({ token: '123', configProvider });
+      const createWorkspaceRequest: API.CreateWorkspaceRequest = { token: '123', configProvider };
+      if (configProvider === configurationServiceItems.configurationTypes.scalecube) {
+        createWorkspaceRequest.dispatcherUrl = 'http://localhost:3000';
+      }
+      await workspaceFactory.createWorkspace(createWorkspaceRequest);
       return expect(getConfigurationServiceClassSpy.mock.results[0].value.name).toBe(configurationServiceClassName);
     }
   );
@@ -544,4 +550,20 @@ describe('Workspace tests', () => {
       new Error(configNotLoadedError(new Error(configurationServiceItems.messages.configProviderDoesNotExist)))
     );
   });
+
+  test.each(invalidCreateWorkspaceRequest)(
+    'Call createWorkspace for "scalecube" configProvider with a dispatcherUrl with invalid format is rejected with error (%s)',
+    (invalidDispatcherUrl) => {
+      expect.assertions(1);
+      const workspaceFactory = new WorkspaceFactory();
+      return expect(
+        workspaceFactory.createWorkspace({
+          token: '123',
+          configProvider: configurationServiceItems.configurationTypes.scalecube,
+          // @ts-ignore
+          dispatcherUrl: invalidDispatcherUrl,
+        })
+      ).rejects.toEqual(new Error(createWorkspaceWrongRequestForScalecubeProviderError));
+    }
+  );
 });
