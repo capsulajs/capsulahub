@@ -1,7 +1,7 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import enhanceWithClickOutside from 'react-click-outside';
 import { defaultFontFamily } from '../constants';
 
 const Container = styled.div`
@@ -16,10 +16,11 @@ const Container = styled.div`
   padding: 19px;
   width: 548px;
   height: 361px;
-  z-index: 9999;
+  z-index: 10;
 `;
 const Close = styled.div`
   cursor: pointer;
+  z-index: 11;
 `;
 const Header = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ const Header = styled.div`
   font-size: 10px;
 `;
 
-class Modal extends React.Component {
+export default class Modal extends React.Component {
   static propTypes = {
     onToggle: PropTypes.func,
     isOpen: PropTypes.bool,
@@ -41,6 +42,8 @@ class Modal extends React.Component {
   state = {
     isOpen: this.props.isOpen,
   };
+
+  ref = React.createRef();
 
   isToggledFromInside = false;
 
@@ -61,6 +64,14 @@ class Modal extends React.Component {
     }
   };
 
+  handleClick = (e) => {
+    const node = ReactDOM.findDOMNode(this.ref.current);
+
+    if (!node || !node.contains(e.target)) {
+      this.handleClickOutside(e);
+    }
+  };
+
   componentDidUpdate(prevProps) {
     const { onToggle, isOpen } = this.props;
 
@@ -75,6 +86,10 @@ class Modal extends React.Component {
     }
   }
 
+  componentDidMount() {
+    document.addEventListener('click', this.handleClick, true);
+  }
+
   render() {
     const { children, title } = this.props;
 
@@ -83,7 +98,7 @@ class Modal extends React.Component {
     }
 
     return (
-      <Container data-cy="modal-container">
+      <Container data-cy="modal-container" ref={this.ref}>
         <Header>
           <div>{title}</div>
           <Close data-cy="modal-close" onClick={this.handleClickOutside}>
@@ -94,6 +109,8 @@ class Modal extends React.Component {
       </Container>
     );
   }
-}
 
-export default enhanceWithClickOutside(Modal);
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClick, true);
+  }
+}
