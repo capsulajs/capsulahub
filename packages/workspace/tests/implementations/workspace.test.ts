@@ -534,7 +534,7 @@ describe('Workspace tests', () => {
     return expect(getConfigurationServiceClassSpy.mock.results[0].value.name).toBe('ConfigurationServiceHttpFile');
   });
 
-  it('Call createWorkspace with providing non-existing configurationType is rejected with error', async () => {
+  it('Call createWorkspace with providing non-existing configurationType is rejected with error', () => {
     expect.assertions(1);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
@@ -548,6 +548,36 @@ describe('Workspace tests', () => {
       workspaceFactory.createWorkspace({ token: '123', configProvider: wrongConfigurationType })
     ).rejects.toEqual(
       new Error(configNotLoadedError(new Error(configurationServiceItems.messages.configProviderDoesNotExist)))
+    );
+  });
+
+  it('DispatcherUrl is applied correctly while the creation of ConfigurationService', async () => {
+    expect.assertions(2);
+
+    const configurationServiceMock = {
+      entries: () => Promise.resolve({ entries: baseConfigEntries }),
+    };
+    const getConfigStub = mockConfigurationService(configurationServiceMock);
+    mockGetModuleDynamically([
+      Promise.resolve(serviceABootstrap),
+      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(gridComponentBootstrap),
+      Promise.resolve(requestFormComponentBootstrap),
+    ]);
+    mockBootstrapComponent();
+
+    const workspaceFactory = new WorkspaceFactory();
+    await workspaceFactory.createWorkspace({
+      token: '123',
+      configProvider: configurationServiceItems.configurationTypes.scalecube,
+      dispatcherUrl: 'http://localhost:3000',
+    });
+
+    expect(getConfigStub).toHaveBeenCalledTimes(1);
+    expect(getConfigStub).toHaveBeenCalledWith(
+      '123',
+      configurationServiceItems.ConfigurationServiceScalecube,
+      'http://localhost:3000'
     );
   });
 

@@ -7,9 +7,11 @@ const utilsToMock: any = utils;
 export const mockConfigurationService = (configurationServiceMock: {
   entries: () => Promise<{ entries: Entity[] } | never>;
 }) => {
-  utilsToMock.getConfigurationService = jest.fn(() => {
+  const stub = jest.fn(() => {
     return configurationServiceMock;
   });
+  utilsToMock.getConfigurationService = stub;
+  return stub;
 };
 
 export const mockGetModuleDynamically = (modulePromises: Array<Promise<API.ModuleBootstrap<object | void>>>): void => {
