@@ -31,7 +31,7 @@
     "debug": "npm-run-all -p -r start-cdn-emulator-1111 start-cdn-emulator-4444 capsulahub-run-1 capsulahub-run-2 cypress:debug"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.0",
+    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.2",
     "commander": "^2.20.0",
     "express": "^4.17.1",
     "parcel-bundler": "^1.12.3",
