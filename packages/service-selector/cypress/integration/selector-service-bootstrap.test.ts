@@ -1,3 +1,4 @@
+import { API as WORKSPACE_API } from '@capsulajs/capsulahub-workspace';
 import '../support';
 import bootstrap from '../../src/index';
 import Selector from '../../src/Selector';
@@ -7,7 +8,7 @@ describe('Selector Service bootstrap TCs', () => {
   it('Bootstrap registers service correctly', async () => {
     const registerServiceStub = cy.stub();
     const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
-    await bootstrap(fakeWorkspace);
+    await bootstrap(fakeWorkspace as WORKSPACE_API.Workspace);
 
     expect(registerServiceStub).to.be.calledOnce;
     // @ts-ignore

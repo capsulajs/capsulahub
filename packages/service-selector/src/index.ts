@@ -5,7 +5,7 @@ import * as API from './api';
 declare let publicExports: object;
 
 const bootstrap = (WORKSPACE: WORKSPACE_API.Workspace) => {
-  return new Promise(async (resolve) => {
+  return new Promise((resolve) => {
     const selectorService = new Selector();
 
     const registerServiceData = {
