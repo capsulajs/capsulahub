@@ -5,8 +5,12 @@ BIN='../../node_modules/.bin/'
 EXIT_CODE=0
 
 did_test_failed() {
-    [[ "$?" -gt 0 ]] && ((EXIT_CODE++))
-    echo -e "\e[41mLast test exited with non-zer0 code.\e[49m"
+    if [[ "$?" -gt 0 ]]; then
+        ((EXIT_CODE++))
+        echo -e "\e[41m  Last test exited with non-zer0 code.  \e[49m"
+    else
+        echo -e "\e[42m  Last test succeed.  \e[49m"
+    fi
 }
 
 waitport() {
@@ -30,7 +34,7 @@ pid_server_1111=$!
 # |               POSITIVE TEST CASES                 |
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-waitport 1111
+#waitport 1111
 ## Run Success scenario #1
 ## capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpFile --port=8888
 nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpFile --port=8888 &>/dev/null &
@@ -152,11 +156,10 @@ kill "$pid_server_4444"
 rm -rf dist/ outputDir/
 rm -rf bin/temp/
 
-
 if [[ "$EXIT_CODE" -eq 0 ]]; then
-    echo -e "\e[42The tests are successful.\e[49m"
+    echo -e "\e[42m  The tests are successful.\e[49m"
 else
-    echo -e "\e[41mOne or more tests failed.\e[49m"
+    echo -e "\e[41m  One or more tests failed.\e[49m"
 fi
 
 exit "$EXIT_CODE"
