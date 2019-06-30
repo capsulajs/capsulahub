@@ -1,3 +1,4 @@
+import { API as WORKSPACE_API } from '@capsulajs/capsulahub-workspace';
 import '../support';
 import bootstrap from '../../src/index';
 import { EnvRegistry } from '@capsulajs/environment-registry';
@@ -9,7 +10,7 @@ describe('Service EnvRegistry TCs', () => {
   it('Bootstrap registers service correctly', async () => {
     const registerServiceStub = cy.stub();
     const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
-    await bootstrap(fakeWorkspace, defaultConfig);
+    await bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, defaultConfig);
 
     expect(registerServiceStub).to.be.calledOnce;
     // @ts-ignore
@@ -20,9 +21,10 @@ describe('Service EnvRegistry TCs', () => {
   });
 
   it('EnvRegistry shows a message', async () => {
-    const testService = new EnvRegistry(defaultConfig.token);
-    return testService.showMessage().then((response: string) => {
-      expect(response).to.equal(`response from Service: ${defaultConfig.token}`);
+    const envRegistry = new EnvRegistry(defaultConfig.token);
+    await envRegistry.register({ envKey: 'develop', env: { test: 'test' } });
+    return envRegistry.environments$({}).subscribe((response) => {
+      expect(response).to.equal({ envKey: 'develop', env: { test: 'test' } });
     });
   });
 });
