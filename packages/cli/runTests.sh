@@ -6,7 +6,7 @@ EXIT_CODE=0
 
 did_test_failed() {
     [[ "$?" -gt 0 ]] && ((EXIT_CODE++))
-    echo "Last test exited with non-zer0 code."
+    echo -e "\e[41mLast test exited with non-zer0 code.\e[49m"
 }
 
 waitport() {
@@ -153,5 +153,10 @@ rm -rf dist/ outputDir/
 rm -rf bin/temp/
 
 
-echo "$EXIT_CODE"
+if [[ "$EXIT_CODE" -eq 0 ]]; then
+    echo -e "\e[42The tests are successful.\e[49m"
+else
+    echo -e "\e[41mOne or more tests failed.\e[49m"
+fi
+
 exit "$EXIT_CODE"
