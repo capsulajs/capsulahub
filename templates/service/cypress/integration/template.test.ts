@@ -6,7 +6,7 @@ import mocks from '../support/mocks';
 describe('Service Template TCs', () => {
   const defaultConfig = { message: 'Hello' };
 
-  it('Bootstrap registers component correctly', async () => {
+  it('Bootstrap registers service correctly', async () => {
     const registerServiceStub = cy.stub();
     const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
     await bootstrap(fakeWorkspace, defaultConfig);
