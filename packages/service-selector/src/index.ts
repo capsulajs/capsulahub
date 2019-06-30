@@ -4,11 +4,11 @@ import * as API from './api';
 
 declare let publicExports: object;
 
-const bootstrap = (WORKSPACE: WORKSPACE_API.Workspace) => {
+const bootstrap = (WORKSPACE: WORKSPACE_API.Workspace, SERVICE_CONFIG: { serviceName: string }) => {
   return new Promise((resolve) => {
     const registerServiceData = {
-      serviceName: 'SelectorService',
-      reference: utils.getSelectorInstance(),
+      serviceName: SERVICE_CONFIG.serviceName,
+      reference: utils.getServiceInstance(),
     };
 
     WORKSPACE.registerService(registerServiceData);

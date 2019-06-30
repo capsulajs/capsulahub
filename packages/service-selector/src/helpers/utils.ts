@@ -1,7 +1,7 @@
 import Selector from '../Selector';
 
 export default {
-  getSelectorInstance() {
+  getServiceInstance() {
     return new Selector();
   },
 };
