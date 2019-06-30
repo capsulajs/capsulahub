@@ -1,16 +1,14 @@
 import { API as WORKSPACE_API } from '@capsulajs/capsulahub-workspace';
-import Selector from './Selector';
+import utils from './helpers/utils';
 import * as API from './api';
 
 declare let publicExports: object;
 
 const bootstrap = (WORKSPACE: WORKSPACE_API.Workspace) => {
   return new Promise((resolve) => {
-    const selectorService = new Selector();
-
     const registerServiceData = {
       serviceName: 'SelectorService',
-      reference: selectorService,
+      reference: utils.getSelectorInstance(),
     };
 
     WORKSPACE.registerService(registerServiceData);
