@@ -1,7 +1,7 @@
 {
   "name": "@capsulajs/capsulahub-service-environment-registry",
   "version": "0.0.1",
-  "description": "A service template package for an extension",
+  "description": "Environment Registry extension, that allows a user to register and retrieve environments",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,7 +16,7 @@
     "prettier": "prettier --write '{src,tests,cypress}/**/*.{js,ts,tsx}'",
     "clean": "rimraf lib dist node_modules",
     "doc": "typedoc src/api --out ./doc --mode file --hideGenerator",
-    "build:dist": "rimraf dist && webpack --env.production=true",
+    "build:dist": "rimraf dist && webpack --env.production=true && cpy --parents doc/ dist/",
     "build:lib": "rimraf lib && tsc",
     "cypress:run": "cypress run --browser chrome",
     "cypress:debug": "cypress open",

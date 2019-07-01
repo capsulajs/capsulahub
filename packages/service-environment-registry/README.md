@@ -1,6 +1,8 @@
-# Service Template extension
+# Environment Registry service extension
 
-Service detailed info
+This service allows to register and load different versions of a project/service environment.  
+This is the bootstrapped service ready to use for CapsulaHub.  
+More detailed info are available [here](https://github.com/capsulajs/environment-registry).
 
 ## Install
 
@@ -8,32 +10,33 @@ Service detailed info
 
 To install the package from NPM registry you should run
 
-    yarn add @capsulajs/capsulahub-service-template
+    yarn add @capsulajs/capsulahub-service-environment-registry
 
 or
 
-    npm install @capsulajs/capsulahub-service-template
+    npm install @capsulajs/capsulahub-service-environment-registry
 
 
 ### CDN
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/service-template/index.js
+    https://capsulajs.s3.amazonaws.com/develop/service-environment-registry/index.js
 
 ## WorkspaceConfiguration example
 
 ```json
   "services": {
-      "serviceName": "TestService",
-      "path": "https://capsulajs.s3.amazonaws.com/develop/service-template/index.js",
+      "serviceName": "EnvironmentRegistryService",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/service-environment-registry/index.js",
       "definition": {
-        "serviceName": "TestService",
+        "serviceName": "EnvironmentRegistryService",
         "methods": {
-          "showMessage": { "asyncModel": "requestResponse" }
+          "register": { "asyncModel": "requestResponse" },
+          "environments$": { "asyncModel": "requestStream" }
         }
       },
-      "config": { "message": "Test message" }
+      "config": { "serviceName": "EnvironmentRegistryService" }
   }
 ```
 
@@ -47,11 +50,15 @@ Bootstrap function of the extension.
 
 The public API of the extension.
 
+## Usage
+
+See [here](https://github.com/capsulajs/environment-registry#basic-usage)
+
 ## API
 
 ### CDN
 
-[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/service-template/doc/index.html)
+[The documentation about public API.](https://capsulajs.s3.amazonaws.com/develop/service-environment-registry/doc/index.html)
 
 ### Local
 
@@ -62,36 +69,12 @@ Run
 And open [doc/index.html](./doc/index.html) in browser.
 
 
-## Example
-
-All of the manual debugging should be provided only in _**test:debug**_ mode. Example folder is required only for Cypress needs.
-
 ## Tests
 
 ### Run
 
 1) `yarn test`
 2) `yarn test:debug`
-
-### Recommendations for testing
-
-**_getServiceRef()_** checks that the service has been bootstrapped correctly and returns the instance of the service.
-
-In order to create a **_stub_** or **_spy_** of any util a file with utils has to export an object, in which these utils
-are implemented. Then in the implementation of a test you can do:
-
-```typescript
-import utils from '../../src/utils';
-const getConfigStub = cy.stub(utils, getConfig);
-getConfigStub.resolves({ name: 'configuration name' });
-
-// run some code from functionality
-expect(getConfigStub).to.be.called;
-```
-
-Expectations for stubs and spies:
-
-<https://docs.cypress.io/guides/references/assertions.html#Sinon-Chai>
 
 ## Licence
 

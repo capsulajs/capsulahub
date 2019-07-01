@@ -1,16 +1,16 @@
-import { EnvRegistry } from '@capsulajs/environment-registry';
 import { API as WORKSPACE_API } from '@capsulajs/capsulahub-workspace';
 import * as API from './api';
+import utils from './helpers/utils';
 
 declare let publicExports: object;
 
 const bootstrap = (WORKSPACE: WORKSPACE_API.Workspace, SERVICE_CONFIG: API.EnvironmentRegistryConfig) => {
   return new Promise(async (resolve) => {
-    const { token, serviceName } = SERVICE_CONFIG;
+    const { serviceName } = SERVICE_CONFIG;
 
     const registerServiceData = {
       serviceName,
-      reference: new EnvRegistry(token),
+      reference: utils.getServiceInstance(SERVICE_CONFIG),
     };
 
     WORKSPACE.registerService(registerServiceData);
