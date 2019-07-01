@@ -16,7 +16,7 @@
     "prettier": "prettier --write '{src,tests}/**/*.{js,ts,tsx}'",
     "clean": "rimraf lib dist node_modules",
     "doc": "typedoc src/api --out ./doc --mode file --hideGenerator",
-    "build:dist": "rimraf dist && webpack --env.production=true",
+    "build:dist": "rimraf dist && webpack --env.production=true && cpy --parents doc/ dist/",
     "build:lib": "rimraf lib && tsc",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
     "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix",
