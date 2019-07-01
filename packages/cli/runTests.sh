@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+echo "+++++++++"
+pwd
+echo "+++++++++"
+
 BIN='../../node_modules/.bin/'
 EXIT_CODE=0
 
