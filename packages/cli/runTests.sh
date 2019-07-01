@@ -2,6 +2,8 @@
 
 echo "+++++++++"
 pwd
+ls ../../node_modules/.bin | grep capsula
+../../node_modules/.bin/capsulahub --help
 echo "+++++++++"
 
 BIN='../../node_modules/.bin/'
