@@ -212,23 +212,27 @@ rm -rf outputDir/
 "$BIN"capsulahub build --token=configuration --configProvider=localStorage --output=outputDir
 
 "$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-local-storage.test.js"
-did_test_failed2
+did_test_failed
+rm -rf outputDir/
 
 ## httpServer configProvider
 "$BIN"capsulahub build --token=http://localhost:1111/configuration --configProvider=httpServer --output=outputDir
 
 "$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-http-server.test.js"
 did_test_failed
+rm -rf outputDir/
 
 ## localFile configProvider
 "$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-local-file.test.js"
 did_test_failed
+rm -rf outputDir/
 
 ## scalecube configProvider
 "$BIN"capsulahub build --token=secretToken --configProvider=scalecube --output=outputDir --dispatcherUrl="http://localhost:4000"
 
 "$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-scalecube.test.js"
 did_test_failed
+rm -rf outputDir/
 
 kill "$pid_server_8888"
 
