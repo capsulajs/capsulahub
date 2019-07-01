@@ -21,6 +21,8 @@ describe('Capsulahub run TCs', () => {
   });
 
   it('Run CapsulaHub instance with a non-existent dispatcherUrl for "scalecube" configProvider throws an error', () => {
-    cy.testDispatcherUrlValidation('run', '').testDispatcherUrlValidation('run', ' ');
+    cy.testDispatcherUrlValidation('run')
+      .testDispatcherUrlValidation('run', '')
+      .testDispatcherUrlValidation('run', ' ');
   });
 });

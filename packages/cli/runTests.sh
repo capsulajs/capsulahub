@@ -36,10 +36,10 @@ echo "Prepared CDN emulation for extensions and configuration for HTTPFile provi
 echo "ports:" && echo "ports:" && lsof -i -P -n | grep LISTEN
 
 echo """
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
-|               POSITIVE TEST CASES                 |
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
-"""
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#|               POSITIVE TEST CASES                 |
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#"""
 
 ## Run Success scenario #1
 ## capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpFile --port=8888
@@ -48,7 +48,7 @@ pid_server_8888=$!
 wait_port 8888
 echo "ports:" && lsof -i -P -n | grep LISTEN
 
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/1-capsulahub_run.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/1.test.js"
 did_test_failed
 kill "$pid_server_8888"
 
@@ -61,18 +61,18 @@ pid_server_7777=$!
 wait_port 7777
 echo "ports:" && lsof -i -P -n | grep LISTEN
 
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run-local-storage.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/2-local-storage.test.js"
 did_test_failed
 kill "$pid_server_7777"
 
 ## httpServer configProvider
-## capsulahub run --token=http://localhost:1111/port-1111/configuration --configProvider=httpServer --port=7778
+## capsulahub run --token=http://localhost:1111/configuration --configProvider=httpServer --port=7778
 nohup "$BIN"capsulahub run --token=http://localhost:1111/configuration --configProvider=httpServer --port=7778 &>/dev/null &
 pid_server_7778=$!
 wait_port 7778
 echo "ports:" && lsof -i -P -n | grep LISTEN
 
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run-http-server.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/2-http-server.test.js"
 did_test_failed
 kill "$pid_server_7778"
 
@@ -83,7 +83,7 @@ pid_server_7779=$!
 wait_port 7779
 echo "ports:" && lsof -i -P -n | grep LISTEN
 
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run-local-file.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/2-local-file.test.js"
 did_test_failed
 kill "$pid_server_7779"
 
@@ -94,7 +94,7 @@ pid_server_7780=$!
 wait_port 7780
 echo "ports:" && lsof -i -P -n | grep LISTEN
 
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/2-capsulahub_run-scalecube.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/2-scalecube.test.js"
 did_test_failed
 kill "$pid_server_7780"
 
@@ -105,7 +105,7 @@ pid_server_55555=$!
 wait_port 55555
 echo "ports:" && lsof -i -P -n | grep LISTEN
 
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/3-capsulahub_run.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/3.test.js"
 did_test_failed
 kill "$pid_server_55555"
 
@@ -123,7 +123,7 @@ wait_port 1234
 wait_port 4321
 echo "ports:" && lsof -i -P -n | grep LISTEN
 
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/4-capsulahub_run.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/4.test.js"
 did_test_failed
 kill "$pid_server_1234"
 kill "$pid_server_4321"
@@ -150,7 +150,7 @@ wait_port 2345
 wait_port 5432
 echo "ports:" && lsof -i -P -n | grep LISTEN
 
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/success/5-capsulahub_run.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/5.test.js"
 did_test_failed
 kill "$pid_server_2345"
 kill "$pid_server_5432"
@@ -166,12 +166,12 @@ echo """
 nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration --port=8888 &>/dev/null &
 pid_server_8888=$!
 wait_port 8888
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/negative/4-capsulahub_run.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/negative/4.test.js"
 did_test_failed
 kill "$pid_server_8888"
 
 ## Run Negative scenario others
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_run/negative/capsulahub_run.test.js"
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/negative/capsulahub_run.test.js"
 did_test_failed
 
 echo """
@@ -179,12 +179,71 @@ echo """
 |            CLI BUILD COMMAND TEST CASES           |
 *****************************************************
 """
-"$BIN"cypress run --browser chrome --spec "cypress/integration/capsulahub_build.test.js"
+echo """
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|               POSITIVE TEST CASES                 |
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+"""
+
+## Build Success scenario #1
+"$BIN"capsulahub build --token=http://localhost:1111/port-1111/configuration --configProvider=httpFile --output=outputDir
+nohup "$BIN"http-server outputDir -p 8888 &>/dev/null &
+pid_server_8888=$!
+wait_port 8888
+echo "ports:" && lsof -i -P -n | grep LISTEN
+
+"$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/1.test.js"
+did_test_failed
+rm -rf outputDir/
+
+## Run Success scenario #2
+
+## localStorage configProvider
+"$BIN"capsulahub build --token=configuration --configProvider=localStorage --output=outputDir
+
+"$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-local-storage.test.js"
+did_test_failed2
+
+## httpServer configProvider
+"$BIN"capsulahub build --token=http://localhost:1111/configuration --configProvider=httpServer --output=outputDir
+
+"$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-http-server.test.js"
+did_test_failed
+
+## localFile configProvider
+"$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-local-file.test.js"
+did_test_failed
+
+## scalecube configProvider
+"$BIN"capsulahub build --token=secretToken --configProvider=scalecube --output=outputDir --dispatcherUrl="http://localhost:4000"
+
+"$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-scalecube.test.js"
+did_test_failed
+
+kill "$pid_server_8888"
+
+## Run Success scenario #3
+"$BIN"capsulahub build --token=http://localhost:1111/port-1111/configuration
+nohup "$BIN"http-server dist -p 55555 &>/dev/null &
+pid_server_55555=$!
+wait_port 55555
+echo "ports:" && lsof -i -P -n | grep LISTEN
+"$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/3.test.js"
+did_test_failed
+kill "$pid_server_55555"
+
+echo """
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|               NEGATIVE TEST CASES                 |
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+"""
+
+"$BIN"cypress run --browser chrome --spec "cypress/integration/build/negative/capsulahub_build.test.js"
 did_test_failed
 
 ## Close CDN-emulator
 kill "$pid_server_1111"
-kill "$pid_server_4444"
+#kill "$pid_server_4444"
 rm -rf dist/ outputDir/ bin/temp/
 echo "Closed CDN Emulator and cleaned dist/, outputDir/ and bin/temp/."
 

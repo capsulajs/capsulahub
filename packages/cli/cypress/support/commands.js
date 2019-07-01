@@ -83,12 +83,13 @@ Cypress.Commands.add('testConfigProviderValidation', (command, configProvider) =
 });
 
 Cypress.Commands.add('testDispatcherUrlValidation', (command, dispatcherUrl) => {
-  cy.exec(
-    `capsulahub ${command} --token=http://localhost:3000/configuration --configProvider=scalecube --dispatcherUrl=${dispatcherUrl}`,
-    {
-      failOnNonZeroExit: false,
-    }
-  ).then((obj) => {
+  let fullCommand = `capsulahub ${command} --token=http://localhost:3000/configuration --configProvider=scalecube`;
+  if (typeof dispatcherUrl !== 'undefined') {
+    fullCommand += ` --dispatcherUrl=${dispatcherUrl}`;
+  }
+  cy.exec(fullCommand, {
+    failOnNonZeroExit: false,
+  }).then((obj) => {
     expect(obj.code).to.eq(1);
     expect(obj.stderr).to.contain(args.dispatcherUrl.error);
   });

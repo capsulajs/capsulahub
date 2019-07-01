@@ -4,6 +4,10 @@ import * as API from '../src/helpers/types';
 
 const appConfig: API.AppConfig = require('../bin/app-config.json');
 const config = appConfig[window.location.port];
+let dispatcherUrl = process.env.CAPSULAHUB_DISPATCHER_URL || config.dispatcherUrl;
+if (dispatcherUrl === 'undefined') {
+  dispatcherUrl = undefined;
+}
 
 new WorkspaceFactory()
   .createWorkspace({
@@ -11,7 +15,7 @@ new WorkspaceFactory()
     configProvider:
       (process.env.CAPSULAHUB_CONFIG_PROVIDER as CONFIGURATION_SERVICE_API.ConfigurationProvider) ||
       config.configProvider,
-    dispatcherUrl: process.env.CAPSULAHUB_DISPATCHER_URL || config.dispatcherUrl,
+    dispatcherUrl,
   })
   .catch((error: Error) => {
     console.info('error while creating a Workspace', error);
