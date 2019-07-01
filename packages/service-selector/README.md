@@ -21,6 +21,25 @@ You can get the default export from the link
 
     https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-selector/index.js
 
+## WorkspaceConfiguration example
+
+```json
+  "services": {
+      "serviceName": "SelectorService",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-selector/index.js",
+      "definition": {
+        "serviceName": "SelectorService",
+        "methods": {
+          "setItems": { "asyncModel": "requestResponse" },
+          "items$": { "asyncModel": "requestStream" },
+          "selectItem": { "asyncModel": "requestResponse" },
+          "selectedItem$": { "asyncModel": "requestStream" },
+        }
+      },
+      "config": { "serviceName": "SelectorService" }
+  }
+```
+
 ## Exports
 
 ### Default
@@ -36,8 +55,6 @@ The public API of the extension.
 This service takes two typed elements (`Item` and `Key`).
 
 ```typescript
-import { Selector } from '@capsulajs/capsulahub-service-selector';
-
 interface Item {
   name: string;
   age: number;
