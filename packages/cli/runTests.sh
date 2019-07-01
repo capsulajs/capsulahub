@@ -2,7 +2,8 @@
 
 echo "+++++++++"
 pwd
-ls ../../node_modules/.bin | grep capsula
+echo "node_m root" && ls ../../node_modules/.bin
+echo "node_m cli" && ls ./node_modules/.bin
 ../../node_modules/.bin/capsulahub --help
 echo "+++++++++"
 
