@@ -6,12 +6,11 @@ declare let publicExports: object;
 
 const bootstrap = (WORKSPACE: WORKSPACE_API.Workspace, SERVICE_CONFIG: API.EnvironmentRegistryConfig) => {
   return new Promise(async (resolve) => {
-    const { token } = SERVICE_CONFIG;
-    const envRegistryService = new EnvRegistry(token);
+    const { token, serviceName } = SERVICE_CONFIG;
 
     const registerServiceData = {
-      serviceName: 'EnvironmentRegistryService',
-      reference: envRegistryService,
+      serviceName,
+      reference: new EnvRegistry(token),
     };
 
     WORKSPACE.registerService(registerServiceData);
