@@ -9,13 +9,13 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap --npm-client=yarn",
-    "build": "lerna run build && node ./afterBuild.js --stream",
-    "doc": "lerna run doc --stream --parallel",
+    "build": "lerna run build --since develop && node ./afterBuild.js --stream",
+    "doc": "lerna run doc --stream --parallel --since develop",
     "start": "lerna run start --stream",
     "lint": "lerna run lint --stream --parallel",
-    "test": "lerna run test --concurrency=1 --stream",
-    "clean": "lerna run clean && rimraf node_modules",
-    "deploy": "lerna run deploy --stream --parallel"
+    "test": "lerna run test --concurrency=1 --stream --since develop",
+    "clean": "lerna run clean && rimraf node_modules --since develop",
+    "deploy": "lerna run deploy --stream --parallel --since develop"
   },
   "husky": {
     "hooks": {

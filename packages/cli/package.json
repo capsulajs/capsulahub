@@ -20,7 +20,7 @@
     "capsulahub-run-2": "capsulahub run --token=http://localhost:4444/port-4444/configuration --port=4321",
     "lint": "yarn lint:md && yarn lint:ts",
     "prettier": "prettier --write '{src,tests,cypress}/**/*.{js,ts,tsx}'",
-    "clean": "rimraf lib dist node_modules",
+    "clean": "rimraf lib dist node_modules bin cdn-emulator",
     "cypress:run": "cypress run --browser chrome",
     "cypress:debug": "cypress open",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",

@@ -20,7 +20,6 @@
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
-    "rxjs": "6.5.2",
-    "@capsulajs/capsulahub-cli": "0.0.1"
+    "rxjs": "6.5.2"
   }
 }
