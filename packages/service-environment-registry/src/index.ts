@@ -5,7 +5,7 @@ import utils from './helpers/utils';
 declare let publicExports: object;
 
 const bootstrap = (WORKSPACE: WORKSPACE_API.Workspace, SERVICE_CONFIG: API.EnvironmentRegistryConfig) => {
-  return new Promise(async (resolve) => {
+  return new Promise((resolve) => {
     const { serviceName } = SERVICE_CONFIG;
 
     const registerServiceData = {

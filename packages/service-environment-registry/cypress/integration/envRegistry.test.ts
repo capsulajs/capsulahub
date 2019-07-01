@@ -3,9 +3,10 @@ import '../support';
 import bootstrap from '../../src/index';
 import { EnvRegistry } from '@capsulajs/environment-registry';
 import mocks from '../support/mocks';
+import utils from '../../src/helpers/utils';
 
 describe('Service EnvRegistry TCs', () => {
-  const defaultConfig = { token: 'Hello' };
+  const defaultConfig = { serviceName: 'EnvironmentRegistryService', token: 'Hello' };
 
   it('EnvRegistry extension bootstrap function resolves correctly and triggers the registration of an instance of EnvRegistry in Workspace', async () => {
     const registerServiceStub = cy.stub();
@@ -32,7 +33,8 @@ describe('Service EnvRegistry TCs', () => {
     const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
     // @ts-ignore
     cy.stub(utils, 'getServiceInstance').throws(Error(errorMessage));
-    return bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, defaultConfig).catch((error) => {
+    return bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, defaultConfig).catch((error: Error) => {
+      console.log(error);
       expect(error instanceof Error).to.be.true;
       expect(error.message).to.equal(errorMessage);
     });
