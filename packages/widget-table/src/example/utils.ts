@@ -22,6 +22,7 @@ export const columns: Column[] = [
   {
     Header: 'Column C',
     accessor: 'columnC',
+    Footer: () => 'Footer C',
   },
 ];
 
