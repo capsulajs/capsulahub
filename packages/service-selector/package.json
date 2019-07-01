@@ -10,7 +10,7 @@
   "private": false,
   "scripts": {
     "build": "yarn build:lib && yarn build:dist",
-    "test": "jest",
+    "test-": "jest",
     "lint": "yarn lint:md && yarn lint:ts",
     "prettier": "prettier --write '{src,tests}/**/*.{js,ts,tsx}'",
     "clean": "rimraf lib dist node_modules",

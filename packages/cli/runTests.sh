@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+echo "+++++++++"
+ls ../../node_modules/.bin | grep capsulahub
+if [[ "$?" -ne 0 ]]; then
+    cd ../cdn-emulator/ && yarn && cd -
+    echo "Manual install of cdn-emulator package"
+    ls ../../node_modules/.bin | grep capsulahub
+fi
+../../node_modules/.bin/capsulahub --help
+echo "+++++++++"
+
 BIN='../../node_modules/.bin/'
 EXIT_CODE=0
 
