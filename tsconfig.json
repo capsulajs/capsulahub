@@ -11,6 +11,7 @@
     "baseUrl": "./src",
     "jsx": "react",
     "esModuleInterop": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true
   }
 }
