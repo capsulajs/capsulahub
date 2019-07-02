@@ -16,6 +16,13 @@ wait_port() {
     while ! nc -z localhost $1 ; do sleep 1 ; done
 }
 
+## Cleaning after npm link
+cd node_modules/
+echo "before cleaning node_modules in " && pwd && ls -la
+find . -maxdepth 1 -type d \! \( -name ".bin" -o -name ".cache" \) -exec rm -rf "{}" \;
+echo "after cleaning node_modules in " && pwd && ls -la
+cd ../
+
 ## Building extensions
 "$BIN"rimraf cdn-emulator
 "$BIN"webpack --env.production=true
