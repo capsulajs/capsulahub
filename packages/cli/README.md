@@ -4,7 +4,8 @@
 
 ## Description
 
-An awesome tool to develop and test your micro-frontend services!
+CapsulaHub is part of CapsulaJS project, it is one of CapsulaJS pillars but it can be used stand alone.
+It is an CLI tool to help you to develop and test your micro-frontend services !
 
 ## Local development
 
@@ -15,101 +16,131 @@ cd packages/cli/node_modules
 find . -maxdepth 1 -type d \! \( -name ".bin" -o -name ".cache" \) -exec rm -rf "{}" \;
 # now you can use capsulahub binary anywhere in the repository
 # for example:
+capsulahub --help
 capsulahub run --token=http://localhost:3000/configuration --configProvider=httpFile --port=8888
 ```
 
 ## Install
 
-In your project, run `$ npm install --save-dev @capsulajs/capsula-hub` or `$ yarn add -D @capsulajs/capsula-hub`.
+In your project, run `$ npm install --save-dev @capsulajs/capsula-hub` or `$ yarn add -D @capsulajs/capsula-hub`.  
 If you want to use `capsulahub` command directly, you can install it globally.
 
 ## Usage
 
 ```shell
-capsula-hub run [options]
+capsulahub --help
+Usage: capsulahub [options] [command]
 
 Options:
-  -l, --local <path-to-file>  Run with local configuration file
-  -p, --port <port>           Run on specified port (default 55555)
+  -h, --help       output usage information
+
+Commands:
+  run [options]    Run a Capsulahub application locally in development mode
+  build [options]  Build Capsulahub application files in a specific folder (ready to deploy)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+capsulahub run --help
+ Usage: run [options]
+ 
+ Run a Capsulahub application locally in development mode
+ 
+ Options:
+   -t, --token <token>                    The token that will be used to get the configuration (required)
+   -c, --configProvider <configProvider>  The type of configuration provider (optional - default is "httpFile"). Possible options: 'localFile', 'httpFile', 'scalecube', 'httpServer', 'localStorage'
+   -p, --port <port>                      The port on which the application will run locally (for instance, http://localhost:55555/) (optional - default is "55555")
+   -d, --dispatcherUrl <dispatcherUrl>    The url of the dispatcher for those providers that use dispatcher (optional)
+   -h, --help                             output usage information
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+capsulahub build --help
+    Usage: build [options]
+    
+    Build Capsulahub application files in a specific folder (ready to deploy)
+    
+    Options:
+      -t, --token <token>                    The token that will be used to get the configuration (required)
+      -c, --configProvider <configProvider>  The type of configuration provider (optional - default is "httpFile"). Possible options: 'localFile', 'httpFile', 'scalecube', 'httpServer', 'localStorage'
+      -o, --output <output>                  Relative path to the output folder (optional - default is "./dist")
+      -d, --dispatcherUrl <dispatcherUrl>    The url of the dispatcher for those providers that use dispatcher (optional)
+      -h, --help                             output usage information
 ```
 
 ## Configuration
 
-The configuration should be a `js` file that exports an `object` which
+The configuration should be a `.json` file which
 match this [API](https://github.com/capsulajs/capsulahub-core/blob/develop/packages/workspace/src/api/WorkspaceConfig.ts).
 
-Example: _config.js_
+This file should be accessible following the `configProvider` that you choose to use 
+([docs](https://github.com/capsulajs/capsulahub/tree/develop/packages/service-configuration)).  
+The url to reach it is passed as the `token`.
 
-```javascript
-module.exports = {
-  name: 'my-app',
-  services: [
+Example: _config.json_
+
+```json
+{
+  "name": "baseWorkspace",
+  "services": [
     {
-      serviceName: 'myServiceA',
-      path: 'https://my-cdn/my-service-a',
-      definition: {
-        serviceName: 'myServiceA',
-        methods: {
-          myMethod1: { asyncModel: 'RequestResponse' },
-          myMethod2$: { asyncModel: 'RequestStream' },
+      "serviceName": "ServiceA",
+      "path": "http://localhost:1111/services/serviceA.js",
+      "definition": {
+        "serviceName": "ServiceA",
+        "methods": {
+          "getMessage": { "asyncModel": "requestResponse" }
         }
       },
-      config: {}
+      "config": { "message": "Message from ServiceA from PORT 1111 HTTP File" }
     },
     {
-      serviceName: 'myServiceB',
-      path: 'https://my-cdn/my-service-b',
-      definition: {
-        serviceName: 'myServiceB',
-        methods: {
-          myMethod1: { asyncModel: 'RequestResponse' },
-          myMethod2: { asyncModel: 'RequestResponse' },
+      "serviceName": "ServiceFlows",
+      "path": "http://localhost:1111/services/serviceFlows.js",
+      "definition": {
+        "serviceName": "ServiceFlows",
+        "methods": {}
+      },
+      "config": {
+        "componentName": "web-component-a"
+      }
+    },
+    {
+      "serviceName": "RendererService",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-renderer/index.js",
+      "definition": {
+        "serviceName": "RendererService",
+        "methods": {
+          "renderLayouts": { "asyncModel": "requestResponse" },
+          "renderItems": { "asyncModel": "requestResponse" },
+          "renderItem": { "asyncModel": "requestResponse" }
         }
       },
-      config: {}
-    },
+      "config": {}
+    }
   ],
-  components: {
-    layouts: {
-      grid: {
-        componentName: 'my-grid',
-        path: 'http://my-cdn/components/Grid.js',
-        config: { title: 'Base Grid' },
-       },
+  "components": {
+    "layouts": {
+      "web-grid": {
+        "componentName": "web-grid",
+        "nodeId": "web-grid",
+        "path": "http://localhost:1111/widgets/Grid.js",
+        "config": {
+          "title": "Base Grid from PORT 1111 HTTP File",
+          "innerComponentId": "web-component-a"
+        }
+      }
     },
-    items: {
-      myItem: {
-        componentName: 'my-item',
-        path: 'http://my-cdn/components/myItem.js',
-        config: { title: 'Base Item' },
-      },
+    "items": {
+      "web-component-a": {
+        "componentName": "web-component-a",
+        "nodeId": "web-component-a",
+        "path": "http://localhost:1111/widgets/ComponentA.js",
+        "config": { "name": "ComponentA(PORT 1111 HTTP File)" }
+      }
     }
   }
-};
+}
 ```
-
-## Develop your extension
-
-An extension is a service or a web component that is loaded by CapsulaHub. 
-The extension should look like this:
-
-```typescript
-import { Workspace } from '@capsulajs/capsulahub-core-workspace';
-export default (workspace: Workspace, config: object): Promise<void> => {
-  // your code here
-};
-```
-
-`workspace` and `config` are injected by the application in the extension.
-
-`workspace` is matching this [API](https://github.com/capsulajs/capsulahub-core/blob/develop/packages/workspace/src/api/Workspace.ts) 
-and could be use in particular to allow the service to register itself.
-
-`config` contains the configuration for this specific extension that you passed in the configuration file 
-(e.g: `configuration_file.services.['myExtension'].config` for myExtension service).
-
-For more details, take a look at this 
-[example file](https://github.com/capsulajs/capsulahub-core/blob/develop/packages/externalModules/src/services/serviceA.ts).
 
 <!-- To put back later for local dev
 Run it locally
