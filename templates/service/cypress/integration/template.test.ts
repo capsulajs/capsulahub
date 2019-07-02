@@ -15,14 +15,14 @@ describe('Service Service bootstrap TCs', () => {
     registerServiceStub.callsFake((registerServiceRequest: WORKSPACE_API.RegisterServiceRequest) => {
       expect(Object.keys(registerServiceRequest).length).to.equal(2);
       expect(registerServiceRequest.serviceName).to.be.equal(serviceName);
-      expect(registerServiceRequest.reference instanceof Service).to.be.true;
+      expect(registerServiceRequest.reference instanceof Service).to.equal(true);
       return registerServiceStubPromise;
     });
     let isBootstrapResolved = false;
     const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
     bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, { serviceName }).then((response) => {
       expect(response).to.equal(undefined);
-      expect(registerServiceStub).to.be.calledOnce;
+      expect(registerServiceStub).to.be.callsCount(1);
       isBootstrapResolved = true;
     });
 
@@ -39,7 +39,7 @@ describe('Service Service bootstrap TCs', () => {
     //@ts-ignore
     cy.stub(utils, 'getServiceInstance').throws(Error(errorMessage));
     return bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, { serviceName }).catch((error) => {
-      expect(error instanceof Error).to.be.true;
+      expect(error instanceof Error).to.equal(true);
       expect(error.message).to.equal(errorMessage);
     });
   });
