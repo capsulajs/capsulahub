@@ -88,13 +88,7 @@ export class Workspace implements API.Workspace {
         try {
           this.microservice = Microservices.create({
             services: [{ definition: serviceConfig!.definition, reference: registerServiceRequest.reference }],
-            // @ts-ignore
-            seedAddress: {
-              host: `${this.id}`,
-              port: 7777,
-              protocol: 'ws',
-              path: './workspace',
-            },
+            seedAddress: this.id,
           });
         } catch (error) {
           const errorMessage = getScalecubeCreationError(error, registerServiceRequest.serviceName);
