@@ -1,15 +1,14 @@
-import TestService from './Service';
+import { API as WORKSPACE_API } from '@capsulajs/capsulahub-workspace';
 import * as API from './api';
+import utils from './helpers/utils';
 
 declare let publicExports: object;
 
-const bootstrap = (WORKSPACE: any, SERVICE_CONFIG: any) => {
-  return new Promise(async (resolve) => {
-    const testService = new TestService(SERVICE_CONFIG.message);
-
+const bootstrap = (WORKSPACE: WORKSPACE_API.Workspace, SERVICE_CONFIG: { serviceName: string }) => {
+  return new Promise((resolve) => {
     const registerServiceData = {
-      serviceName: 'TestService',
-      reference: testService,
+      serviceName: SERVICE_CONFIG.serviceName,
+      reference: utils.getServiceInstance(),
     };
 
     WORKSPACE.registerService(registerServiceData);

@@ -12,7 +12,7 @@ import {
 import { validationMessages, errorMessages } from './helpers/messages';
 import { isObjectRequest, isValidSelectRequest, isValidSetItemsRequest } from './helpers/validators';
 
-export class Selector<Item extends Key, Key extends object> implements SelectorInterface<Item, Key> {
+export default class Selector<Item extends Key, Key extends object> implements SelectorInterface<Item, Key> {
   private readonly data$: BehaviorSubject<Item[]>;
   private readonly selected$: BehaviorSubject<Item | undefined>;
 
