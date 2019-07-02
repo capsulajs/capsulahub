@@ -37,12 +37,12 @@ comment(){
         && echo "included configuration"
 
     [[ "$HAS_DOCS" == "true" ]] \
-        && DOC_LINK="[**$SERVICE documentation**](${URL}doc/)" \
+        && DOC_LINK="[**$SERVICE documentation**](${URL}doc/index.html)" \
         && COMMENT_TEXT+=" and $DOC_LINK" \
         && echo "included documentation"
 
     [[ "$HAS_EXAMPLE" == "true" ]] \
-        && EXAMPLE_LINK="[**$SERVICE example**](${URL}example/)" \
+        && EXAMPLE_LINK="[**$SERVICE example**](${URL}example/index.html)" \
         && COMMENT_TEXT+=" and $EXAMPLE_LINK" \
         && echo "included example"
 

@@ -1,7 +1,7 @@
 import { Selector as SelectorInterface } from '../../src/api/Selector';
 import { avengers, beatles } from '../mocks/items';
 import { Character, ComplexCharacterKey, SimpleCharacterKey } from '../types';
-import { Selector } from '../../src';
+import Selector from '../../src/Selector';
 import { errorMessages, validationMessages } from '../../src/helpers/messages';
 
 describe('Selector service test suite', () => {
