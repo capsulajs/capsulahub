@@ -3,6 +3,7 @@ Feature: Create Selector service extension for CapsulaHub
 Background:
   Given Workspace
   And   SelectorService extension
+  And   WorkspaceConfig with SelectorService extension with the property serviceName: "SelectorService" in its config
 
  Scenario: SelectorService extension bootstrap function resolves correctly and triggers the registration of an instance of SelectorService in Workspace
    When  SelectorService extension bootstrap function is called
