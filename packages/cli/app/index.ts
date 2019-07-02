@@ -9,6 +9,9 @@ if (dispatcherUrl === 'undefined') {
   dispatcherUrl = undefined;
 }
 
+// config is applied for "run" command - configuration is stored for each port there
+// process.env props are applied for "build" command and will be not available for "run"
+
 new WorkspaceFactory()
   .createWorkspace({
     token: process.env.CAPSULAHUB_TOKEN || config.token,
