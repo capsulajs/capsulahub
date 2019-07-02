@@ -13,12 +13,12 @@ describe('Service EnvRegistry TCs', () => {
     const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
     await bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, defaultConfig);
 
-    expect(registerServiceStub).to.be.calledOnce;
+    expect(registerServiceStub).to.be.callCount(1);
     // @ts-ignore
     const registerServiceRequest = registerServiceStub.args[0][0];
     expect(Object.keys(registerServiceRequest).length).to.equal(2);
     expect(registerServiceRequest.serviceName).to.be.equal('EnvironmentRegistryService');
-    expect(registerServiceRequest.reference instanceof EnvRegistry).to.be.true;
+    expect(registerServiceRequest.reference instanceof EnvRegistry).to.equal(true);
 
     const envRegistry = new EnvRegistry(defaultConfig.token);
     await envRegistry.register({ envKey: 'develop', env: { test: 'test' } });
@@ -34,8 +34,7 @@ describe('Service EnvRegistry TCs', () => {
     // @ts-ignore
     cy.stub(utils, 'getServiceInstance').throws(Error(errorMessage));
     return bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, defaultConfig).catch((error: Error) => {
-      console.log(error);
-      expect(error instanceof Error).to.be.true;
+      expect(error instanceof Error).to.equal(true);
       expect(error.message).to.equal(errorMessage);
     });
   });
