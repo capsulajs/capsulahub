@@ -25,5 +25,8 @@
     "start": "webpack-dev-server --env.production=false",
     "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
+  },
+  "dependencies": {
+    "@capsulajs/capsulahub-workspace": "^0.0.2-alpha.1"
   }
 }
