@@ -1,29 +1,38 @@
+import { EnvRegistry } from '@capsulajs/environment-registry';
 import { API as WORKSPACE_API } from '@capsulajs/capsulahub-workspace';
 import '../support';
 import bootstrap from '../../src/index';
-import { EnvRegistry } from '@capsulajs/environment-registry';
 import mocks from '../support/mocks';
 import utils from '../../src/helpers/utils';
 
 describe('Service EnvRegistry TCs', () => {
   const defaultConfig = { serviceName: 'EnvironmentRegistryService', token: 'Hello' };
 
-  it('EnvRegistry extension bootstrap function resolves correctly and triggers the registration of an instance of EnvRegistry in Workspace', async () => {
+  it('EnvRegistry extension bootstrap function resolves correctly and triggers the registration of an instance of EnvRegistry in Workspace', (done) => {
     const registerServiceStub = cy.stub();
-    const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
-    await bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, defaultConfig);
-
-    expect(registerServiceStub).to.be.callCount(1);
+    const spy = cy.spy(utils, 'getServiceInstance');
+    const registerServiceStubPromise = new Promise((resolve) => setTimeout(resolve, 500));
     // @ts-ignore
-    const registerServiceRequest = registerServiceStub.args[0][0];
-    expect(Object.keys(registerServiceRequest).length).to.equal(2);
-    expect(registerServiceRequest.serviceName).to.be.equal('EnvironmentRegistryService');
-    expect(registerServiceRequest.reference instanceof EnvRegistry).to.equal(true);
+    registerServiceStub.callsFake((registerServiceRequest: WORKSPACE_API.RegisterServiceRequest) => {
+      expect(Object.keys(registerServiceRequest).length).to.equal(2);
+      expect(registerServiceRequest.serviceName).to.be.equal('EnvironmentRegistryService');
+      expect(registerServiceRequest.reference instanceof EnvRegistry).to.equal(true);
+      return registerServiceStubPromise;
+    });
 
-    const envRegistry = new EnvRegistry(defaultConfig.token);
-    await envRegistry.register({ envKey: 'develop', env: { test: 'test' } });
-    return envRegistry.environments$({}).subscribe((response) => {
-      expect(response).to.equal({ envKey: 'develop', env: { test: 'test' } });
+    let isBootstrapResolved = false;
+    const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
+    bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, defaultConfig).then((response) => {
+      expect(response).to.equal(undefined);
+      expect(registerServiceStub).to.be.callCount(1);
+      isBootstrapResolved = true;
+      // @ts-ignore
+      expect(spy.args[0][0].token).to.equal(defaultConfig.token);
+    });
+
+    registerServiceStubPromise.then(() => {
+      expect(isBootstrapResolved).to.equal(true);
+      done();
     });
   });
 
