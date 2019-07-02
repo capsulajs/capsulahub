@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-widget-table",
-  "version": "0.0.2-alpha.1",
+  "version": "0.0.2-alpha.2",
   "description": "Widget item extension, that provides a web-component with a table of data.",
   "main": "lib/index.js",
   "module": "lib/index.js",
