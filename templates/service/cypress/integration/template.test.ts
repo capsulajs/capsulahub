@@ -8,17 +8,28 @@ import mocks from '../support/mocks';
 describe('Service Service bootstrap TCs', () => {
   const serviceName = 'TestService';
 
-  it('Service extension bootstrap function resolves correctly and triggers the registration of an instance of Service in Workspace', async () => {
+  it('Service extension bootstrap function resolves correctly and triggers the registration of an instance of Service in Workspace', (done) => {
     const registerServiceStub = cy.stub();
-    const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
-    await bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, { serviceName });
-
-    expect(registerServiceStub).to.be.calledOnce;
+    const registerServiceStubPromise = new Promise((resolve) => setTimeout(resolve, 500));
     // @ts-ignore
-    const registerServiceRequest = registerServiceStub.args[0][0];
-    expect(Object.keys(registerServiceRequest).length).to.equal(2);
-    expect(registerServiceRequest.serviceName).to.be.equal(serviceName);
-    expect(registerServiceRequest.reference instanceof Service).to.be.true;
+    registerServiceStub.callsFake((registerServiceRequest: WORKSPACE_API.RegisterServiceRequest) => {
+      expect(Object.keys(registerServiceRequest).length).to.equal(2);
+      expect(registerServiceRequest.serviceName).to.be.equal(serviceName);
+      expect(registerServiceRequest.reference instanceof Service).to.be.true;
+      return registerServiceStubPromise;
+    });
+    let isBootstrapResolved = false;
+    const fakeWorkspace = mocks.getWorkspaceMock(registerServiceStub);
+    bootstrap(fakeWorkspace as WORKSPACE_API.Workspace, { serviceName }).then((response) => {
+      expect(response).to.equal(undefined);
+      expect(registerServiceStub).to.be.calledOnce;
+      isBootstrapResolved = true;
+    });
+
+    registerServiceStubPromise.then(() => {
+      expect(isBootstrapResolved).to.equal(true);
+      done();
+    });
   });
 
   it('Service extension bootstrap function rejects with an error if the creation of an instance of Service throws an error', () => {
