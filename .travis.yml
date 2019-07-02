@@ -14,10 +14,10 @@ branches:
     - /.*/
 
 # Keep the npm cache around to speed up installs
-cache:
-  npm: true
-  directories:
-    - '$HOME/.npm'
+#cache:
+#  npm: true
+#  directories:
+#    - '$HOME/.npm'
 
 before_install:
   - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
