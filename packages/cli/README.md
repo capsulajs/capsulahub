@@ -4,13 +4,17 @@
 
 ## Description
 
-An awesome tool to develop and test your micro-frontend services !
+An awesome tool to develop and test your micro-frontend services!
 
 ## Local development
 
 ```bash
-yarn link
-chmod +x bin/cli.js
+# from the root
+npm link packages/cli
+cd packages/cli/node_modules
+find . -maxdepth 1 -type d \! \( -name ".bin" -o -name ".cache" \) -exec rm -rf "{}" \;
+# now you can use capsulahub binary anywhere in the repository
+# for example:
 capsulahub run --token=http://localhost:3000/configuration --configProvider=httpFile --port=8888
 ```
 
