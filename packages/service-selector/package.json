@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-service-selector",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "description": "Service extension, that allows a user to select a specific item inside a collection of data.",
   "main": "dist/index.js",
   "module": "lib/index.js",
