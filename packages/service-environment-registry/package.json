@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-service-environment-registry",
-  "version": "0.0.1",
+  "version": "0.0.2-alpha.0",
   "description": "Environment Registry extension, that allows a user to register and retrieve environments",
   "main": "dist/index.js",
   "module": "lib/index.js",
