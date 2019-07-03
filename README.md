@@ -20,7 +20,7 @@ The packages, that implement an ability to run Capsulahub from CLI (from a termi
 
 | Package name          | Description                                                                                                                                                    |
 |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| cli                   | The package, that provides an ability to use CLI to run and build Capsulahub application.                                                                                                                                 |
+| [cli](packages/cli)   | The package, that provides an ability to use CLI to run and build Capsulahub application.                                                                                                                                 |
 
 ### Service extensions
 
@@ -79,7 +79,7 @@ you can add those npm scripts to the `package.json`
     "dist:doc": "cpy --parents doc/ dist/",
     "dist:example": "cpy --parents example/ dist/"
 
-#### Publish
+### Publish
 The npm publishing will be performed automatically during the CI/CD process.  
 However, you need to **manually publish it for the first time**.  
 If you don't, you will get this error: `lerna ERR! E402 You must sign up for private packages` 
@@ -95,3 +95,29 @@ If you want, you can enable comments after publishing on npm by adding this npm 
     "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)"
 In this case, a bot will comment after publishing the package and will update this comment each time 
 a new package is built for your PR.
+
+## Develop your extension
+
+An extension is a service or a web component that is loaded by CapsulaHub. 
+The extension should look like this:
+
+```typescript
+import { Workspace } from '@capsulajs/capsulahub-core-workspace';
+export default (workspace: Workspace, config: object): Promise<void> => {
+  // your code here
+};
+```
+
+`workspace` and `config` are injected by the application in the extension.
+
+`workspace` is matching this [API](https://github.com/capsulajs/capsulahub-core/blob/develop/packages/workspace/src/api/Workspace.ts) 
+and could be use in particular to allow the service to register itself.
+
+`config` contains the configuration for this specific extension that you passed in the configuration file 
+(e.g: `configuration_file.services.['myExtension'].config` for myExtension service).
+
+For more details, take a look at this 
+[example file](https://github.com/capsulajs/capsulahub-core/blob/develop/packages/externalModules/src/services/serviceA.ts).
+
+You can also use our [template](https://github.com/capsulajs/capsulahub/tree/develop/templates) 
+as a basis.

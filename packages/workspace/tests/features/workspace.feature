@@ -58,6 +58,16 @@ Scenario: Call createWorkspace without providing configProvider should create wo
     When I run createWorkspace method with token 123 and without providing configProvider
     Then I expect workspace to be created with "httpFile" configuration provider
 
+#5
+Scenario: DispatcherUrl is applied correctly while the creation of ConfigurationService for scalecube configProvider
+    Given WorkspaceFactory instance with createWorkspace method
+    And  Configuration for token 123 that includes service A and B and components 1 and 2
+    And  Service A and service B include a bootstrap that calls registerService
+    When I run createWorkspace method with token 123, with "scalecube" configProvider and a valid dispatcherUrl
+    Then I expect workspace to be created with "scalecube" configuration provider
+    And  DispatcherUrl is applied correctly
+
+
 #______________________________________NEGATIVE______________________________________
 
 #1
@@ -214,6 +224,25 @@ Scenario: Call createWorkspace with an invalid configProvider is rejected with e
     And  Service A and service B include a bootstrap that calls registerService
     When I run createWorkspace method with token 123 with invalid values for <configProvider>
         |<configProvider> |
+        |''        |
+        |{}        |
+        |{ test: 'test' }|
+        |[]        |
+        |['test']  |
+        |null      |
+        |true      |
+        |false     |
+        |0         |
+        |-1        |
+    Then I expect to receive an error
+
+#6
+Scenario: Call createWorkspace for "scalecube" configProvider with a dispatcherUrl with invalid format is rejected with error
+    Given WorkspaceFactory instance with createWorkspace method
+    And  Configuration for token 123 that includes service A and B and components 1 and 2
+    And  Service A and service B include a bootstrap that calls registerService
+    When I run createWorkspace method with token 123, with "scalecube" configProvider and invalid values for <dispatcherUrl>
+        |<dispatcherUrl> |
         |''        |
         |{}        |
         |{ test: 'test' }|

@@ -17,6 +17,7 @@ import {
   validateRegisterServiceRequest,
   validateServiceInConfig,
 } from './helpers/validators';
+import { generateMicroserviceAddress } from './helpers/utils';
 
 const eventsTypes = {
   registered: 'registered',
@@ -32,6 +33,7 @@ export class Workspace implements API.Workspace {
   private componentsMap: API.ComponentsMap;
   private listeners: INTERNAL_TYPES.EventListeners;
   private id: string;
+  private seedAddress?: string;
 
   constructor(configuration: API.WorkspaceConfig) {
     this.id = uuidv4();
@@ -86,16 +88,17 @@ export class Workspace implements API.Workspace {
           (serviceConfiguration) => serviceConfiguration.serviceName === registerServiceRequest.serviceName
         );
         try {
-          this.microservice = Microservices.create({
+          const microserviceOptions: SCALECUBE_API.MicroserviceOptions = {
             services: [{ definition: serviceConfig!.definition, reference: registerServiceRequest.reference }],
-            // @ts-ignore
-            seedAddress: {
-              host: `${this.id}`,
-              port: 7777,
-              protocol: 'ws',
-              path: './workspace',
-            },
-          });
+          };
+          if (!this.seedAddress) {
+            this.seedAddress = uuidv4();
+            microserviceOptions.address = generateMicroserviceAddress(this.seedAddress);
+          } else {
+            microserviceOptions.address = generateMicroserviceAddress(uuidv4());
+            microserviceOptions.seedAddress = generateMicroserviceAddress(this.seedAddress);
+          }
+          this.microservice = Microservices.create(microserviceOptions);
         } catch (error) {
           const errorMessage = getScalecubeCreationError(error, registerServiceRequest.serviceName);
           this.emitServiceRegistrationFailedEvent(registerServiceRequest.serviceName, errorMessage);

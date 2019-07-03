@@ -13,6 +13,7 @@ import gridComponentBootstrap from '@capsulajs/capsulahub-cdn-emulator/src/widge
 // // @ts-ignore
 import requestFormComponentBootstrap from '@capsulajs/capsulahub-cdn-emulator/src/widgets/RequestForm';
 import WorkspaceFactory from '../../src/WorkspaceFactory';
+import { API } from '../..';
 import {
   configRepositoryName,
   configWrongFormatError,
@@ -27,6 +28,7 @@ import {
   getBootstrapServiceError,
   getScalecubeCreationError,
   configNotLoadedError,
+  createWorkspaceWrongRequestForScalecubeProviderError,
 } from '../../src/helpers/const';
 import { mockBootstrapComponent, mockConfigurationService, mockGetModuleDynamically } from '../helpers/mocks';
 import baseConfigEntries, {
@@ -117,16 +119,16 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceCBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceCBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -169,9 +171,9 @@ describe('Workspace tests', () => {
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
       Promise.reject(error),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
 
     const workspaceFactory = new WorkspaceFactory();
@@ -188,14 +190,14 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(() => {
         return new Promise(() => {
           throw bootstrapError;
         });
       }),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
 
     const workspaceFactory = new WorkspaceFactory();
@@ -212,10 +214,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.reject(error),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
 
     const workspaceFactory = new WorkspaceFactory();
@@ -233,9 +235,9 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(() => {
         return new Promise(() => {
           throw bootstrapError;
@@ -258,10 +260,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent(true);
 
@@ -278,10 +280,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -317,10 +319,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -350,10 +352,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -377,10 +379,10 @@ describe('Workspace tests', () => {
       };
       mockConfigurationService(configurationServiceMock);
       mockGetModuleDynamically([
-        Promise.resolve(serviceABootstrap),
-        Promise.resolve(serviceBBootstrap),
-        Promise.resolve(gridComponentBootstrap),
-        Promise.resolve(requestFormComponentBootstrap),
+        Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+        Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
       mockBootstrapComponent();
 
@@ -403,10 +405,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -427,11 +429,11 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceCBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -464,11 +466,11 @@ describe('Workspace tests', () => {
       };
       mockConfigurationService(configurationServiceMock);
       mockGetModuleDynamically([
-        Promise.resolve(serviceABootstrap),
-        Promise.resolve(serviceBBootstrap),
-        Promise.resolve(serviceDBootstrap),
-        Promise.resolve(gridComponentBootstrap),
-        Promise.resolve(requestFormComponentBootstrap),
+        Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(serviceDBootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+        Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
       mockBootstrapComponent();
 
@@ -476,7 +478,12 @@ describe('Workspace tests', () => {
       const workspace = await workspaceFactory.createWorkspace({ token: '123' });
       const services = await workspace.services({});
       return expect(services.ServiceD).rejects.toEqual(
-        new Error(getScalecubeCreationError(new Error('Invalid method reference for ServiceD/world'), 'ServiceD'))
+        new Error(
+          getScalecubeCreationError(
+            new Error('ServiceD/world has valid definition but reference is not a function.'),
+            'ServiceD'
+          )
+        )
       );
     }
   );
@@ -497,14 +504,18 @@ describe('Workspace tests', () => {
       };
       mockConfigurationService(configurationServiceMock);
       mockGetModuleDynamically([
-        Promise.resolve(serviceABootstrap),
-        Promise.resolve(serviceBBootstrap),
-        Promise.resolve(gridComponentBootstrap),
-        Promise.resolve(requestFormComponentBootstrap),
+        Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+        Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
       mockBootstrapComponent();
       const workspaceFactory = new WorkspaceFactory();
-      await workspaceFactory.createWorkspace({ token: '123', configProvider });
+      const createWorkspaceRequest: API.CreateWorkspaceRequest = { token: '123', configProvider };
+      if (configProvider === configurationServiceItems.configurationTypes.scalecube) {
+        createWorkspaceRequest.dispatcherUrl = 'http://localhost:3000';
+      }
+      await workspaceFactory.createWorkspace(createWorkspaceRequest);
       return expect(getConfigurationServiceClassSpy.mock.results[0].value.name).toBe(configurationServiceClassName);
     }
   );
@@ -516,10 +527,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -528,7 +539,7 @@ describe('Workspace tests', () => {
     return expect(getConfigurationServiceClassSpy.mock.results[0].value.name).toBe('ConfigurationServiceHttpFile');
   });
 
-  it('Call createWorkspace with providing non-existing configurationType is rejected with error', async () => {
+  it('Call createWorkspace with providing non-existing configurationType is rejected with error', () => {
     expect.assertions(1);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
@@ -544,4 +555,50 @@ describe('Workspace tests', () => {
       new Error(configNotLoadedError(new Error(configurationServiceItems.messages.configProviderDoesNotExist)))
     );
   });
+
+  it('DispatcherUrl is applied correctly while the creation of ConfigurationService', async () => {
+    expect.assertions(2);
+
+    const configurationServiceMock = {
+      entries: () => Promise.resolve({ entries: baseConfigEntries }),
+    };
+    const getConfigStub = mockConfigurationService(configurationServiceMock);
+    mockGetModuleDynamically([
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
+    ]);
+    mockBootstrapComponent();
+
+    const workspaceFactory = new WorkspaceFactory();
+    await workspaceFactory.createWorkspace({
+      token: '123',
+      configProvider: configurationServiceItems.configurationTypes.scalecube,
+      dispatcherUrl: 'http://localhost:3000',
+    });
+
+    expect(getConfigStub).toHaveBeenCalledTimes(1);
+    expect(getConfigStub).toHaveBeenCalledWith(
+      '123',
+      configurationServiceItems.ConfigurationServiceScalecube,
+      'http://localhost:3000'
+    );
+  });
+
+  test.each(invalidCreateWorkspaceRequest)(
+    'Call createWorkspace for "scalecube" configProvider with a dispatcherUrl with invalid format is rejected with error (%s)',
+    (invalidDispatcherUrl) => {
+      expect.assertions(1);
+      const workspaceFactory = new WorkspaceFactory();
+      return expect(
+        workspaceFactory.createWorkspace({
+          token: '123',
+          configProvider: configurationServiceItems.configurationTypes.scalecube,
+          // @ts-ignore
+          dispatcherUrl: invalidDispatcherUrl,
+        })
+      ).rejects.toEqual(new Error(createWorkspaceWrongRequestForScalecubeProviderError));
+    }
+  );
 });

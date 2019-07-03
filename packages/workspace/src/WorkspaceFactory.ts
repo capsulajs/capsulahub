@@ -13,8 +13,13 @@ import {
   configRepositoryName,
   configWrongFormatError,
   createWorkspaceWrongRequestError,
+  createWorkspaceWrongRequestForScalecubeProviderError,
 } from './helpers/const';
-import { validateCreateWorkspaceRequestToken, validateWorkspaceConfig } from './helpers/validators';
+import {
+  validateCreateWorkspaceRequestScalecubeConfigProvider,
+  validateCreateWorkspaceRequestToken,
+  validateWorkspaceConfig,
+} from './helpers/validators';
 
 export default class WorkspaceFactory implements API.WorkspaceFactory {
   public createWorkspace(createWorkspaceRequest: API.CreateWorkspaceRequest): Promise<API.Workspace> {
@@ -22,6 +27,9 @@ export default class WorkspaceFactory implements API.WorkspaceFactory {
       // createWorkspaceRequest validation
       if (!validateCreateWorkspaceRequestToken(createWorkspaceRequest)) {
         return reject(new Error(createWorkspaceWrongRequestError));
+      }
+      if (!validateCreateWorkspaceRequestScalecubeConfigProvider(createWorkspaceRequest)) {
+        return reject(new Error(createWorkspaceWrongRequestForScalecubeProviderError));
       }
 
       // Getting configurationService
@@ -34,7 +42,8 @@ export default class WorkspaceFactory implements API.WorkspaceFactory {
               typeof createWorkspaceRequest.configProvider !== 'undefined'
                 ? createWorkspaceRequest.configProvider
                 : 'httpFile',
-          })
+          }),
+          createWorkspaceRequest.dispatcherUrl
         );
       } catch (error) {
         reject(getErrorWithModifiedMessage(error, configNotLoadedError(error)));
