@@ -963,6 +963,13 @@
   dependencies:
     "@capsulajs/capsulajs-transport-providers" "^0.1.1"
 
+"@capsulajs/capsulajs-configuration-service@^0.1.5":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@capsulajs/capsulajs-configuration-service/-/capsulajs-configuration-service-0.1.12.tgz#7ebec19b2b47ab0f1d57da22ce70f653faab0652"
+  integrity sha512-IKk0/fUWiacO8kGr29i9GfXl0XDzsHz7kgRKsycnkN1yroe9TghGt8V8Kjz+4yIx5fZNZAeSOnCHhOOX/iUViQ==
+  dependencies:
+    "@capsulajs/capsulajs-transport-providers" "^0.1.1"
+
 "@capsulajs/capsulajs-transport-providers@0.1.1", "@capsulajs/capsulajs-transport-providers@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@capsulajs/capsulajs-transport-providers/-/capsulajs-transport-providers-0.1.1.tgz#c4f08cda57af8a1e1eef36b9ec13eb68434181fb"
@@ -970,6 +977,16 @@
   dependencies:
     axios "^0.18.0"
     typescript "^3.1.3"
+
+"@capsulajs/environment-registry@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@capsulajs/environment-registry/-/environment-registry-0.0.3.tgz#fd9e1ad7f18ca4f80f455d5f168099e59e01bdf4"
+  integrity sha512-B/XpN+774+dKk5JSu0AXp85KnlcnpHcyETdlvSpwevlHu47kKkJg4av0RehKrf3jRGmoiyMl1bLaMe97LDwmtw==
+  dependencies:
+    "@capsulajs/capsulajs-configuration-service" "^0.1.5"
+    "@types/node" "^10.12.21"
+    rxjs "^6.4.0"
+    typedoc "^0.14.2"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.3"
@@ -2713,6 +2730,11 @@
   version "12.0.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.2.tgz#3452a24edf9fea138b48fad4a0a028a683da1e40"
   integrity sha512-5tabW/i+9mhrfEOUcLDu2xBPsHJ+X5Orqy9FKpale3SjDA17j5AEpYq5vfy3oAeAHGcvANRCO3NV3d2D6q3NiA==
+
+"@types/node@^10.12.21":
+  version "10.14.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.10.tgz#e491484c6060af8d461e12ec81c0da8a3282b8de"
+  integrity sha512-V8wj+w2YMNvGuhgl/MA5fmTxgjmVHVoasfIaxMMZJV6Y8Kk+Ydpi1z2whoShDCJ2BuNVoqH/h1hrygnBxkrw/Q==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
