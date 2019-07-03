@@ -24,7 +24,7 @@
     "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-workspace": "^0.0.2-alpha.2",
+    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.2",
     "commander": "2.20.0",
     "express": "4.17.1",
     "parcel-bundler": "1.12.3",
