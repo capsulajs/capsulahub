@@ -119,16 +119,16 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceCBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceCBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -171,9 +171,9 @@ describe('Workspace tests', () => {
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
       Promise.reject(error),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
 
     const workspaceFactory = new WorkspaceFactory();
@@ -190,14 +190,14 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(() => {
         return new Promise(() => {
           throw bootstrapError;
         });
       }),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
 
     const workspaceFactory = new WorkspaceFactory();
@@ -214,10 +214,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.reject(error),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
 
     const workspaceFactory = new WorkspaceFactory();
@@ -235,9 +235,9 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(() => {
         return new Promise(() => {
           throw bootstrapError;
@@ -260,10 +260,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent(true);
 
@@ -280,10 +280,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -319,10 +319,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -352,10 +352,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -379,10 +379,10 @@ describe('Workspace tests', () => {
       };
       mockConfigurationService(configurationServiceMock);
       mockGetModuleDynamically([
-        Promise.resolve(serviceABootstrap),
-        Promise.resolve(serviceBBootstrap),
-        Promise.resolve(gridComponentBootstrap),
-        Promise.resolve(requestFormComponentBootstrap),
+        Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+        Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
       mockBootstrapComponent();
 
@@ -405,10 +405,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -429,11 +429,11 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceCBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -466,11 +466,11 @@ describe('Workspace tests', () => {
       };
       mockConfigurationService(configurationServiceMock);
       mockGetModuleDynamically([
-        Promise.resolve(serviceABootstrap),
-        Promise.resolve(serviceBBootstrap),
-        Promise.resolve(serviceDBootstrap),
-        Promise.resolve(gridComponentBootstrap),
-        Promise.resolve(requestFormComponentBootstrap),
+        Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(serviceDBootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+        Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
       mockBootstrapComponent();
 
@@ -478,7 +478,12 @@ describe('Workspace tests', () => {
       const workspace = await workspaceFactory.createWorkspace({ token: '123' });
       const services = await workspace.services({});
       return expect(services.ServiceD).rejects.toEqual(
-        new Error(getScalecubeCreationError(new Error('Invalid method reference for ServiceD/world'), 'ServiceD'))
+        new Error(
+          getScalecubeCreationError(
+            new Error('ServiceD/world has valid definition but reference is not a function.'),
+            'ServiceD'
+          )
+        )
       );
     }
   );
@@ -499,10 +504,10 @@ describe('Workspace tests', () => {
       };
       mockConfigurationService(configurationServiceMock);
       mockGetModuleDynamically([
-        Promise.resolve(serviceABootstrap),
-        Promise.resolve(serviceBBootstrap),
-        Promise.resolve(gridComponentBootstrap),
-        Promise.resolve(requestFormComponentBootstrap),
+        Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+        Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+        Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
       mockBootstrapComponent();
       const workspaceFactory = new WorkspaceFactory();
@@ -522,10 +527,10 @@ describe('Workspace tests', () => {
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
@@ -559,10 +564,10 @@ describe('Workspace tests', () => {
     };
     const getConfigStub = mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap),
-      Promise.resolve(serviceBBootstrap),
-      Promise.resolve(gridComponentBootstrap),
-      Promise.resolve(requestFormComponentBootstrap),
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
     mockBootstrapComponent();
 
