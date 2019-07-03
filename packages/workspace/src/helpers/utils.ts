@@ -103,3 +103,10 @@ export const getErrorWithModifiedMessage = (error: Error, newMessage: string): E
   error.message = newMessage;
   return error;
 };
+
+export const generateMicroserviceAddress = (path: string) => ({
+  host: 'host',
+  port: 7777,
+  protocol: 'pm',
+  path,
+});
