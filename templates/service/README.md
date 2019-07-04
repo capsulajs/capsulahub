@@ -19,14 +19,15 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/service-template/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-template/index.js
 
 ## WorkspaceConfiguration example
 
 ```json
-  "services": {
+  "services": [
+    {
       "serviceName": "TestService",
-      "path": "https://capsulajs.s3.amazonaws.com/develop/service-template/index.js",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-template/index.js",
       "definition": {
         "serviceName": "TestService",
         "methods": {
@@ -34,7 +35,8 @@ You can get the default export from the link
         }
       },
       "config": { "message": "Test message" }
-  }
+    }
+  ]
 ```
 
 ## Exports

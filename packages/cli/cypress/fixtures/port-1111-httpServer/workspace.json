@@ -39,9 +39,8 @@
   ],
   "components": {
     "layouts": {
-      "web-grid": {
+      "capsulahub-root": {
         "componentName": "web-grid",
-        "nodeId": "web-grid",
         "path": "http://localhost:1111/widgets/Grid.js",
         "config": {
           "title": "Base Grid from PORT 1111 HTTP Server",
@@ -52,7 +51,6 @@
     "items": {
       "web-component-a": {
         "componentName": "web-component-a",
-        "nodeId": "web-component-a",
         "path": "http://localhost:1111/widgets/ComponentA.js",
         "config": { "name": "ComponentA(PORT 1111 HTTP Server)" }
       }

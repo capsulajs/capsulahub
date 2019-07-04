@@ -20,14 +20,15 @@ or
 
 You can get the default export from the link
 
-    https://capsulajs.s3.amazonaws.com/develop/service-environment-registry/index.js
+    https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-environment-registry/index.js
 
 ## WorkspaceConfiguration example
 
 ```json
-  "services": {
+  "services": [
+    {
       "serviceName": "EnvironmentRegistryService",
-      "path": "https://capsulajs.s3.amazonaws.com/develop/service-environment-registry/index.js",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-environment-registry/index.js",
       "definition": {
         "serviceName": "EnvironmentRegistryService",
         "methods": {
@@ -36,7 +37,8 @@ You can get the default export from the link
         }
       },
       "config": { "serviceName": "EnvironmentRegistryService" }
-  }
+    }
+  ]
 ```
 
 ## Exports
