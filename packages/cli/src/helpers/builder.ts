@@ -10,6 +10,7 @@ export default (builderOptions: { entryFile: string; output: string }) => {
   rimraf(output, () => {
     const options = {
       outDir: output,
+      publicUrl: './',
       watch: false,
       cache: false,
       contentHash: false,
