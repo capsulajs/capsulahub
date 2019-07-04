@@ -30,10 +30,10 @@ if [[ "$TRAVIS_PULL_REQUEST_BRANCH" =~ ^feature\/.*$ ]]; then
     echo "version      -> $VERSION_NUMBER"
     BRANCH_NAME=$(echo $TRAVIS_PULL_REQUEST_BRANCH | sed "s/[_/]/-/g")
     echo "branch name  -> $BRANCH_NAME"
-    PACKAGE_VERSION="${BRANCH_NAME}.$(date +%s)"
+    PACKAGE_VERSION="alpha.$(date +%s)"
     lerna publish --canary --dist-tag snapshot --preid "$PACKAGE_VERSION" --yes --since develop
     echo_result "$?"
-    lerna run --since develop publish:comment -- ${VERSION_NUMBER} ${PACKAGE_VERSION}
+    lerna run --since develop publish:comment -- "alpha" ${PACKAGE_VERSION}
 
 elif [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
     echo "--------------------------------------------"
@@ -42,7 +42,7 @@ elif [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false"
 
     set_git_remote
     git checkout develop
-    lerna publish prerelease --dist-tag next --yes -m '[skip ci]'
+    lerna publish prerelease --canary --preid next --dist-tag next --yes -m '[skip ci]'
     echo_result "$?"
 
 elif [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
