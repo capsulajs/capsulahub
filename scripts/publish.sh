@@ -31,9 +31,9 @@ if [[ "$TRAVIS_PULL_REQUEST_BRANCH" =~ ^feature\/.*$ ]]; then
     BRANCH_NAME=$(echo $TRAVIS_PULL_REQUEST_BRANCH | sed "s/[_/]/-/g")
     echo "branch name  -> $BRANCH_NAME"
     PACKAGE_VERSION="${BRANCH_NAME}.$(date +%s)"
-    lerna publish --canary --dist-tag snapshot --preid "$PACKAGE_VERSION" --yes
+    lerna publish --canary --dist-tag snapshot --preid "$PACKAGE_VERSION" --yes --since develop
     echo_result "$?"
-    lerna run publish:comment -- ${VERSION_NUMBER} ${PACKAGE_VERSION}
+    lerna run --since develop publish:comment -- ${VERSION_NUMBER} ${PACKAGE_VERSION}
 
 elif [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
     echo "--------------------------------------------"
