@@ -120,9 +120,8 @@ Example: _config.json_
   ],
   "components": {
     "layouts": {
-      "web-grid": {
+      "capsulahub-root": {
         "componentName": "web-grid",
-        "nodeId": "web-grid",
         "path": "http://localhost:1111/widgets/Grid.js",
         "config": {
           "title": "Base Grid from PORT 1111 HTTP File",
@@ -133,7 +132,6 @@ Example: _config.json_
     "items": {
       "web-component-a": {
         "componentName": "web-component-a",
-        "nodeId": "web-component-a",
         "path": "http://localhost:1111/widgets/ComponentA.js",
         "config": { "name": "ComponentA(PORT 1111 HTTP File)" }
       }
@@ -141,6 +139,11 @@ Example: _config.json_
   }
 }
 ```
+
+### Mount point
+
+Please notice, that the first component, that is supposed to be mounted on the application, should
+have the key **"capsulahub-root"** (as it is in configuration example).
 
 <!-- To put back later for local dev
 Run it locally

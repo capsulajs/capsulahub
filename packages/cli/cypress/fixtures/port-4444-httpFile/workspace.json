@@ -39,9 +39,8 @@
   ],
   "components": {
     "layouts": {
-      "web-grid": {
+      "capsulahub-root": {
         "componentName": "web-grid",
-        "nodeId": "web-grid",
         "path": "http://localhost:4444/widgets/Grid.js",
         "config": {
           "title": "Base Grid from PORT 4444 HTTP File",
@@ -52,7 +51,6 @@
     "items": {
       "web-component-b": {
         "componentName": "web-component-b",
-        "nodeId": "web-component-b",
         "path": "http://localhost:4444/widgets/ComponentB.js",
         "config": {}
       }
