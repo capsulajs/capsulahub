@@ -25,6 +25,7 @@ You can get the default export from the link
     https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-modal/index.js
 
 ## WorkspaceConfiguration example
+
 ```json
 {
   "components": {
