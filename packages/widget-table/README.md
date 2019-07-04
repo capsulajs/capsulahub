@@ -1,6 +1,6 @@
 # Widget Table
 
-Widget item extension, that provides a web-component with a table of data.
+Widget item extension, that provides a webComponent with a table of data.
 
 ### TODO
 
@@ -26,19 +26,20 @@ You can get the default export from the link
 
 ## WorkspaceConfiguration example
 
-      "components": {
-        "layouts": {
-            // ...some widget for layout
-        },
-        "items": {
-          "web-table": {
-            "componentName": "web-table",
-            "nodeId": "web-table",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-table/index.js",
-            "config": {}
-          }
-        }
+```json
+{
+  "components": {
+    "layouts": {},
+    "items": {
+      "web-table": {
+        "componentName": "web-table",
+        "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-table/index.js",
+        "config": {}
       }
+    }
+  }
+}
+```
 
 ## Exports
 

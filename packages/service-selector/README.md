@@ -24,7 +24,9 @@ You can get the default export from the link
 ## WorkspaceConfiguration example
 
 ```json
-  "services": {
+{
+  "services": [
+    {
       "serviceName": "SelectorService",
       "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-selector/index.js",
       "definition": {
@@ -33,11 +35,13 @@ You can get the default export from the link
           "setItems": { "asyncModel": "requestResponse" },
           "items$": { "asyncModel": "requestStream" },
           "selectItem": { "asyncModel": "requestResponse" },
-          "selectedItem$": { "asyncModel": "requestStream" },
+          "selectedItem$": { "asyncModel": "requestStream" }
         }
       },
       "config": { "serviceName": "SelectorService" }
-  }
+    }
+  ]
+}
 ```
 
 ## Exports

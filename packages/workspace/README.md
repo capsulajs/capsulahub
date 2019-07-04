@@ -91,7 +91,7 @@ An example of WorkspaceConfiguration:
           "greet": { "asyncModel": "requestResponse" }
         }
       },
-      "config": { "name": "serviceA", "message": "what pill would you choose: red or blue?" }
+      "config": { "serviceName": "serviceA", "message": "what pill would you choose: red or blue?" }
     },
     {
       "serviceName": "ServiceB",
@@ -102,14 +102,13 @@ An example of WorkspaceConfiguration:
           "getRandomNumbers": { "asyncModel": "requestStream" }
         }
       },
-      "config": { "name": "serviceB" }
+      "config": { "serviceName": "serviceB" }
     }
   ],
   "components": {
     "layouts": {
-      "grid": {
+      "capsulahub-root": {
         "componentName": "web-grid",
-        "nodeId": "root",
         "path": "http://localhost:3000/widgets/Grid.js",
         "config": { "title": "Base Grid" }
       }
@@ -117,7 +116,6 @@ An example of WorkspaceConfiguration:
     "items": {
       "request-form": {
         "componentName": "web-request-form",
-        "nodeId": "request-form",
         "path": "http://localhost:3000/widgets/RequestForm.js",
         "config": { "title": "Base Request Form" }
       }

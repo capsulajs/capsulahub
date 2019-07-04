@@ -5,7 +5,7 @@
 ## Description
 
 CapsulaHub is part of CapsulaJS project, it is one of CapsulaJS pillars but it can be used stand alone.
-It is an CLI tool to help you to develop and test your micro-frontend services !
+It is an CLI tool to help you to develop and test your micro-frontend services!
 
 ## Local development
 

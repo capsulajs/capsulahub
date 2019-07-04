@@ -1,14 +1,14 @@
-# Utils
+## Utils
 
 Common utils for Capsulahub.
 
-# Exports
+## Exports
 
 ### Named (helpers)
 
 An object with all the helper functions.
 
-# Usage
+## Usage
 
 ### Add the package to packages dependencies
 

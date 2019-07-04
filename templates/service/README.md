@@ -24,6 +24,7 @@ You can get the default export from the link
 ## WorkspaceConfiguration example
 
 ```json
+{
   "services": [
     {
       "serviceName": "TestService",
@@ -34,9 +35,13 @@ You can get the default export from the link
           "showMessage": { "asyncModel": "requestResponse" }
         }
       },
-      "config": { "message": "Test message" }
+      "config": { 
+         "serviceName":"message",
+         "message": "Test message"
+       }
     }
   ]
+}
 ```
 
 ## Exports

@@ -10,7 +10,7 @@ will be loaded dynamically while the creation of **Workspace**.
 You can put a new extension in [./src](src) folder in an appropriate folder (widgets or services) and register it
 in [Workspace configuration](webpack.config.js).
 
-WorkspaceConfiguration can be changed in [./src/configurations/workspace.json](webpack.config.js), but the name of the file should stay the same.
+Configuration can be changed in [./src/configurations/workspace.json](webpack.config.js), but the name of the file should stay the same.
 
 In order to build extensions and serve them on localhost you should run
 
