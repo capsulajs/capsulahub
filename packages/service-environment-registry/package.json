@@ -27,7 +27,7 @@
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-workspace": "^0.0.2-alpha.2",
-    "@capsulajs/environment-registry": "^0.0.3"
+    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.2",
+    "@capsulajs/environment-registry": "0.0.3"
   }
 }
