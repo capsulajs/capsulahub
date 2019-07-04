@@ -1,6 +1,6 @@
 # Widget Request Form
 
-Widget item extension, that provides a web-component with an editor, that allows to create JS or JSON code snippets.
+Widget item extension, that provides a webComponent with an editor, that allows to create JS or JSON code snippets.
 
 ### TODO
 

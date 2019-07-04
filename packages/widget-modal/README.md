@@ -1,6 +1,6 @@
 # Widget Modal
 
-Widget item extension, that provides a web-component with the modal, that can include any given content.
+Widget item extension, that provides a webComponent with the modal, that can include any given content.
 
 ### TODO
 
@@ -39,7 +39,6 @@ You can get the default export from the link
   }
 }
 ```
-
 
 ## Exports
 

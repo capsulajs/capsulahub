@@ -1,6 +1,6 @@
 # Widget Table
 
-Widget item extension, that provides a web-component with a table of data.
+Widget item extension, that provides a webComponent with a table of data.
 
 ### TODO
 
