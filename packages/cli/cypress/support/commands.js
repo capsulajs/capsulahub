@@ -9,22 +9,22 @@ Cypress.Commands.add('testCapsulahubAppRender', (customText, componentName = 'co
   let componentMessageText;
   switch (componentName) {
     case 'componentA': {
-      componentGetSelector = '#web-grid web-grid web-component-a h2';
-      componentGetMessageSelector = '#web-grid web-grid web-component-a #component-a-message';
+      componentGetSelector = '#capsulahub-root web-grid web-component-a h2';
+      componentGetMessageSelector = '#capsulahub-root web-grid web-component-a #component-a-message';
       componentText = `Hello from ComponentA(${customText})`;
       componentMessageText = `Message from Service A: Message from ServiceA from ${customText}`;
       break;
     }
     case 'componentB': {
-      componentGetSelector = '#web-grid web-grid web-component-b h2';
-      componentGetMessageSelector = '#web-grid web-grid web-component-b #component-b-message';
+      componentGetSelector = '#capsulahub-root web-grid web-component-b h2';
+      componentGetMessageSelector = '#capsulahub-root web-grid web-component-b #component-b-message';
       componentText = 'I am ComponentB!';
       componentMessageText = `Message from Service A: Message from ServiceA from ${customText}`;
       break;
     }
   }
 
-  cy.get('#web-grid web-grid h1')
+  cy.get('#capsulahub-root web-grid h1')
     .should('have.text', `Capsulahub title: Base Grid from ${customText}`)
     .get(componentGetSelector)
     .should('have.text', componentText)
