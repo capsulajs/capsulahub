@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-service-environment-registry",
-  "version": "0.0.2-alpha.1",
+  "version": "0.0.2-alpha.2",
   "description": "Environment Registry extension, that allows a user to register and retrieve environments",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -27,7 +27,7 @@
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.2",
+    "@capsulajs/capsulahub-workspace": "^0.0.2-alpha.3",
     "@capsulajs/environment-registry": "0.0.3"
   }
 }

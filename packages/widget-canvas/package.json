@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-widget-canvas",
-  "version": "0.0.2-alpha.1",
+  "version": "0.0.2-alpha.2",
   "description": "Widget layout extension, that provides the canvas web-component, where all the other elements can be flexibly situated",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@capsulajs/capsulahub-ui": "^0.0.2-alpha.1",
-    "@capsulajs/capsulahub-utils": "^0.0.2-alpha.1",
+    "@capsulajs/capsulahub-utils": "^0.0.2-alpha.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "rxjs": "6.5.2"

@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-service-configuration",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "description": "Service extension, that providers an ability to use ConfigurationService, that you can use for managing different configurations across your projects",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -23,7 +23,7 @@
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.2",
+    "@capsulajs/capsulahub-workspace": "^0.0.2-alpha.3",
     "@capsulajs/capsulajs-configuration-service": "0.1.11",
     "@capsulajs/capsulajs-transport-providers": "0.1.1",
     "rxjs": "6.5.2"

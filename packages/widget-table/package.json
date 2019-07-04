@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-widget-table",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "description": "Widget item extension, that provides a web-component with a table of data.",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@capsulajs/capsulahub-ui": "^0.0.2-alpha.1",
-    "@capsulajs/capsulahub-utils": "^0.0.2-alpha.1",
+    "@capsulajs/capsulahub-utils": "^0.0.2-alpha.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "rxjs": "6.5.2"
