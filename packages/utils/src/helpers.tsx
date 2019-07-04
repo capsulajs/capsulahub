@@ -32,9 +32,9 @@ export default {
     }
   },
 
-  dataComponentHoc<Data extends {}>(Component: React.ComponentClass, data$: Observable<Data>) {
+  dataComponentHoc<Data>(Component: React.ComponentClass<Data, any>, data$: Observable<Data>) {
     // tslint:disable:max-classes-per-file
-    return class HOC extends React.Component {
+    return class HOC extends React.Component<any, Data> {
       public componentDidMount() {
         data$.subscribe((data) => {
           this.setState(data);
