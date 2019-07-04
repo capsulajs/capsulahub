@@ -25,20 +25,20 @@ You can get the default export from the link
     https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-table/index.js
 
 ## WorkspaceConfiguration example
-
-      "components": {
-        "layouts": {
-            // ...some widget for layout
-        },
-        "items": {
-          "web-table": {
-            "componentName": "web-table",
-            "nodeId": "web-table",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-table/index.js",
-            "config": {}
-          }
-        }
+```json
+{
+  "components": {
+    "layouts": {},
+    "items": {
+      "web-table": {
+        "componentName": "web-table",
+        "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-table/index.js",
+        "config": {}
       }
+    }
+  }
+}
+```
 
 ## Exports
 

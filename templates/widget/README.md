@@ -22,20 +22,19 @@ You can get the default export from the link
 
 ## WorkspaceConfiguration example
 
-```
+```json
+{
   "components": {
-    "layouts": {
-        // ...some widget for layout
-    },
+    "layouts": {},
     "items": {
       "test-widget-id": {
         "componentName": "web-test-widget",
-        "nodeId": "test-widget-id",
         "path": "https://capsulajs.s3.amazonaws.com/develop/widget-template/index.js",
         "config": { "title": "Base Test Widget" }
       }
     }
   }
+}
 ```
 
 ## Exports

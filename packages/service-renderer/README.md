@@ -23,7 +23,9 @@ You can get the default export from the link
 ## WorkspaceConfiguration example
 
 ```json
-  "services": {
+{
+  "services": [
+    {
       "serviceName": "RendererService",
       "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-renderer/index.js",
       "definition": {
@@ -31,11 +33,13 @@ You can get the default export from the link
         "methods": {
           "renderLayouts": { "asyncModel": "requestResponse" },
           "renderItems": { "asyncModel": "requestResponse" },
-          "renderItem": { "asyncModel": "requestResponse" },
+          "renderItem": { "asyncModel": "requestResponse" }
         }
       },
       "config": {}
-  }
+    }
+  ]
+}
 ```
 
 ## Exports

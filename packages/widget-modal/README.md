@@ -25,20 +25,21 @@ You can get the default export from the link
     https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-modal/index.js
 
 ## WorkspaceConfiguration example
-
-      "components": {
-        "layouts": {
-            // ...some widget for layout
-        },
-        "items": {
-          "web-modal": {
-            "componentName": "web-modal",
-            "nodeId": "web-modal",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-modal/index.js",
-            "config": {}
-          }
-        }
+```json
+{
+  "components": {
+    "layouts": {},
+    "items": {
+      "web-modal": {
+        "componentName": "web-modal",
+        "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-modal/index.js",
+        "config": {}
       }
+    }
+  }
+}
+```
+
 
 ## Exports
 

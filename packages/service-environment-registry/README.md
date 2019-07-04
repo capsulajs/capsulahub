@@ -25,6 +25,7 @@ You can get the default export from the link
 ## WorkspaceConfiguration example
 
 ```json
+{
   "services": [
     {
       "serviceName": "EnvironmentRegistryService",
@@ -39,6 +40,7 @@ You can get the default export from the link
       "config": { "serviceName": "EnvironmentRegistryService" }
     }
   ]
+}
 ```
 
 ## Exports

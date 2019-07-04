@@ -27,31 +27,29 @@ You can get the default export from the link
 
 ## Usage
 
-```javascript
-# ./config.js
+### Part of configuration
 
-module.exports = {
-  name: 'my-app',
-  services: [
+```json
+{
+  "services": [
     {
-      serviceName: 'ConfigurationService',
-      path: 'https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-configuration/index.js',
-      definition: {
-        serviceName: 'ConfigurationService',
-        methods: {
-          createRepository: { asyncModel: 'requestResponse' },
-          delete: { asyncModel: 'requestResponse' },
-          entries: { asyncModel: 'requestResponse' },
-          fetch: { asyncModel: 'requestResponse' },
-          save: { asyncModel: 'requestResponse' },
+      "serviceName": "ConfigurationService",
+      "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-service-configuration/index.js",
+      "definition": {
+        "serviceName": "ConfigurationService",
+        "methods": {
+          "createRepository": { "asyncModel": "requestResponse" },
+          "delete": { "asyncModel": "requestResponse" },
+          "entries": { "asyncModel": "requestResponse" },
+          "fetch": { "asyncModel": "requestResponse" },
+          "save": { "asyncModel": "requestResponse" }
         }
       },
-      config: {
-        provider: 'http'
+      "config": {
+        "provider": "http"
       }
-    },
-  ],
-  components: {}
+    }
+  ]
 };
 ```
 

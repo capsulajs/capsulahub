@@ -27,19 +27,20 @@ You can get the default export from the link
 
 ## WorkspaceConfiguration example
 
-      "components": {
-        "layouts": {
-          "web-canvas": {
-            "componentName": "web-canvas",
-            "nodeId": "web-canvas",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-canvas/index.js",
-            "config": {}
-          }
-        },
-        "items": {
-            // ...some items widgets
-        }
+```json
+{
+  "components": {
+    "layouts": {
+      "capsulahub-root": {
+        "componentName": "web-canvas",
+        "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-canvas/index.js",
+        "config": {}
       }
+    },
+    "items": {}
+  }
+}
+```
 
 ## Exports
 

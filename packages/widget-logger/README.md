@@ -27,19 +27,21 @@ You can get the default export from the link
 
 ## WorkspaceConfiguration example
 
-      "components": {
-        "layouts": {
-            // ...some widget for layout
-        },
-        "items": {
-          "web-logger": {
-            "componentName": "web-logger",
-            "nodeId": "web-logger",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-logger/index.js",
-            "config": {}
-          }
-        }
+```json
+{
+  "components": {
+    "layouts": {},
+    "items": {
+      "web-logger": {
+        "componentName": "web-logger",
+        "nodeId": "web-logger",
+        "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-logger/index.js",
+        "config": {}
       }
+    }
+  }
+}
+```
 
 ## Exports
 

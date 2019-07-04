@@ -25,20 +25,20 @@ You can get the default export from the link
     https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-request-form/index.js
 
 ## WorkspaceConfiguration example
-
-      "components": {
-        "layouts": {
-            // ...some widget for layout
-        },
-        "items": {
-          "web-request-form": {
-            "componentName": "web-request-form",
-            "nodeId": "web-request-form",
-            "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-request-form/index.js",
-            "config": {}
-          }
-        }
+```json
+{
+  "components": {
+    "layouts": {},
+    "items": {
+      "web-request-form": {
+        "componentName": "web-request-form",
+        "path": "https://capsulajs.s3.amazonaws.com/develop/capsulahub-widget-request-form/index.js",
+        "config": {}
       }
+    }
+  }
+}
+```
 
 ## Exports
 
