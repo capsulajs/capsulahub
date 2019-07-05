@@ -37,7 +37,10 @@ You can get the default export from the link
           "environments$": { "asyncModel": "requestStream" }
         }
       },
-      "config": { "serviceName": "EnvironmentRegistryService" }
+      "config": { 
+        "serviceName": "EnvironmentRegistryService",
+        "token": "workspace"
+      }
     }
   ]
 }

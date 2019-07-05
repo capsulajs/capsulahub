@@ -22,8 +22,17 @@ capsulahub run --token=http://localhost:3000/configuration --configProvider=http
 
 ## Install
 
-In your project, run `$ npm install --save-dev @capsulajs/capsula-hub` or `$ yarn add -D @capsulajs/capsula-hub`.  
-If you want to use `capsulahub` command directly, you can install it globally.
+### NPM
+
+```bash
+npm install --save-dev @capsulajs/capsulahub-cli
+```
+
+### Yarn
+
+```bash
+yarn add -D @capsulajs/capsulahub-cli
+```
 
 ## Usage
 
@@ -65,6 +74,25 @@ capsulahub build --help
       -o, --output <output>                  Relative path to the output folder (optional - default is "./dist")
       -d, --dispatcherUrl <dispatcherUrl>    The url of the dispatcher for those providers that use dispatcher (optional)
       -h, --help                             output usage information
+```
+
+## Example
+
+### HttpFile
+
+Make sure, that you have httpServer running on the port 1111 and you have
+a configuration file in `./configuration/workspace.json` (the path is relative to the root of your server).
+
+In order to run the application locally run:
+
+```bash
+capsulahub run --token=http://localhost:1111/configuration --port=8888
+```
+
+If you want to generate a build with html and js file in it, you should run:
+
+```bash
+capsulahub build --token=http://localhost:1111/configuration
 ```
 
 ## Configuration
