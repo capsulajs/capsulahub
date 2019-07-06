@@ -30,6 +30,13 @@ export default class Content extends React.Component {
     hoverCorrelationId: null,
   };
 
+  componentDidUpdate(prevProps) {
+    if (this.props.events.length !== prevProps.events.length) {
+      const loggerContainer = document.getElementById('logger-container');
+      loggerContainer.scrollTop = loggerContainer.scrollHeight;
+    }
+  }
+
   onPointEnter = ({ correlationId }) => this.setState({ hoverCorrelationId: correlationId });
   onPointLeave = () => this.setState({ hoverCorrelationId: null });
   onPointClick = ({ correlationId }) =>
@@ -46,7 +53,7 @@ export default class Content extends React.Component {
     const correlationId = activeCorrelationId || hoverCorrelationId;
 
     return (
-      <Container>
+      <Container id="logger-container">
         {events.length
           ? events.map((event, index) => (
               <Row
