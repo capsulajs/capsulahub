@@ -30,6 +30,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   padding: 5px;
+  height: 100%;
 `;
 const Header = styled.div`
   display: flex;
@@ -90,6 +91,7 @@ export default class RequestForm extends PureComponent {
     isChangeLanguageVisible: PropTypes.boolean,
     isChangeArgsCountVisible: PropTypes.boolean,
     title: PropTypes.string,
+    width: PropTypes.string,
   };
 
   static defaultProps = {
@@ -104,6 +106,7 @@ export default class RequestForm extends PureComponent {
     isChangeLanguageVisible: true,
     isChangeArgsCountVisible: true,
     title: 'Request Form',
+    width: '500px',
   };
 
   state = {

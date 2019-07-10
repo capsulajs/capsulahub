@@ -20,6 +20,7 @@ export default class Editor extends React.Component {
   static propTypes = {
     index: PropTypes.number.isRequired,
     height: PropTypes.string.isRequired,
+    width: PropTypes.string,
     mode: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onValid: PropTypes.func.isRequired,
@@ -48,7 +49,7 @@ export default class Editor extends React.Component {
   onLoad = (editor) => (this.editor = editor);
 
   render() {
-    const { height, mode, value, index } = this.props;
+    const { height, width, mode, value, index } = this.props;
 
     return (
       <EditorWrapper data-cy={`request-form-editor-${index}`}>
@@ -65,6 +66,7 @@ export default class Editor extends React.Component {
           }}
           editorProps={{ $blockScrolling: true }}
           height={height}
+          width={width}
         />
         <Line />
       </EditorWrapper>
