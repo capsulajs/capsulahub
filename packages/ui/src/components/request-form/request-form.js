@@ -74,7 +74,7 @@ const defaultArgVal = {
   json: '{}',
 };
 
-const height = 561;
+const defaultHeight = 561;
 
 const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
@@ -87,6 +87,9 @@ export default class RequestForm extends PureComponent {
     }).isRequired,
     onSubmit: PropTypes.func.isRequired,
     theme: PropTypes.object,
+    isChangeLanguageVisible: PropTypes.boolean,
+    isChangeArgsCountVisible: PropTypes.boolean,
+    title: PropTypes.string,
   };
 
   static defaultProps = {
@@ -98,6 +101,9 @@ export default class RequestForm extends PureComponent {
       bgColor: defaultBackgroundColor,
       color: defaultColor,
     },
+    isChangeLanguageVisible: true,
+    isChangeArgsCountVisible: true,
+    title: 'Request Form',
   };
 
   state = {
@@ -199,7 +205,7 @@ export default class RequestForm extends PureComponent {
 
   render() {
     const { language, requestArgs, argsCount } = this.state;
-    const { theme, selectedMethodPath } = this.props;
+    const { theme, selectedMethodPath, isChangeLanguageVisible, isChangeArgsCountVisible, title } = this.props;
 
     return (
       <Container theme={theme} data-cy="request-form-container">
@@ -207,41 +213,51 @@ export default class RequestForm extends PureComponent {
           <Header data-cy="request-form-header">
             <Wrapper>
               <Image data-cy="request-form-icon" src={image} />
-              <Title data-cy="request-form-title">Request Form</Title>
+              <Title data-cy="request-form-title">{title}</Title>
             </Wrapper>
             <Wrapper>
-              <ArgumentsCount data-cy="request-form-args-count">
-                <ArgumentsCountLabel data-cy="request-form-args-count-label">Arguments:</ArgumentsCountLabel>
-                <Input
-                  data-cy="request-form-args-count-value"
-                  min="1"
-                  onChange={this.onChangeArgumentsCount}
-                  value={argsCount}
-                  type="number"
-                  width="30px"
+              {isChangeArgsCountVisible && (
+                <ArgumentsCount data-cy="request-form-args-count">
+                  <ArgumentsCountLabel data-cy="request-form-args-count-label">Arguments:</ArgumentsCountLabel>
+                  <Input
+                    data-cy="request-form-args-count-value"
+                    min="1"
+                    onChange={this.onChangeArgumentsCount}
+                    value={argsCount}
+                    type="number"
+                    width="30px"
+                  />
+                </ArgumentsCount>
+              )}
+              {isChangeLanguageVisible && (
+                <Dropdown
+                  dataCy="request-form-language-dropdown"
+                  selected={this.state.language}
+                  title="Choose the language"
+                  items={languages}
+                  width={120}
+                  onChange={this.onChangeLanguage}
                 />
-              </ArgumentsCount>
-              <Dropdown
-                dataCy="request-form-language-dropdown"
-                selected={this.state.language}
-                title="Choose the language"
-                items={languages}
-                width={120}
-                onChange={this.onChangeLanguage}
-              />
+              )}
             </Wrapper>
           </Header>
-          {requestArgs.map((value, index) => (
-            <Editor
-              key={index}
-              index={index}
-              mode={language}
-              value={value}
-              onChange={this.onChangeArgument}
-              onValid={this.onValid}
-              height={(height - (65 + 2 * requestArgs.length)) / requestArgs.length}
-            />
-          ))}
+          {requestArgs.map((value, index) => {
+            let height = '100%';
+            if (isChangeArgsCountVisible) {
+              height = `${(defaultHeight - (65 + 2 * requestArgs.length)) / requestArgs.length}px`;
+            }
+            return (
+              <Editor
+                key={index}
+                index={index}
+                mode={language}
+                value={value}
+                onChange={this.onChangeArgument}
+                onValid={this.onValid}
+                height={height}
+              />
+            );
+          })}
           <Footer>
             <Button
               dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}

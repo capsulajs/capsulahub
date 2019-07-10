@@ -5,7 +5,6 @@ import AceEditor from 'react-ace';
 import 'brace/mode/javascript';
 import 'brace/mode/json';
 import './theme';
-import { codeModes } from '../constants';
 
 const Line = styled.div`
   height: 1px;
@@ -13,10 +12,14 @@ const Line = styled.div`
   width: 100%;
 `;
 
+const EditorWrapper = styled.div`
+  flex-grow: 1;
+`;
+
 export default class Editor extends React.Component {
   static propTypes = {
     index: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
+    height: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onValid: PropTypes.func.isRequired,
@@ -48,7 +51,7 @@ export default class Editor extends React.Component {
     const { height, mode, value, index } = this.props;
 
     return (
-      <div data-cy={`request-form-editor-${index}`}>
+      <EditorWrapper data-cy={`request-form-editor-${index}`}>
         <AceEditor
           mode={mode}
           theme="capsula-js"
@@ -61,10 +64,10 @@ export default class Editor extends React.Component {
             tabSize: 2,
           }}
           editorProps={{ $blockScrolling: true }}
-          height={`${height}px`}
+          height={height}
         />
         <Line />
-      </div>
+      </EditorWrapper>
     );
   }
 }
