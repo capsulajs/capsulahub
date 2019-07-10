@@ -88,8 +88,8 @@ export default class RequestForm extends PureComponent {
     }).isRequired,
     onSubmit: PropTypes.func.isRequired,
     theme: PropTypes.object,
-    isChangeLanguageVisible: PropTypes.boolean,
-    isChangeArgsCountVisible: PropTypes.boolean,
+    isChangeLanguageVisible: PropTypes.bool,
+    isChangeArgsCountVisible: PropTypes.bool,
     title: PropTypes.string,
     width: PropTypes.string,
   };
@@ -208,7 +208,7 @@ export default class RequestForm extends PureComponent {
 
   render() {
     const { language, requestArgs, argsCount } = this.state;
-    const { theme, selectedMethodPath, isChangeLanguageVisible, isChangeArgsCountVisible, title } = this.props;
+    const { theme, selectedMethodPath, isChangeLanguageVisible, isChangeArgsCountVisible, title, width } = this.props;
 
     return (
       <Container theme={theme} data-cy="request-form-container">
