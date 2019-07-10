@@ -1,8 +1,16 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+// import Fab from '@material-ui/core/Fab';
+// import IconButton from '@material-ui/core/IconButton';
+// import AddIcon from '@material-ui/icons/Add';
+// import DeleteIcon from '@material-ui/icons/Delete';
+// import NavigationIcon from '@material-ui/icons/Navigation';
+// import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import styled from 'styled-components';
 import Editor from './editor';
-import { Dropdown, Input, Button } from '..';
+import { Dropdown, Input } from '..';
 import {
   defaultFontStyle,
   defaultFontWeight,
@@ -13,6 +21,14 @@ import {
   codeModes,
 } from '../constants';
 import image from '../../assets/settings.png';
+
+const styles = () =>
+  createStyles({
+    button: {
+      margin: '0 30px 30px 0',
+      padding: '0px 45px',
+    },
+  });
 
 const Container = styled.div`
   font-style: ${(props) => props.theme.fontStyle};
@@ -31,16 +47,18 @@ const Column = styled.div`
   flex-direction: column;
   padding: 5px;
   height: 100%;
+  box-sizing: border-box;
 `;
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin: 10px 0 10px 20px;
 `;
 const Footer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 5px;
 `;
@@ -79,7 +97,7 @@ const defaultHeight = 561;
 
 const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
-export default class RequestForm extends PureComponent {
+class RequestForm extends PureComponent {
   static propTypes = {
     selectedMethodPath: PropTypes.string.isRequired,
     content: PropTypes.shape({
@@ -208,14 +226,21 @@ export default class RequestForm extends PureComponent {
 
   render() {
     const { language, requestArgs, argsCount } = this.state;
-    const { theme, selectedMethodPath, isChangeLanguageVisible, isChangeArgsCountVisible, title, width } = this.props;
+    const {
+      theme,
+      selectedMethodPath,
+      isChangeLanguageVisible,
+      isChangeArgsCountVisible,
+      title,
+      width,
+      classes,
+    } = this.props;
 
     return (
       <Container theme={theme} data-cy="request-form-container">
         <Column>
           <Header data-cy="request-form-header">
             <Wrapper>
-              <Image data-cy="request-form-icon" src={image} />
               <Title data-cy="request-form-title">{title}</Title>
             </Wrapper>
             <Wrapper>
@@ -264,21 +289,35 @@ export default class RequestForm extends PureComponent {
           })}
           <Footer>
             <Button
-              dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
-              text="Submit"
-              theme={this.isFormValid() ? 'active' : 'disabled'}
-              css="padding: 3px 5px 4px 5px; width: 100px;"
+              variant="contained"
+              size="small"
+              color="primary"
+              className={classes.button}
               onClick={this.onSubmit}
-            />
+              disabled={!this.isFormValid()}
+              dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
+            >
+              Send
+            </Button>
+
+            {/*<Button*/}
+            {/*  dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}*/}
+            {/*  text="Submit"*/}
+            {/*  theme={this.isFormValid() ? 'active' : 'disabled'}*/}
+            {/*  css="padding: 3px 5px 4px 5px; width: 100px;"*/}
+            {/*  onClick={this.onSubmit}*/}
+            {/*/>*/}
             {this.state.executionError && (
               <ErrorMessage data-cy="request-form-error-message">{this.state.executionError}</ErrorMessage>
             )}
-            <Title data-cy="request-form-selected-method-path" color="#f8f7f7">
-              {selectedMethodPath}
-            </Title>
+            {/*<Title data-cy="request-form-selected-method-path" color="#f8f7f7">*/}
+            {/*  {selectedMethodPath}*/}
+            {/*</Title>*/}
           </Footer>
         </Column>
       </Container>
     );
   }
 }
+
+export default withStyles(styles)(RequestForm);

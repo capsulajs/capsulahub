@@ -15,6 +15,7 @@
     "prettier": "prettier --write '{src,stories}/**/*.{js,jsx}'"
   },
   "dependencies": {
+    "@material-ui/core": "^4.2.0",
     "lodash": "4.17.11",
     "react": "16.8.6",
     "react-ace": "^6.1.4",

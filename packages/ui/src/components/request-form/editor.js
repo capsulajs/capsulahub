@@ -68,7 +68,7 @@ export default class Editor extends React.Component {
           height={height}
           width={width}
         />
-        <Line />
+        {/*<Line />*/}
       </EditorWrapper>
     );
   }
