@@ -7,8 +7,8 @@ document.getElementById('root').style.heigh = '500px';
 export const props = {
   selectedMethodPath: 'greetingService/hello',
   content: {
-    language: 'javascript',
-    requestArgs: 'return {};',
+    language: 'json',
+    requestArgs: '{}',
   },
   onSubmit: (data) => {
     console.log('data from RequestForm onSubmit callback', data);
