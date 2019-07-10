@@ -258,6 +258,7 @@ export default class RequestForm extends PureComponent {
                 onChange={this.onChangeArgument}
                 onValid={this.onValid}
                 height={height}
+                width={width}
               />
             );
           })}
