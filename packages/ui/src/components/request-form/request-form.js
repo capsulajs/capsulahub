@@ -1,16 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { createStyles, withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-// import Fab from '@material-ui/core/Fab';
-// import IconButton from '@material-ui/core/IconButton';
-// import AddIcon from '@material-ui/icons/Add';
-// import DeleteIcon from '@material-ui/icons/Delete';
-// import NavigationIcon from '@material-ui/icons/Navigation';
-// import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import styled from 'styled-components';
 import Editor from './editor';
-import { Dropdown, Input } from '..';
+import { Dropdown, Input, Button } from '..';
 import {
   defaultFontStyle,
   defaultFontWeight,
@@ -20,15 +12,6 @@ import {
   defaultBackgroundColor,
   codeModes,
 } from '../constants';
-import image from '../../assets/settings.png';
-
-const styles = () =>
-  createStyles({
-    button: {
-      margin: '0 30px 30px 0',
-      padding: '0px 45px',
-    },
-  });
 
 const Container = styled.div`
   font-style: ${(props) => props.theme.fontStyle};
@@ -60,7 +43,7 @@ const Footer = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 5px;
+  margin: 5px 0 30px 0;
 `;
 const ErrorMessage = styled.div`
   color: red;
@@ -70,11 +53,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-`;
-const Image = styled.img`
-  padding-right: 5px;
-  width: 16px;
-  height: 16px;
 `;
 const Title = styled.div`
   text-transform: uppercase;
@@ -97,7 +75,7 @@ const defaultHeight = 561;
 
 const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
-class RequestForm extends PureComponent {
+export default class RequestForm extends PureComponent {
   static propTypes = {
     selectedMethodPath: PropTypes.string.isRequired,
     content: PropTypes.shape({
@@ -108,8 +86,8 @@ class RequestForm extends PureComponent {
     theme: PropTypes.object,
     isChangeLanguageVisible: PropTypes.bool,
     isChangeArgsCountVisible: PropTypes.bool,
+    isSelectedMethodPathVisible: PropTypes.bool,
     title: PropTypes.string,
-    width: PropTypes.string,
   };
 
   static defaultProps = {
@@ -123,8 +101,8 @@ class RequestForm extends PureComponent {
     },
     isChangeLanguageVisible: true,
     isChangeArgsCountVisible: true,
+    isSelectedMethodPathVisible: true,
     title: 'Request Form',
-    width: '500px',
   };
 
   state = {
@@ -228,12 +206,11 @@ class RequestForm extends PureComponent {
     const { language, requestArgs, argsCount } = this.state;
     const {
       theme,
-      selectedMethodPath,
       isChangeLanguageVisible,
       isChangeArgsCountVisible,
       title,
-      width,
-      classes,
+      selectedMethodPath,
+      isSelectedMethodPathVisible,
     } = this.props;
 
     return (
@@ -283,41 +260,29 @@ class RequestForm extends PureComponent {
                 onChange={this.onChangeArgument}
                 onValid={this.onValid}
                 height={height}
-                width={width}
+                isLineVisible={index + 1 !== argsCount}
               />
             );
           })}
           <Footer>
             <Button
-              variant="contained"
-              size="small"
-              color="primary"
-              className={classes.button}
-              onClick={this.onSubmit}
-              disabled={!this.isFormValid()}
               dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
-            >
-              Send
-            </Button>
-
-            {/*<Button*/}
-            {/*  dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}*/}
-            {/*  text="Submit"*/}
-            {/*  theme={this.isFormValid() ? 'active' : 'disabled'}*/}
-            {/*  css="padding: 3px 5px 4px 5px; width: 100px;"*/}
-            {/*  onClick={this.onSubmit}*/}
-            {/*/>*/}
+              text="Send"
+              theme={this.isFormValid() ? 'active' : 'disabled'}
+              css="padding: 5px 45px; margin-right: 30px;"
+              onClick={this.onSubmit}
+            />
             {this.state.executionError && (
               <ErrorMessage data-cy="request-form-error-message">{this.state.executionError}</ErrorMessage>
             )}
-            {/*<Title data-cy="request-form-selected-method-path" color="#f8f7f7">*/}
-            {/*  {selectedMethodPath}*/}
-            {/*</Title>*/}
+            {isSelectedMethodPathVisible && (
+              <Title data-cy="request-form-selected-method-path" color="#f8f7f7">
+                {selectedMethodPath}
+              </Title>
+            )}
           </Footer>
         </Column>
       </Container>
     );
   }
 }
-
-export default withStyles(styles)(RequestForm);
