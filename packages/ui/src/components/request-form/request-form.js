@@ -237,7 +237,7 @@ export default class RequestForm extends PureComponent {
               )}
               {isChangeLanguageVisible && (
                 <Dropdown
-                  data-cy="request-form-language-dropdown"
+                  dataCy="request-form-language-dropdown"
                   selected={this.state.language}
                   title="Choose the language"
                   items={languages}
@@ -267,7 +267,7 @@ export default class RequestForm extends PureComponent {
           })}
           <Footer>
             <Button
-              data-cy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
+              dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
               text="Send"
               theme={this.isFormValid() ? 'active' : 'disabled'}
               css="padding: 5px 45px; margin-right: 30px;"
