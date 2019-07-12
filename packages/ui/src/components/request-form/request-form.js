@@ -182,6 +182,7 @@ export default class RequestForm extends PureComponent {
   onSubmit = () => {
     if (this.isFormValid()) {
       const { language, requestArgs: args } = this.state;
+      console.log('args', args);
       try {
         const requestArgs = args.map((arg) =>
           language === codeModes.javascript ? eval(`(function(){${arg}})()`) : JSON.parse(arg)

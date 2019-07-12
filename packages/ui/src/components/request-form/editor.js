@@ -59,7 +59,7 @@ export default class Editor extends React.Component {
           onLoad={this.onLoad}
           onChange={this.onChange}
           onValidate={this.onValid}
-          fontSize={14}
+          fontSize={12}
           setOptions={{
             tabSize: 2,
           }}
