@@ -1,0 +1,59 @@
+{
+  "name": "baseWorkspace",
+  "services": [
+    {
+      "serviceName": "ServiceA",
+      "path": "http://localhost:1111/services/serviceA.js",
+      "definition": {
+        "serviceName": "ServiceA",
+        "methods": {
+          "getMessage": { "asyncModel": "requestResponse" }
+        }
+      },
+      "config": { "message": "Message from ServiceA from PORT 1111 Scalecube" }
+    },
+    {
+      "serviceName": "ServiceFlows",
+      "path": "http://localhost:1111/services/serviceFlows.js",
+      "definition": {
+        "serviceName": "ServiceFlows",
+        "methods": {}
+      },
+      "config": {
+        "componentName": "web-component-a"
+      }
+    },
+    {
+      "serviceName": "RendererService",
+      "path": "https://capsulajs.s3.amazonaws.com/PR/feature-set-CI-CD/capsulahub-service-renderer/index.js",
+      "definition": {
+        "serviceName": "RendererService",
+        "methods": {
+          "renderLayouts": { "asyncModel": "requestResponse" },
+          "renderItems": { "asyncModel": "requestResponse" },
+          "renderItem": { "asyncModel": "requestResponse" }
+        }
+      },
+      "config": {}
+    }
+  ],
+  "components": {
+    "layouts": {
+      "capsulahub-root": {
+        "componentName": "web-grid",
+        "path": "http://localhost:1111/widgets/Grid.js",
+        "config": {
+          "title": "Base Grid from PORT 1111 Scalecube",
+          "innerComponentId": "web-component-a"
+        }
+      }
+    },
+    "items": {
+      "web-component-a": {
+        "componentName": "web-component-a",
+        "path": "http://localhost:1111/widgets/ComponentA.js",
+        "config": { "name": "ComponentA(PORT 1111 Scalecube)" }
+      }
+    }
+  }
+}
