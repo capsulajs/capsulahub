@@ -84,7 +84,7 @@ export default class RequestForm extends PureComponent {
       requestArgs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
     }).isRequired,
     onSubmit: PropTypes.func.isRequired,
-    onContentChange: PropTypes.func.isRequired,
+    onContentChange: PropTypes.func,
     theme: PropTypes.object,
     isChangeLanguageVisible: PropTypes.bool,
     isChangeArgsCountVisible: PropTypes.bool,
@@ -164,9 +164,11 @@ export default class RequestForm extends PureComponent {
   };
 
   onChangeArgument = (index, newArgument) => {
-    const newArgs = [...this.state.requestArgs];
-    newArgs[index] = newArgument;
-    this.props.onContentChange(newArgs);
+    this.setState((prevState) => {
+      const newArgs = [...prevState.requestArgs];
+      newArgs[index] = newArgument;
+      return { requestArgs: newArgs, executionError: '' };
+    });
   };
 
   onValid = ({ isValid, index }) =>
@@ -182,7 +184,6 @@ export default class RequestForm extends PureComponent {
   onSubmit = () => {
     if (this.isFormValid()) {
       const { language, requestArgs: args } = this.state;
-      console.log('args', args);
       try {
         const requestArgs = args.map((arg) =>
           language === codeModes.javascript ? eval(`(function(){${arg}})()`) : JSON.parse(arg)

@@ -34,16 +34,9 @@ export default class Editor extends React.Component {
     }
   }
 
-  componentDidCatch(error, errorData) {
-    console.log('error', error);
-    console.log('errorData', errorData);
-  }
-
   onChange = (input) => this.props.onChange(this.props.index, input);
 
   onValid = (errors) => {
-    console.log('errors in Editor', errors);
-
     const { onValid, index } = this.props;
     let isValid = false;
     if (errors.filter((error) => error.type !== 'info').length === 0) {
