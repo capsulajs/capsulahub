@@ -121,12 +121,19 @@ export default class RequestForm extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.content !== prevProps.content) {
       const { language, requestArgs } = this.props.content;
-      this.setState((prevState) => ({
-        language,
-        requestArgs: typeof requestArgs === 'string' ? prevState.requestArgs.map((arg) => requestArgs) : requestArgs,
-        argsCount: typeof requestArgs.map === 'function' ? requestArgs.length : prevState.argsCount,
-        executionError: '',
-      }));
+
+      console.log('BLOB! requestArgs', requestArgs);
+
+      new Response(requestArgs).text().then((newContent) => {
+        console.log('newContent blob response', newContent);
+
+        this.setState((prevState) => ({
+          language,
+          requestArgs: typeof newContent === 'string' ? prevState.requestArgs.map((arg) => newContent) : newContent,
+          argsCount: typeof newContent.map === 'function' ? requestArgs.length : prevState.argsCount,
+          executionError: '',
+        }));
+      });
     }
     if (this.state.argsCount < prevState.argsCount && this.state.argsCount) {
       this.setState({
