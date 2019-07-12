@@ -66,6 +66,7 @@ export default class Editor extends React.Component {
           editorProps={{ $blockScrolling: true }}
           height={height}
           width="100%"
+          className="request-form-editor"
         />
         {isLineVisible && <Line />}
       </EditorWrapper>

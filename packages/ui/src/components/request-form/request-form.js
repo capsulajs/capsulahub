@@ -12,6 +12,7 @@ import {
   defaultBackgroundColor,
   codeModes,
 } from '../constants';
+import './styles.css';
 
 const Container = styled.div`
   font-style: ${(props) => props.theme.fontStyle};
@@ -83,6 +84,7 @@ export default class RequestForm extends PureComponent {
       requestArgs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
     }).isRequired,
     onSubmit: PropTypes.func.isRequired,
+    onContentChange: PropTypes.func,
     theme: PropTypes.object,
     isChangeLanguageVisible: PropTypes.bool,
     isChangeArgsCountVisible: PropTypes.bool,
