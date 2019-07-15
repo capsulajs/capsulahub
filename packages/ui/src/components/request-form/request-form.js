@@ -29,7 +29,6 @@ const Container = styled.div`
 const Column = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 5px;
   height: 100%;
   box-sizing: border-box;
 `;
@@ -37,7 +36,7 @@ const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 10px 0 10px 20px;
+  margin: 10px 0 10px 27px;
 `;
 const Footer = styled.div`
   display: flex;
@@ -56,6 +55,7 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 const Title = styled.div`
+  font-size: 13px;
   text-transform: uppercase;
   color: ${(props) => props.color};
 `;
@@ -290,7 +290,7 @@ export default class RequestForm extends PureComponent {
               dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
               text="Send"
               theme={this.isFormValid() ? 'active' : 'disabled'}
-              css="padding: 5px 45px; margin-right: 30px;"
+              css="padding: 5px 45px; margin-right: 30px; font-size: 13px;"
               onClick={this.onSubmit}
             />
             {this.state.executionError && (
