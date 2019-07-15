@@ -120,13 +120,32 @@ export default class RequestForm extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.content !== prevProps.content) {
-      const { language, requestArgs } = this.props.content;
-      this.setState((prevState) => ({
-        language,
-        requestArgs: typeof requestArgs === 'string' ? prevState.requestArgs.map((arg) => requestArgs) : requestArgs,
-        argsCount: typeof requestArgs.map === 'function' ? requestArgs.length : prevState.argsCount,
-        executionError: '',
-      }));
+      if (
+        this.props.content.language !== prevProps.content.language ||
+        this.props.content.requestArgs !== prevProps.content.requestArgs
+      ) {
+        const { language, requestArgs } = this.props.content;
+        if (typeof requestArgs === 'string') {
+          this.setState((prevState) => ({
+            language,
+            requestArgs: prevState.requestArgs.map(() => requestArgs),
+            argsCount: prevState.argsCount,
+            executionError: '',
+          }));
+        } else {
+          const isContentChanged = requestArgs.some((argContent, index) => {
+            return argContent !== prevProps.content.requestArgs[index];
+          });
+          if (isContentChanged || language !== prevProps.content.language) {
+            this.setState({
+              language,
+              requestArgs,
+              argsCount: requestArgs.length,
+              executionError: '',
+            });
+          }
+        }
+      }
     }
     if (this.state.argsCount < prevState.argsCount && this.state.argsCount) {
       this.setState({
