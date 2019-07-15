@@ -86,10 +86,10 @@ a configuration file in `./configuration/workspace.json` (the path is relative t
 In order to run the application locally run:
 
 ```bash
-capsulahub run --token=http://localhost:1111/configuration --port=8888
+capsulahub run --token=http://localhost:1111/configuration
 ```
 
-If you want to generate a build with html and js file in it, you should run:
+If you want to generate a bundle containing the app in order to serve it by yourself, you should run:
 
 ```bash
 capsulahub build --token=http://localhost:1111/configuration

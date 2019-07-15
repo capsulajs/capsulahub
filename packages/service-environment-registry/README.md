@@ -39,7 +39,7 @@ You can get the default export from the link
       },
       "config": { 
         "serviceName": "EnvironmentRegistryService",
-        "token": "workspace"
+        "token": "someToken"
       }
     }
   ]
