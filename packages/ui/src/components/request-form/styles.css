@@ -1,0 +1,8 @@
+.request-form-editor {
+  min-height: 300px;
+}
+
+.ace_selection {
+  background-color: #686868 !important;
+  opacity: 0.4;
+}

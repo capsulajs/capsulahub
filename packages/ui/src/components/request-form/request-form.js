@@ -12,7 +12,7 @@ import {
   defaultBackgroundColor,
   codeModes,
 } from '../constants';
-import image from '../../assets/settings.png';
+import './styles.css';
 
 const Container = styled.div`
   font-style: ${(props) => props.theme.fontStyle};
@@ -29,19 +29,21 @@ const Container = styled.div`
 const Column = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 5px;
+  height: 100%;
+  box-sizing: border-box;
 `;
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin: 10px 0 10px 27px;
 `;
 const Footer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-top: 5px;
+  margin: 5px 0 30px 0;
 `;
 const ErrorMessage = styled.div`
   color: red;
@@ -52,12 +54,8 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: center;
 `;
-const Image = styled.img`
-  padding-right: 5px;
-  width: 16px;
-  height: 16px;
-`;
 const Title = styled.div`
+  font-size: 13px;
   text-transform: uppercase;
   color: ${(props) => props.color};
 `;
@@ -74,7 +72,7 @@ const defaultArgVal = {
   json: '{}',
 };
 
-const height = 561;
+const defaultHeight = 561;
 
 const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
@@ -86,7 +84,12 @@ export default class RequestForm extends PureComponent {
       requestArgs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
     }).isRequired,
     onSubmit: PropTypes.func.isRequired,
+    onContentChange: PropTypes.func,
     theme: PropTypes.object,
+    isChangeLanguageVisible: PropTypes.bool,
+    isChangeArgsCountVisible: PropTypes.bool,
+    isSelectedMethodPathVisible: PropTypes.bool,
+    title: PropTypes.string,
   };
 
   static defaultProps = {
@@ -98,6 +101,10 @@ export default class RequestForm extends PureComponent {
       bgColor: defaultBackgroundColor,
       color: defaultColor,
     },
+    isChangeLanguageVisible: true,
+    isChangeArgsCountVisible: true,
+    isSelectedMethodPathVisible: true,
+    title: 'Request Form',
   };
 
   state = {
@@ -113,13 +120,32 @@ export default class RequestForm extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.content !== prevProps.content) {
-      const { language, requestArgs } = this.props.content;
-      this.setState((prevState) => ({
-        language,
-        requestArgs: typeof requestArgs === 'string' ? prevState.requestArgs.map((arg) => requestArgs) : requestArgs,
-        argsCount: typeof requestArgs.map === 'function' ? requestArgs.length : prevState.argsCount,
-        executionError: '',
-      }));
+      if (
+        this.props.content.language !== prevProps.content.language ||
+        this.props.content.requestArgs !== prevProps.content.requestArgs
+      ) {
+        const { language, requestArgs } = this.props.content;
+        if (typeof requestArgs === 'string') {
+          this.setState((prevState) => ({
+            language,
+            requestArgs: prevState.requestArgs.map(() => requestArgs),
+            argsCount: prevState.argsCount,
+            executionError: '',
+          }));
+        } else {
+          const isContentChanged = requestArgs.some((argContent, index) => {
+            return argContent !== prevProps.content.requestArgs[index];
+          });
+          if (isContentChanged || language !== prevProps.content.language) {
+            this.setState({
+              language,
+              requestArgs,
+              argsCount: requestArgs.length,
+              executionError: '',
+            });
+          }
+        }
+      }
     }
     if (this.state.argsCount < prevState.argsCount && this.state.argsCount) {
       this.setState({
@@ -199,63 +225,82 @@ export default class RequestForm extends PureComponent {
 
   render() {
     const { language, requestArgs, argsCount } = this.state;
-    const { theme, selectedMethodPath } = this.props;
+    const {
+      theme,
+      isChangeLanguageVisible,
+      isChangeArgsCountVisible,
+      title,
+      selectedMethodPath,
+      isSelectedMethodPathVisible,
+    } = this.props;
 
     return (
       <Container theme={theme} data-cy="request-form-container">
         <Column>
           <Header data-cy="request-form-header">
             <Wrapper>
-              <Image data-cy="request-form-icon" src={image} />
-              <Title data-cy="request-form-title">Request Form</Title>
+              <Title data-cy="request-form-title">{title}</Title>
             </Wrapper>
             <Wrapper>
-              <ArgumentsCount data-cy="request-form-args-count">
-                <ArgumentsCountLabel data-cy="request-form-args-count-label">Arguments:</ArgumentsCountLabel>
-                <Input
-                  data-cy="request-form-args-count-value"
-                  min="1"
-                  onChange={this.onChangeArgumentsCount}
-                  value={argsCount}
-                  type="number"
-                  width="30px"
+              {isChangeArgsCountVisible && (
+                <ArgumentsCount data-cy="request-form-args-count">
+                  <ArgumentsCountLabel data-cy="request-form-args-count-label">Arguments:</ArgumentsCountLabel>
+                  <Input
+                    data-cy="request-form-args-count-value"
+                    min="1"
+                    onChange={this.onChangeArgumentsCount}
+                    value={argsCount}
+                    type="number"
+                    width="30px"
+                  />
+                </ArgumentsCount>
+              )}
+              {isChangeLanguageVisible && (
+                <Dropdown
+                  dataCy="request-form-language-dropdown"
+                  selected={this.state.language}
+                  title="Choose the language"
+                  items={languages}
+                  width={120}
+                  onChange={this.onChangeLanguage}
                 />
-              </ArgumentsCount>
-              <Dropdown
-                dataCy="request-form-language-dropdown"
-                selected={this.state.language}
-                title="Choose the language"
-                items={languages}
-                width={120}
-                onChange={this.onChangeLanguage}
-              />
+              )}
             </Wrapper>
           </Header>
-          {requestArgs.map((value, index) => (
-            <Editor
-              key={index}
-              index={index}
-              mode={language}
-              value={value}
-              onChange={this.onChangeArgument}
-              onValid={this.onValid}
-              height={(height - (65 + 2 * requestArgs.length)) / requestArgs.length}
-            />
-          ))}
+          {requestArgs.map((value, index) => {
+            let height = '100%';
+            if (isChangeArgsCountVisible) {
+              height = `${(defaultHeight - (65 + 2 * requestArgs.length)) / requestArgs.length}px`;
+            }
+            return (
+              <Editor
+                key={index}
+                index={index}
+                mode={language}
+                value={value}
+                onChange={this.onChangeArgument}
+                onValid={this.onValid}
+                height={height}
+                isLineVisible={index + 1 !== argsCount}
+              />
+            );
+          })}
           <Footer>
             <Button
               dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
-              text="Submit"
+              text="Send"
               theme={this.isFormValid() ? 'active' : 'disabled'}
-              css="padding: 3px 5px 4px 5px; width: 100px;"
+              css="padding: 5px 45px; margin-right: 30px; font-size: 13px;"
               onClick={this.onSubmit}
             />
             {this.state.executionError && (
               <ErrorMessage data-cy="request-form-error-message">{this.state.executionError}</ErrorMessage>
             )}
-            <Title data-cy="request-form-selected-method-path" color="#f8f7f7">
-              {selectedMethodPath}
-            </Title>
+            {isSelectedMethodPathVisible && (
+              <Title data-cy="request-form-selected-method-path" color="#f8f7f7">
+                {selectedMethodPath}
+              </Title>
+            )}
           </Footer>
         </Column>
       </Container>
