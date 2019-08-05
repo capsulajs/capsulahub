@@ -82,6 +82,7 @@ export default class RequestForm extends PureComponent {
     content: PropTypes.shape({
       language: PropTypes.string.isRequired,
       requestArgs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
+      timestamp: PropTypes.number.isRequired,
     }).isRequired,
     onSubmit: PropTypes.func.isRequired,
     onContentChange: PropTypes.func,
@@ -122,7 +123,8 @@ export default class RequestForm extends PureComponent {
     if (this.props.content !== prevProps.content) {
       if (
         this.props.content.language !== prevProps.content.language ||
-        this.props.content.requestArgs !== prevProps.content.requestArgs
+        this.props.content.requestArgs !== prevProps.content.requestArgs ||
+        this.props.content.timestamp !== prevProps.content.timestamp
       ) {
         const { language, requestArgs } = this.props.content;
         if (typeof requestArgs === 'string') {
@@ -133,17 +135,12 @@ export default class RequestForm extends PureComponent {
             executionError: '',
           }));
         } else {
-          const isContentChanged = requestArgs.some((argContent, index) => {
-            return argContent !== prevProps.content.requestArgs[index];
+          this.setState({
+            language,
+            requestArgs,
+            argsCount: requestArgs.length,
+            executionError: '',
           });
-          if (isContentChanged || language !== prevProps.content.language) {
-            this.setState({
-              language,
-              requestArgs,
-              argsCount: requestArgs.length,
-              executionError: '',
-            });
-          }
         }
       }
     }
