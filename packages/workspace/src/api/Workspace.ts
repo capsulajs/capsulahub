@@ -8,6 +8,8 @@ import { ServicesMap, ServicesRequest, RegisterServiceRequest, ComponentsMap, Co
  * Workspace need to be instantiated with a configuration service
  */
 export default interface Workspace {
+  readonly id: string;
+
   /**
    * Getting a map of promises to each service that has been loaded in the workspace
    * Reject in case :

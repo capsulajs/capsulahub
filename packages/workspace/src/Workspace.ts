@@ -18,15 +18,15 @@ import {
   validateRegisterServiceRequest,
   validateServiceInConfig,
 } from './helpers/validators';
+import { generateMicroserviceAddress } from './helpers/utils';
 import {
-  generateMicroserviceAddress,
   generateServiceEventType,
   generateComponentEventType,
   emitServiceRegistrationFailedEvent,
   emitServiceRegistrationSuccessEvent,
   emitComponentRegistrationSuccessEvent,
   emitComponentRegistrationFailedEvent,
-} from './helpers/utils';
+} from './helpers/eventEmitters';
 import { ExtensionEventType } from './helpers/types';
 
 export class Workspace implements API.Workspace {
