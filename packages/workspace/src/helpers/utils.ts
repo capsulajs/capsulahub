@@ -8,7 +8,9 @@ import {
   getBootstrapServiceError,
   getInitComponentError,
   getBootstrapComponentError,
+  extensionsEventTypes,
 } from './const';
+import { ExtensionEventType } from './types';
 
 export const getConfigurationService = (
   token: string,
@@ -80,10 +82,16 @@ export const initComponent = (
 export const bootstrapServices = (workspace: API.Workspace, servicesConfig: API.ServiceConfig[]): Promise<any[]> => {
   return Promise.all(
     servicesConfig.map((serviceConfig) => {
-      return getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then((bootstrap) =>
-        bootstrap(workspace, serviceConfig.config).catch((error) => {
-          throw getErrorWithModifiedMessage(error, getBootstrapServiceError(error, serviceConfig.serviceName));
-        })
+      return getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then(
+        async (bootstrap) => {
+          try {
+            await bootstrap(workspace, serviceConfig.config);
+          } catch (error) {
+            console.error(
+              getErrorWithModifiedMessage(error, getBootstrapServiceError(error, serviceConfig.serviceName))
+            );
+          }
+        }
       );
     })
   );
@@ -110,3 +118,73 @@ export const generateMicroserviceAddress = (path: string) => ({
   protocol: 'pm',
   path,
 });
+
+export const generateServiceEventType = ({
+  serviceName,
+  type,
+  id,
+}: {
+  serviceName: any;
+  type: ExtensionEventType;
+  id: string;
+}) => {
+  return `${
+    typeof serviceName === 'string' ? serviceName.toUpperCase() : 'UNKNOWN_SERVICE'
+  }_${type.toUpperCase()}_${id}`;
+};
+
+export const generateComponentEventType = ({
+  nodeId,
+  type,
+  id,
+}: {
+  nodeId: string;
+  type: ExtensionEventType;
+  id: string;
+}) => {
+  return `COMPONENT_FOR_${nodeId.toUpperCase()}_${type.toUpperCase()}_${id}`;
+};
+
+export const emitServiceRegistrationSuccessEvent = ({ serviceName, id }: { serviceName: string; id: string }) => {
+  document.dispatchEvent(
+    new CustomEvent(generateServiceEventType({ serviceName, type: extensionsEventTypes.registered, id }))
+  );
+};
+
+export const emitServiceRegistrationFailedEvent = ({
+  serviceName,
+  error,
+  id,
+}: {
+  serviceName: string;
+  error: string;
+  id: string;
+}) => {
+  document.dispatchEvent(
+    new CustomEvent(generateServiceEventType({ serviceName, type: extensionsEventTypes.registrationFailed, id }), {
+      detail: error,
+    })
+  );
+};
+
+export const emitComponentRegistrationSuccessEvent = ({ nodeId, id }: { nodeId: string; id: string }) => {
+  document.dispatchEvent(
+    new CustomEvent(generateComponentEventType({ nodeId, type: extensionsEventTypes.registered, id }))
+  );
+};
+
+export const emitComponentRegistrationFailedEvent = ({
+  nodeId,
+  error,
+  id,
+}: {
+  nodeId: string;
+  error: string;
+  id: string;
+}) => {
+  document.dispatchEvent(
+    new CustomEvent(generateComponentEventType({ nodeId, type: extensionsEventTypes.registrationFailed, id }), {
+      detail: error,
+    })
+  );
+};

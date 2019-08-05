@@ -84,6 +84,8 @@ export default class WorkspaceFactory implements API.WorkspaceFactory {
               } as Workspace);
             })
             .catch((error) => {
+              console.log('goes to catch of full chain');
+
               reject(error);
               workspace.cleanEventListeners();
             });

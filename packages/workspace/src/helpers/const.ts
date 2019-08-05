@@ -1,3 +1,5 @@
+import { ExtensionEventTypeRegistered, ExtensionEventTypeRegistrationFailed } from './types';
+
 export const configRepositoryName = 'workspace';
 
 export const configWrongFormatError = 'Workspace configuration does not have the correct format';
@@ -42,3 +44,8 @@ export const componentToRegisterMissingInConfigurationError =
 export const componentsRequestInvalidError = 'Components request is invalid';
 
 export const servicesRequestInvalidError = 'Services request is invalid';
+
+export const extensionsEventTypes = {
+  registered: 'registered' as ExtensionEventTypeRegistered,
+  registrationFailed: 'registration_failed' as ExtensionEventTypeRegistrationFailed,
+};

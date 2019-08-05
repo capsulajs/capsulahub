@@ -39,6 +39,7 @@ import baseConfigEntries, {
 } from '../helpers/baseConfigEntries';
 import { applyPostMessagePolyfill } from '../helpers/polyfills/PostMessageWithTransferPolyfill';
 import { applyMessageChannelPolyfill } from '../helpers/polyfills/MessageChannelPolyfill';
+import { getErrorWithModifiedMessage } from '../../src/helpers/utils';
 
 const repositoryNotFoundError = `Configuration repository ${configRepositoryName} not found`;
 
@@ -182,8 +183,9 @@ describe('Workspace tests', () => {
     );
   });
 
-  it('An error with bootstrapping a service occurs after calling createWorkspace', async () => {
-    expect.assertions(1);
+  it.only('An error with bootstrapping a service occurs after calling createWorkspace', async () => {
+    expect.assertions(2);
+    const consoleErrorSpy = jest.spyOn(window.console, 'error');
     const bootstrapError = new Error('Type error: logic is undefined');
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
@@ -199,11 +201,27 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
+    mockBootstrapComponent();
 
     const workspaceFactory = new WorkspaceFactory();
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
-      new Error(getBootstrapServiceError(bootstrapError, 'ServiceB'))
+
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+    const expectedServiceBError = getErrorWithModifiedMessage(
+      bootstrapError,
+      getBootstrapServiceError(bootstrapError, 'ServiceB')
     );
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedServiceBError);
+
+    const services = await workspace.services({});
+
+    console.log('services', services);
+
+    const serviceA = await services.ServiceA;
+    const greetingFromServiceA = await serviceA.proxy.greet('Stephane');
+    expect(greetingFromServiceA).toEqual('Dear Stephane, what pill would you choose: red or blue?');
+
+    // return expect(services.ServiceB)
+    //   .rejects.toEqual(new Error(getBootstrapServiceError(bootstrapError, 'ServiceB')));
   });
 
   it('An error with importing a component occurs after calling createWorkspace', async () => {
@@ -247,8 +265,14 @@ describe('Workspace tests', () => {
     mockBootstrapComponent();
 
     const workspaceFactory = new WorkspaceFactory();
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+    const components = await workspace.components({});
 
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
+    const gridComponent = await components.grid;
+
+    console.log('gridComponent', gridComponent);
+
+    return expect(components['request-form']).rejects.toEqual(
       new Error(getBootstrapComponentError(bootstrapError, 'web-request-form'))
     );
   });
