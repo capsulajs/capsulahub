@@ -139,7 +139,7 @@ export class Workspace implements API.Workspace {
 
       if (!!component) {
         emitComponentRegistrationFailedEvent({
-          nodeId: registerComponentRequest.nodeId,
+          componentName: registerComponentRequest.componentName,
           error: extensionsEventTypes.registrationFailed,
           id: this.id,
         });
@@ -147,7 +147,7 @@ export class Workspace implements API.Workspace {
       } else {
         this.componentRegistry[registerComponentRequest.nodeId] = { ...registerComponentRequest };
         emitComponentRegistrationSuccessEvent({
-          nodeId: registerComponentRequest.nodeId,
+          componentName: registerComponentRequest.componentName,
           id: this.id,
         });
         resolve();
@@ -190,6 +190,7 @@ export class Workspace implements API.Workspace {
     const componentsMap = { ...(this.componentsMap || {}) };
     const fulfillComponentsMap = (componentsConfig: { [nodeId: string]: API.ComponentConfig }) => {
       Object.keys(componentsConfig).forEach((nodeId) => {
+        const { componentName } = componentsConfig[nodeId];
         componentsMap[nodeId] = new Promise((resolve, reject) => {
           const observeEvent = (type: ExtensionEventType) => {
             const listenerHandler = (event: CustomEvent) =>
@@ -197,7 +198,7 @@ export class Workspace implements API.Workspace {
                 ? resolve(this.componentRegistry[nodeId])
                 : reject(new Error(event.detail));
 
-            const eventType = generateComponentEventType({ nodeId, type, id: this.id });
+            const eventType = generateComponentEventType({ componentName, type, id: this.id });
             document.addEventListener(eventType, listenerHandler as EventListener, { once: true });
             this.listeners[eventType] = (this.listeners[eventType] || []).concat(listenerHandler as EventListener);
           };

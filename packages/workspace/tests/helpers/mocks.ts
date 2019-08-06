@@ -23,10 +23,12 @@ export const mockGetModuleDynamically = (modulePromises: Array<Promise<API.Modul
   utilsToMock.dynamicImport = getModuleDynamicallyMock;
 };
 
-export const mockBootstrapComponent = (throwsError = false): void => {
+export const mockBootstrapComponent = ({ timesToFailWithError = 0, error = new Error() } = {}): void => {
+  let failedWithErrorCount = 0;
   utilsToMock.bootstrapComponent = jest.fn(() => {
-    if (throwsError) {
-      throw new Error('Error while defining custom element');
+    if (failedWithErrorCount < timesToFailWithError) {
+      failedWithErrorCount++;
+      throw error;
     }
     return {};
   });

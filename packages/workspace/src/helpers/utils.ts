@@ -6,7 +6,6 @@ import {
   getLoadingServiceError,
   getLoadingComponentError,
   getBootstrapServiceError,
-  getInitComponentError,
   getBootstrapComponentError,
 } from './const';
 import { emitComponentRegistrationFailedEvent, emitServiceRegistrationFailedEvent } from './eventEmitters';
@@ -62,8 +61,7 @@ export const initComponent = (
         const errorMessage = getBootstrapComponentError(error, componentData.componentName);
         console.error(getErrorWithModifiedMessage(error, errorMessage));
         emitComponentRegistrationFailedEvent({
-          // TODO nodeId or componentName?
-          nodeId: componentData.componentName,
+          componentName: componentData.componentName,
           error: errorMessage,
           id: workspace.id,
         });
@@ -75,14 +73,21 @@ export const initComponent = (
         try {
           webComponent = bootstrapComponent(componentData.componentName, WebComponent);
         } catch (error) {
-          throw getErrorWithModifiedMessage(error, getInitComponentError(error, componentData.componentName));
+          const errorMessage = getBootstrapComponentError(error, componentData.componentName);
+          console.error(getErrorWithModifiedMessage(error, errorMessage));
+          emitComponentRegistrationFailedEvent({
+            componentName: componentData.componentName,
+            error: errorMessage,
+            id: workspace.id,
+          });
         }
-        workspace.registerComponent({
-          nodeId,
-          type,
-          componentName: componentData.componentName,
-          reference: webComponent,
-        });
+        webComponent &&
+          workspace.registerComponent({
+            nodeId,
+            type,
+            componentName: componentData.componentName,
+            reference: webComponent,
+          });
       }
     });
 };

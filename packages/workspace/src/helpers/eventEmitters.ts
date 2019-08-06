@@ -16,15 +16,15 @@ export const generateServiceEventType = ({
 };
 
 export const generateComponentEventType = ({
-  nodeId,
+  componentName,
   type,
   id,
 }: {
-  nodeId: string;
+  componentName: string;
   type: ExtensionEventType;
   id: string;
 }) => {
-  return `COMPONENT_FOR_${nodeId.toUpperCase()}_${type.toUpperCase()}_${id}`;
+  return `COMPONENT_${componentName.toUpperCase()}_${type.toUpperCase()}_${id}`;
 };
 
 export const emitServiceRegistrationSuccessEvent = ({ serviceName, id }: { serviceName: string; id: string }) => {
@@ -49,23 +49,23 @@ export const emitServiceRegistrationFailedEvent = ({
   );
 };
 
-export const emitComponentRegistrationSuccessEvent = ({ nodeId, id }: { nodeId: string; id: string }) => {
+export const emitComponentRegistrationSuccessEvent = ({ componentName, id }: { componentName: string; id: string }) => {
   document.dispatchEvent(
-    new CustomEvent(generateComponentEventType({ nodeId, type: extensionsEventTypes.registered, id }))
+    new CustomEvent(generateComponentEventType({ componentName, type: extensionsEventTypes.registered, id }))
   );
 };
 
 export const emitComponentRegistrationFailedEvent = ({
-  nodeId,
+  componentName,
   error,
   id,
 }: {
-  nodeId: string;
+  componentName: string;
   error: string;
   id: string;
 }) => {
   document.dispatchEvent(
-    new CustomEvent(generateComponentEventType({ nodeId, type: extensionsEventTypes.registrationFailed, id }), {
+    new CustomEvent(generateComponentEventType({ componentName, type: extensionsEventTypes.registrationFailed, id }), {
       detail: error,
     })
   );
