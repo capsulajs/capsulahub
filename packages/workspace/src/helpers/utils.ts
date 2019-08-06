@@ -35,12 +35,12 @@ export const getModuleDynamically = <BootstrapResponse>(
     console.error(errorMessage, error);
   });
 
-export const bootstrapComponent = (componentName: string, WebComponent: INTERNAL_TYPES.CustomWebComponentClass) => {
+export const initComponent = (componentName: string, WebComponent: INTERNAL_TYPES.CustomWebComponentClass) => {
   customElements.define(componentName, WebComponent);
   return new WebComponent();
 };
 
-export const initComponent = (
+export const bootstrapComponent = (
   nodeId: string,
   componentsConfig: INTERNAL_TYPES.ComponentsConfig,
   workspace: INTERNAL_TYPES.Workspace,
@@ -64,7 +64,7 @@ export const initComponent = (
       if (WebComponent) {
         let webComponent;
         try {
-          webComponent = bootstrapComponent(componentData.componentName, WebComponent);
+          webComponent = initComponent(componentData.componentName, WebComponent);
         } catch (error) {
           console.error(getInitComponentError(componentData.componentName), error);
         }
@@ -93,13 +93,13 @@ export const bootstrapServices = (workspace: API.Workspace, servicesConfig: API.
   );
 };
 
-export const initComponents = (
+export const bootstrapComponents = (
   workspace: INTERNAL_TYPES.Workspace,
   componentsConfig: INTERNAL_TYPES.ComponentsConfig,
   type: API.ComponentType
 ) => {
   return Promise.all(
-    Object.keys(componentsConfig).map((nodeId: string) => initComponent(nodeId, componentsConfig, workspace, type))
+    Object.keys(componentsConfig).map((nodeId: string) => bootstrapComponent(nodeId, componentsConfig, workspace, type))
   );
 };
 

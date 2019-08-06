@@ -6,7 +6,7 @@ import {
   bootstrapServices,
   getConfigurationService,
   getErrorWithModifiedMessage,
-  initComponents,
+  bootstrapComponents,
 } from './helpers/utils';
 import {
   configNotLoadedError,
@@ -71,10 +71,10 @@ export default class WorkspaceFactory implements API.WorkspaceFactory {
           const workspace = new Workspace(formattedConfiguration);
           return bootstrapServices(workspace, formattedConfiguration.services)
             .then(() => {
-              return initComponents(workspace, formattedConfiguration.components.layouts, 'layout');
+              return bootstrapComponents(workspace, formattedConfiguration.components.layouts, 'layout');
             })
             .then(() => {
-              return initComponents(workspace, formattedConfiguration.components.items, 'item');
+              return bootstrapComponents(workspace, formattedConfiguration.components.items, 'item');
             })
             .then(() => {
               return resolve({

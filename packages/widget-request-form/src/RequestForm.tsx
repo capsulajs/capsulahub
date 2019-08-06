@@ -6,7 +6,7 @@ import { RequestForm as RequestFormUI } from '@capsulajs/capsulahub-ui';
 import { helpers } from '@capsulajs/capsulahub-utils';
 import { RequestFormUIProps } from './api';
 
-// const mountPoint = 'web-request-form';
+const mountPoint = 'web-request-form';
 
 export class RequestForm extends HTMLElement {
   public props$?: Observable<RequestFormUIProps>;
@@ -16,6 +16,6 @@ export class RequestForm extends HTMLElement {
       ? helpers.dataComponentHoc<RequestFormUIProps>(RequestFormUI, this.props$)
       : RequestFormUI;
     // @ts-ignore
-    ReactDOM.render(<Component />, document.getElementById(mountPoint777));
+    ReactDOM.render(<Component />, document.getElementById(mountPoint));
   }
 }

@@ -59,15 +59,11 @@ export default (WORKSPACE: API.Workspace) => {
     WORKSPACE.registerService({
       serviceName: 'RendererService',
       reference: rendererService,
-    }).then(() => {
+    }).then(async () => {
       // @ts-ignore
       if (!window.mockComponents && process.env.NODE_ENV !== 'test') {
-        rendererService
-          .renderLayouts()
-          .then(() => rendererService.renderItems())
-          .catch((error) => {
-            throw new Error(error);
-          });
+        await rendererService.renderLayouts();
+        await rendererService.renderItems();
       }
     });
 

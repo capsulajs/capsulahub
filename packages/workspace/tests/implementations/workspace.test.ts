@@ -20,6 +20,7 @@ import {
   configWrongFormatError,
   createWorkspaceWrongRequestError,
   getBootstrapComponentError,
+  getInitComponentError,
   getLoadingServiceError,
   getLoadingComponentError,
   invalidRegisterServiceRequestError,
@@ -30,7 +31,7 @@ import {
   configNotLoadedError,
   createWorkspaceWrongRequestForScalecubeProviderError,
 } from '../../src/helpers/const';
-import { mockBootstrapComponent, mockConfigurationService, mockGetModuleDynamically } from '../helpers/mocks';
+import { mockInitComponent, mockConfigurationService, mockGetModuleDynamically } from '../helpers/mocks';
 import baseConfigEntries, {
   configEntriesWithIncorrectDefinitionService,
   configEntriesWithUnregisteredService,
@@ -39,7 +40,6 @@ import baseConfigEntries, {
 } from '../helpers/baseConfigEntries';
 import { applyPostMessagePolyfill } from '../helpers/polyfills/PostMessageWithTransferPolyfill';
 import { applyMessageChannelPolyfill } from '../helpers/polyfills/MessageChannelPolyfill';
-import { getErrorWithModifiedMessage } from '../../src/helpers/utils';
 
 const repositoryNotFoundError = `Configuration repository ${configRepositoryName} not found`;
 
@@ -131,7 +131,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace1 = await workspaceFactory.createWorkspace({ token: '123' });
@@ -163,7 +163,7 @@ describe('Workspace tests', () => {
     }, 1000);
   });
 
-  it.only('An error with importing a service occurs after calling createWorkspace', async () => {
+  it('An error with importing a service occurs after calling createWorkspace', async () => {
     expect.assertions(3);
     const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const importError = new Error('Module can not be found');
@@ -177,7 +177,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -213,13 +213,13 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
 
-    const expectedErrorMessage = getBootstrapServiceError(bootstrapError, 'ServiceB');
-    expect(consoleErrorSpy).toHaveBeenLastCalledWith(getErrorWithModifiedMessage(bootstrapError, expectedErrorMessage));
+    const expectedErrorMessage = getBootstrapServiceError('ServiceB');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, bootstrapError);
     const services = await workspace.services({});
     const serviceA = await services.ServiceA;
     const greetingFromServiceA = await serviceA.proxy.greet('Stephane');
@@ -245,12 +245,12 @@ describe('Workspace tests', () => {
       Promise.reject(importError),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
-    const expectedErrorMessage = getLoadingComponentError(importError, 'web-grid');
-    expect(consoleErrorSpy).toHaveBeenLastCalledWith(getErrorWithModifiedMessage(importError, expectedErrorMessage));
+    const expectedErrorMessage = getLoadingComponentError('web-grid');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, importError);
     const components = await workspace.components({});
     const requestFormComponent = await components['request-form'];
     expect(!!requestFormComponent.reference && typeof requestFormComponent.reference === 'object').toBeTruthy();
@@ -279,12 +279,12 @@ describe('Workspace tests', () => {
         });
       }),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
-    const expectedErrorMessage = getBootstrapComponentError(bootstrapError, 'web-request-form');
-    expect(consoleErrorSpy).toHaveBeenLastCalledWith(getErrorWithModifiedMessage(bootstrapError, expectedErrorMessage));
+    const expectedErrorMessage = getBootstrapComponentError('web-request-form');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, bootstrapError);
     const components = await workspace.components({});
     const gridComponent = await components.grid;
     expect(!!gridComponent.reference && typeof gridComponent.reference === 'object').toBeTruthy();
@@ -309,12 +309,12 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent({ timesToFailWithError: 1, error: bootstrapError });
+    mockInitComponent({ timesToFailWithError: 1, error: bootstrapError });
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
-    const expectedErrorMessage = getBootstrapComponentError(bootstrapError, 'web-grid');
-    expect(consoleErrorSpy).toHaveBeenLastCalledWith(getErrorWithModifiedMessage(bootstrapError, expectedErrorMessage));
+    const expectedErrorMessage = getInitComponentError('web-grid');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, bootstrapError);
     const components = await workspace.components({});
     const requestFormComponent = await components['request-form'];
     expect(!!requestFormComponent.reference && typeof requestFormComponent.reference === 'object').toBeTruthy();
@@ -337,7 +337,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -376,7 +376,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -409,7 +409,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -436,7 +436,7 @@ describe('Workspace tests', () => {
         Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
         Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
-      mockBootstrapComponent();
+      mockInitComponent();
 
       const workspaceFactory = new WorkspaceFactory();
       const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -462,7 +462,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -487,7 +487,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -524,7 +524,7 @@ describe('Workspace tests', () => {
         Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
         Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
-      mockBootstrapComponent();
+      mockInitComponent();
 
       const workspaceFactory = new WorkspaceFactory();
       const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -561,7 +561,7 @@ describe('Workspace tests', () => {
         Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
         Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
-      mockBootstrapComponent();
+      mockInitComponent();
       const workspaceFactory = new WorkspaceFactory();
       const createWorkspaceRequest: API.CreateWorkspaceRequest = { token: '123', configProvider };
       if (configProvider === configurationServiceItems.configurationTypes.scalecube) {
@@ -584,7 +584,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     await workspaceFactory.createWorkspace({ token: '123' });
@@ -621,7 +621,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     await workspaceFactory.createWorkspace({
