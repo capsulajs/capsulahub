@@ -25,7 +25,7 @@ module.exports = (env = {}) => {
   }
 
   return {
-    mode: isProduction ? 'production' : 'development',
+    mode: 'development',
     entry: isProduction ? `${packagePath}/src/index.ts` : `${packagePath}/src/example/index.ts`,
     output: {
       path: isProduction ? `${packagePath}/dist` : `${packagePath}/public`,

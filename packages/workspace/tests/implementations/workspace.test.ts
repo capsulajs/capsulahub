@@ -163,7 +163,7 @@ describe('Workspace tests', () => {
     }, 1000);
   });
 
-  it('An error with importing a service occurs after calling createWorkspace', async () => {
+  it.only('An error with importing a service occurs after calling createWorkspace', async () => {
     expect.assertions(3);
     const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const importError = new Error('Module can not be found');
@@ -182,8 +182,8 @@ describe('Workspace tests', () => {
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
 
-    const expectedErrorMessage = getLoadingServiceError(importError, 'ServiceA');
-    expect(consoleErrorSpy).toHaveBeenLastCalledWith(getErrorWithModifiedMessage(importError, expectedErrorMessage));
+    const expectedErrorMessage = getLoadingServiceError('ServiceA');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, importError);
     const services = await workspace.services({});
     const serviceB = await services.ServiceB;
     const numbers$ = await serviceB.proxy.getRandomNumbers();

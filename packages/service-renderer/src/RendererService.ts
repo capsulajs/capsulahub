@@ -3,7 +3,7 @@ import { Renderer, RenderItemRequest } from './api';
 import { callRenderLayoutsBefore, invalidNodeId, notFoundComponent, notFoundNode } from './helpers/const';
 
 export default (WORKSPACE: API.Workspace) => {
-  return new Promise(async (resolve) => {
+  return new Promise((resolve) => {
     class RendererService implements Renderer {
       private renderedLayouts: boolean = false;
 
@@ -59,11 +59,15 @@ export default (WORKSPACE: API.Workspace) => {
     WORKSPACE.registerService({
       serviceName: 'RendererService',
       reference: rendererService,
-    }).then(async () => {
+    }).then(() => {
       // @ts-ignore
       if (!window.mockComponents && process.env.NODE_ENV !== 'test') {
-        await rendererService.renderLayouts();
-        await rendererService.renderItems();
+        rendererService
+          .renderLayouts()
+          .then(() => rendererService.renderItems())
+          .catch((error) => {
+            throw new Error(error);
+          });
       }
     });
 

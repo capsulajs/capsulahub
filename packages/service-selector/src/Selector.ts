@@ -19,6 +19,8 @@ export default class Selector<Item extends Key, Key extends object> implements S
   constructor() {
     this.data$ = new BehaviorSubject<Item[]>([]);
     this.selected$ = new BehaviorSubject<Item | undefined>(undefined);
+    // @ts-ignore
+    this.data$ = testing_error;
   }
 
   public setItems(setItemsRequest: SetItemsRequest<Item>): Promise<void> {

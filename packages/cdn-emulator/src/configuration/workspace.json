@@ -22,6 +22,20 @@
         }
       },
       "config": { "name": "serviceB" }
+    },
+    {
+      "serviceName": "SelectorService",
+      "path": "http://localhost:3000/services/SelectorService.js",
+      "definition": {
+        "serviceName": "SelectorService",
+        "methods": {
+          "setItems": { "asyncModel": "requestResponse" },
+          "items$": { "asyncModel": "requestStream" },
+          "selectItem": { "asyncModel": "requestResponse" },
+          "selectedItem$": { "asyncModel": "requestStream" }
+        }
+      },
+      "config": { "serviceName": "SelectorService" }
     }
   ],
   "components": {

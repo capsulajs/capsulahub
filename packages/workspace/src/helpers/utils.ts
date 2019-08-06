@@ -7,6 +7,7 @@ import {
   getLoadingComponentError,
   getBootstrapServiceError,
   getBootstrapComponentError,
+  getInitComponentError,
 } from './const';
 
 export const getConfigurationService = (
@@ -30,9 +31,8 @@ export const getModuleDynamically = <BootstrapResponse>(
   itemName: string
 ): Promise<API.ModuleBootstrap<BootstrapResponse>> =>
   dynamicImport(path).catch((error) => {
-    const errorMessage =
-      type === 'service' ? getLoadingServiceError(error, itemName) : getLoadingComponentError(error, itemName);
-    console.error(getErrorWithModifiedMessage(error, errorMessage));
+    const errorMessage = type === 'service' ? getLoadingServiceError(itemName) : getLoadingComponentError(itemName);
+    console.error(errorMessage, error);
   });
 
 export const bootstrapComponent = (componentName: string, WebComponent: INTERNAL_TYPES.CustomWebComponentClass) => {
@@ -57,9 +57,7 @@ export const initComponent = (
       (bootstrap) =>
         bootstrap &&
         bootstrap(workspace, componentData.config).catch((error) => {
-          console.error(
-            getErrorWithModifiedMessage(error, getBootstrapComponentError(error, componentData.componentName))
-          );
+          console.error(getBootstrapComponentError(componentData.componentName), error);
         })
     )
     .then((WebComponent) => {
@@ -68,9 +66,7 @@ export const initComponent = (
         try {
           webComponent = bootstrapComponent(componentData.componentName, WebComponent);
         } catch (error) {
-          console.error(
-            getErrorWithModifiedMessage(error, getBootstrapComponentError(error, componentData.componentName))
-          );
+          console.error(getInitComponentError(componentData.componentName), error);
         }
         webComponent &&
           workspace.registerComponent({
@@ -90,9 +86,7 @@ export const bootstrapServices = (workspace: API.Workspace, servicesConfig: API.
         (bootstrap) =>
           bootstrap &&
           bootstrap(workspace, serviceConfig.config).catch((error) => {
-            console.error(
-              getErrorWithModifiedMessage(error, getBootstrapServiceError(error, serviceConfig.serviceName))
-            );
+            console.error(getBootstrapServiceError(serviceConfig.serviceName), error);
           })
       );
     })
@@ -110,8 +104,7 @@ export const initComponents = (
 };
 
 export const getErrorWithModifiedMessage = (error: Error, newMessage: string): Error => {
-  const newError = new Error();
-  newError.message = newMessage;
+  const newError = new Error(newMessage);
   newError.stack = error.stack;
   return newError;
 };

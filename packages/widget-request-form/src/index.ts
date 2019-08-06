@@ -1,12 +1,15 @@
 import { RequestForm } from './RequestForm';
-import * as API from './api';
 
-declare var publicExports: object;
+declare let publicExports: any;
+
+const bootstrap = (): any => {
+  return new Promise((resolve) => {
+    return resolve(RequestForm);
+  });
+};
 
 if (typeof publicExports !== 'undefined') {
-  publicExports = RequestForm;
+  publicExports = bootstrap;
 }
 
-export { API };
-
-export default RequestForm;
+export default bootstrap;
