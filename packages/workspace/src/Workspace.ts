@@ -30,7 +30,7 @@ import {
 import { ExtensionEventType } from './helpers/types';
 
 export class Workspace implements API.Workspace {
-  public readonly id: string;
+  private id: string;
   private configuration: API.WorkspaceConfig;
   private serviceRegistry: INTERNAL_TYPES.ServiceRegistry;
   private componentRegistry: INTERNAL_TYPES.ComponentRegistry;

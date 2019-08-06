@@ -8,7 +8,6 @@ import {
   getBootstrapServiceError,
   getBootstrapComponentError,
 } from './const';
-import { emitComponentRegistrationFailedEvent, emitServiceRegistrationFailedEvent } from './eventEmitters';
 
 export const getConfigurationService = (
   token: string,
@@ -31,11 +30,9 @@ export const getModuleDynamically = <BootstrapResponse>(
   itemName: string
 ): Promise<API.ModuleBootstrap<BootstrapResponse>> =>
   dynamicImport(path).catch((error) => {
-    if (type === 'service') {
-      throw getErrorWithModifiedMessage(error, getLoadingServiceError(error, itemName));
-    } else {
-      throw getErrorWithModifiedMessage(error, getLoadingComponentError(error, itemName));
-    }
+    const errorMessage =
+      type === 'service' ? getLoadingServiceError(error, itemName) : getLoadingComponentError(error, itemName);
+    console.error(getErrorWithModifiedMessage(error, errorMessage));
   });
 
 export const bootstrapComponent = (componentName: string, WebComponent: INTERNAL_TYPES.CustomWebComponentClass) => {
@@ -56,16 +53,14 @@ export const initComponent = (
     'component',
     componentData.componentName
   )
-    .then((bootstrap) =>
-      bootstrap(workspace, componentData.config).catch((error) => {
-        const errorMessage = getBootstrapComponentError(error, componentData.componentName);
-        console.error(getErrorWithModifiedMessage(error, errorMessage));
-        emitComponentRegistrationFailedEvent({
-          componentName: componentData.componentName,
-          error: errorMessage,
-          id: workspace.id,
-        });
-      })
+    .then(
+      (bootstrap) =>
+        bootstrap &&
+        bootstrap(workspace, componentData.config).catch((error) => {
+          console.error(
+            getErrorWithModifiedMessage(error, getBootstrapComponentError(error, componentData.componentName))
+          );
+        })
     )
     .then((WebComponent) => {
       if (WebComponent) {
@@ -73,13 +68,9 @@ export const initComponent = (
         try {
           webComponent = bootstrapComponent(componentData.componentName, WebComponent);
         } catch (error) {
-          const errorMessage = getBootstrapComponentError(error, componentData.componentName);
-          console.error(getErrorWithModifiedMessage(error, errorMessage));
-          emitComponentRegistrationFailedEvent({
-            componentName: componentData.componentName,
-            error: errorMessage,
-            id: workspace.id,
-          });
+          console.error(
+            getErrorWithModifiedMessage(error, getBootstrapComponentError(error, componentData.componentName))
+          );
         }
         webComponent &&
           workspace.registerComponent({
@@ -96,19 +87,13 @@ export const bootstrapServices = (workspace: API.Workspace, servicesConfig: API.
   return Promise.all(
     servicesConfig.map((serviceConfig) => {
       return getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then(
-        async (bootstrap) => {
-          try {
-            await bootstrap(workspace, serviceConfig.config);
-          } catch (error) {
-            const errorMessage = getBootstrapServiceError(error, serviceConfig.serviceName);
-            console.error(getErrorWithModifiedMessage(error, errorMessage));
-            emitServiceRegistrationFailedEvent({
-              serviceName: serviceConfig.serviceName,
-              error: errorMessage,
-              id: workspace.id,
-            });
-          }
-        }
+        (bootstrap) =>
+          bootstrap &&
+          bootstrap(workspace, serviceConfig.config).catch((error) => {
+            console.error(
+              getErrorWithModifiedMessage(error, getBootstrapServiceError(error, serviceConfig.serviceName))
+            );
+          })
       );
     })
   );
@@ -125,7 +110,10 @@ export const initComponents = (
 };
 
 export const getErrorWithModifiedMessage = (error: Error, newMessage: string): Error => {
-  return { ...error, message: newMessage };
+  const newError = new Error();
+  newError.message = newMessage;
+  newError.stack = error.stack;
+  return newError;
 };
 
 export const generateMicroserviceAddress = (path: string) => ({

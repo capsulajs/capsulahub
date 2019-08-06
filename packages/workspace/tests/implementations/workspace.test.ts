@@ -1,5 +1,6 @@
 import { take } from 'rxjs/operators';
 import * as configurationServiceItems from '@capsulajs/capsulajs-configuration-service';
+import { helpers } from '@capsulajs/capsulahub-utils/src';
 // @ts-ignore
 import serviceABootstrap from '@capsulajs/capsulahub-cdn-emulator/src/services/serviceA';
 // @ts-ignore
@@ -20,7 +21,6 @@ import {
   createWorkspaceWrongRequestError,
   getBootstrapComponentError,
   getLoadingServiceError,
-  getInitComponentError,
   getLoadingComponentError,
   invalidRegisterServiceRequestError,
   serviceAlreadyRegisteredError,
@@ -164,23 +164,35 @@ describe('Workspace tests', () => {
   });
 
   it('An error with importing a service occurs after calling createWorkspace', async () => {
-    expect.assertions(1);
-    const error = new Error('Module can not be found');
+    expect.assertions(3);
+    const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
+    const importError = new Error('Module can not be found');
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.reject(error),
+      Promise.reject(importError),
       Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
+    mockBootstrapComponent();
 
     const workspaceFactory = new WorkspaceFactory();
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
-      new Error(getLoadingServiceError(error, 'ServiceA'))
-    );
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+
+    const expectedErrorMessage = getLoadingServiceError(importError, 'ServiceA');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(getErrorWithModifiedMessage(importError, expectedErrorMessage));
+    const services = await workspace.services({});
+    const serviceB = await services.ServiceB;
+    const numbers$ = await serviceB.proxy.getRandomNumbers();
+    expect(typeof numbers$.subscribe === 'function').toBeTruthy();
+    consoleErrorSpy.mockRestore();
+    const timeoutError = 'timeout';
+    return helpers
+      .getTimeoutPromise({ promise: services.ServiceA, timeout: 1000, errorMessage: timeoutError })
+      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
   });
 
   it('An error with bootstrapping a service occurs after calling createWorkspace', async () => {
@@ -212,15 +224,17 @@ describe('Workspace tests', () => {
     const serviceA = await services.ServiceA;
     const greetingFromServiceA = await serviceA.proxy.greet('Stephane');
     expect(greetingFromServiceA).toEqual('Dear Stephane, what pill would you choose: red or blue?');
-    return services.ServiceB.catch((error) => {
-      expect(error.message).toEqual(expectedErrorMessage);
-      consoleErrorSpy.mockRestore();
-    });
+    consoleErrorSpy.mockRestore();
+    const timeoutError = 'timeout';
+    return helpers
+      .getTimeoutPromise({ promise: services.ServiceB, timeout: 1000, errorMessage: timeoutError })
+      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
   });
 
   it('An error with importing a component occurs after calling createWorkspace', async () => {
-    expect.assertions(1);
-    const error = new Error('Module can not be found');
+    expect.assertions(3);
+    const importError = new Error('Module can not be found');
+    const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
     };
@@ -228,15 +242,23 @@ describe('Workspace tests', () => {
     mockGetModuleDynamically([
       Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
-      Promise.reject(error),
+      Promise.reject(importError),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
+    mockBootstrapComponent();
 
     const workspaceFactory = new WorkspaceFactory();
-
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
-      new Error(getLoadingComponentError(error, 'web-grid'))
-    );
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+    const expectedErrorMessage = getLoadingComponentError(importError, 'web-grid');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(getErrorWithModifiedMessage(importError, expectedErrorMessage));
+    const components = await workspace.components({});
+    const requestFormComponent = await components['request-form'];
+    expect(!!requestFormComponent.reference && typeof requestFormComponent.reference === 'object').toBeTruthy();
+    consoleErrorSpy.mockRestore();
+    const timeoutError = 'timeout';
+    return helpers
+      .getTimeoutPromise({ promise: components.grid, timeout: 1000, errorMessage: timeoutError })
+      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
   });
 
   it('An error with bootstrapping a component occurs after calling createWorkspace', async () => {
@@ -266,10 +288,11 @@ describe('Workspace tests', () => {
     const components = await workspace.components({});
     const gridComponent = await components.grid;
     expect(!!gridComponent.reference && typeof gridComponent.reference === 'object').toBeTruthy();
-    return components['request-form'].catch((error) => {
-      expect(error.message).toEqual(expectedErrorMessage);
-      consoleErrorSpy.mockRestore();
-    });
+    consoleErrorSpy.mockRestore();
+    const timeoutError = 'timeout';
+    return helpers
+      .getTimeoutPromise({ promise: components['request-form'], timeout: 1000, errorMessage: timeoutError })
+      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
   });
 
   it('An error with registering a component occurs after calling createWorkspace', async () => {
@@ -295,10 +318,11 @@ describe('Workspace tests', () => {
     const components = await workspace.components({});
     const requestFormComponent = await components['request-form'];
     expect(!!requestFormComponent.reference && typeof requestFormComponent.reference === 'object').toBeTruthy();
-    return components.grid.catch((error) => {
-      expect(error.message).toEqual(expectedErrorMessage);
-      consoleErrorSpy.mockRestore();
-    });
+    consoleErrorSpy.mockRestore();
+    const timeoutError = 'timeout';
+    return helpers
+      .getTimeoutPromise({ promise: components.grid, timeout: 1000, errorMessage: timeoutError })
+      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
   });
 
   it('Call services method returns a map of promises to each service loaded in Workspace', async (done) => {
