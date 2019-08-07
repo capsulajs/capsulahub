@@ -1,3 +1,5 @@
+import { ExtensionEventTypeRegistered, ExtensionEventTypeRegistrationFailed } from './types';
+
 export const configRepositoryName = 'workspace';
 
 export const configWrongFormatError = 'Workspace configuration does not have the correct format';
@@ -9,20 +11,17 @@ export const createWorkspaceWrongRequestError = 'createWorkspace has been called
 export const createWorkspaceWrongRequestForScalecubeProviderError =
   'createWorkspace has been called with invalid dispatcherUrl for configProvider: "scalecube"';
 
-export const getLoadingServiceError = (error: Error, serviceName: string) =>
-  `Error while loading service "${serviceName}": ${error.message}`;
+export const getLoadingServiceError = (serviceName: string) => `Error while loading service "${serviceName}":`;
 
-export const getBootstrapServiceError = (error: Error, serviceName: string) =>
-  `Error while bootstrapping service "${serviceName}": ${error.message}`;
+export const getBootstrapServiceError = (serviceName: string) => `Error while bootstrapping service "${serviceName}":`;
 
-export const getLoadingComponentError = (error: Error, componentName: string) =>
-  `Error while loading component "${componentName}": ${error.message}`;
+export const getLoadingComponentError = (componentName: string) => `Error while loading component "${componentName}":`;
 
-export const getBootstrapComponentError = (error: Error, componentName: string) =>
-  `Error while bootstrapping component "${componentName}": ${error.message}`;
+export const getBootstrapComponentError = (componentName: string) =>
+  `Error while bootstrapping component "${componentName}":`;
 
-export const getInitComponentError = (error: Error, componentName: string) =>
-  `Error while initialization component "${componentName}": ${error.message}`;
+export const getInitComponentError = (componentName: string) =>
+  `Error while initialization component "${componentName}":`;
 
 export const getScalecubeCreationError = (error: Error, serviceName: string) =>
   `Error in serviceRegister has happened for "${serviceName}" while creating Scalecube microservice: ${error.message}`;
@@ -42,3 +41,8 @@ export const componentToRegisterMissingInConfigurationError =
 export const componentsRequestInvalidError = 'Components request is invalid';
 
 export const servicesRequestInvalidError = 'Services request is invalid';
+
+export const extensionsEventTypes = {
+  registered: 'registered' as ExtensionEventTypeRegistered,
+  registrationFailed: 'registration_failed' as ExtensionEventTypeRegistrationFailed,
+};

@@ -19,8 +19,8 @@ import {
   configWrongFormatError,
   createWorkspaceWrongRequestError,
   getBootstrapComponentError,
-  getLoadingServiceError,
   getInitComponentError,
+  getLoadingServiceError,
   getLoadingComponentError,
   invalidRegisterServiceRequestError,
   serviceAlreadyRegisteredError,
@@ -30,7 +30,7 @@ import {
   configNotLoadedError,
   createWorkspaceWrongRequestForScalecubeProviderError,
 } from '../../src/helpers/const';
-import { mockBootstrapComponent, mockConfigurationService, mockGetModuleDynamically } from '../helpers/mocks';
+import { mockInitComponent, mockConfigurationService, mockGetModuleDynamically } from '../helpers/mocks';
 import baseConfigEntries, {
   configEntriesWithIncorrectDefinitionService,
   configEntriesWithUnregisteredService,
@@ -39,6 +39,8 @@ import baseConfigEntries, {
 } from '../helpers/baseConfigEntries';
 import { applyPostMessagePolyfill } from '../helpers/polyfills/PostMessageWithTransferPolyfill';
 import { applyMessageChannelPolyfill } from '../helpers/polyfills/MessageChannelPolyfill';
+import { importError, bootstrapError } from '../helpers/const';
+import { testPendingPromise } from '../helpers/utils';
 
 const repositoryNotFoundError = `Configuration repository ${configRepositoryName} not found`;
 
@@ -130,7 +132,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace1 = await workspaceFactory.createWorkspace({ token: '123' });
@@ -163,52 +165,72 @@ describe('Workspace tests', () => {
   });
 
   it('An error with importing a service occurs after calling createWorkspace', async () => {
-    expect.assertions(1);
-    const error = new Error('Module can not be found');
+    expect.assertions(3);
+    const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.reject(error),
+      Promise.reject(importError),
       Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
-      new Error(getLoadingServiceError(error, 'ServiceA'))
-    );
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+    const expectedErrorMessage = getLoadingServiceError('ServiceA');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, importError);
+    const services = await workspace.services({});
+    expect(typeof (await services.ServiceB).proxy.getRandomNumbers().subscribe === 'function').toBeTruthy();
+    consoleErrorSpy.mockRestore();
+    return testPendingPromise(services.ServiceA);
   });
 
-  it('An error with bootstrapping a service occurs after calling createWorkspace', async () => {
-    expect.assertions(1);
-    const bootstrapError = new Error('Type error: logic is undefined');
+  const testBootstrapServiceError = async (brokenBootstrap: () => Promise<any>) => {
+    expect.assertions(3);
+    const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
       Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
-      Promise.resolve(() => {
-        return new Promise(() => {
-          throw bootstrapError;
-        });
-      }),
+      Promise.resolve(brokenBootstrap),
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
-      new Error(getBootstrapServiceError(bootstrapError, 'ServiceB'))
-    );
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+    const expectedErrorMessage = getBootstrapServiceError('ServiceB');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, bootstrapError);
+    const services = await workspace.services({});
+    expect(typeof (await services.ServiceA).proxy.greet('Stephane').then === 'function').toBeTruthy();
+    consoleErrorSpy.mockRestore();
+    return testPendingPromise(services.ServiceB);
+  };
+
+  it('An error with bootstrapping a service occurs after calling createWorkspace (error in promise)', () => {
+    return testBootstrapServiceError(() => {
+      return new Promise(() => {
+        throw bootstrapError;
+      });
+    });
+  });
+
+  it('An error with bootstrapping a service occurs after calling createWorkspace (error outside of promise)', () => {
+    return testBootstrapServiceError(() => {
+      throw bootstrapError;
+    });
   });
 
   it('An error with importing a component occurs after calling createWorkspace', async () => {
-    expect.assertions(1);
-    const error = new Error('Module can not be found');
+    expect.assertions(3);
+    const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
     };
@@ -216,20 +238,38 @@ describe('Workspace tests', () => {
     mockGetModuleDynamically([
       Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
-      Promise.reject(error),
+      Promise.reject(importError),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
-
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
-      new Error(getLoadingComponentError(error, 'web-grid'))
-    );
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+    const expectedErrorMessage = getLoadingComponentError('web-grid');
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, importError);
+    const components = await workspace.components({});
+    const requestFormComponent = await components['request-form'];
+    expect(!!requestFormComponent.reference && typeof requestFormComponent.reference === 'object').toBeTruthy();
+    consoleErrorSpy.mockRestore();
+    return testPendingPromise(components.grid);
   });
 
-  it('An error with bootstrapping a component occurs after calling createWorkspace', async () => {
-    expect.assertions(1);
-    const bootstrapError = new Error('TypeError: stream$ is not a function');
+  interface ErrorTypesForComponentTest {
+    bootstrap: 'bootstrap';
+    init: 'init';
+  }
+
+  const errorTypesForComponentTest: ErrorTypesForComponentTest = {
+    bootstrap: 'bootstrap',
+    init: 'init',
+  };
+
+  const testBootstrapComponentError = async (
+    errorType: keyof ErrorTypesForComponentTest,
+    brokenBootstrap?: () => Promise<any>
+  ) => {
+    expect.assertions(3);
+    const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
     };
@@ -238,39 +278,55 @@ describe('Workspace tests', () => {
       Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
-      Promise.resolve(() => {
-        return new Promise(() => {
-          throw bootstrapError;
-        });
-      }),
+      Promise.resolve(
+        errorType === errorTypesForComponentTest.bootstrap
+          ? brokenBootstrap!
+          : (requestFormComponentBootstrap as API.ModuleBootstrap<object>)
+      ),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent(
+      errorType === errorTypesForComponentTest.init ? { timesToFailWithError: 1, error: bootstrapError } : {}
+    );
+
+    const gridComponentData = { rootId: 'grid', name: 'web-grid' };
+    const requestFormComponentData = { rootId: 'request-form', name: 'web-request-form' };
+    const successfulComponent =
+      errorType === errorTypesForComponentTest.bootstrap ? gridComponentData : requestFormComponentData;
+    const failedComponent =
+      errorType === errorTypesForComponentTest.bootstrap ? requestFormComponentData : gridComponentData;
 
     const workspaceFactory = new WorkspaceFactory();
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+    const expectedErrorMessage =
+      errorType === errorTypesForComponentTest.bootstrap
+        ? getBootstrapComponentError(failedComponent.name)
+        : getInitComponentError(failedComponent.name);
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, bootstrapError);
+    const components = await workspace.components({});
+    const successfulComponentFromWorkspace = await components[successfulComponent.rootId];
+    expect(
+      !!successfulComponentFromWorkspace.reference && typeof successfulComponentFromWorkspace.reference === 'object'
+    ).toBeTruthy();
+    consoleErrorSpy.mockRestore();
+    return testPendingPromise(components[failedComponent.rootId]);
+  };
 
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
-      new Error(getBootstrapComponentError(bootstrapError, 'web-request-form'))
-    );
+  it('An error with bootstrapping a component occurs after calling createWorkspace (error in promise)', () => {
+    return testBootstrapComponentError(errorTypesForComponentTest.bootstrap, () => {
+      return new Promise((_) => {
+        throw bootstrapError;
+      });
+    });
   });
 
-  it('An error with registering a component occurs after calling createWorkspace', async () => {
-    expect.assertions(1);
-    const configurationServiceMock = {
-      entries: () => Promise.resolve({ entries: baseConfigEntries }),
-    };
-    mockConfigurationService(configurationServiceMock);
-    mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
-      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
-      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
-      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
-    ]);
-    mockBootstrapComponent(true);
+  it('An error with bootstrapping a component occurs after calling createWorkspace (error outside of promise)', () => {
+    return testBootstrapComponentError(errorTypesForComponentTest.bootstrap, () => {
+      throw bootstrapError;
+    });
+  });
 
-    const workspaceFactory = new WorkspaceFactory();
-    return expect(workspaceFactory.createWorkspace({ token: '123' })).rejects.toEqual(
-      new Error(getInitComponentError(new Error('Error while defining custom element'), 'web-grid'))
-    );
+  it('An error with registering a component occurs after calling createWorkspace', () => {
+    return testBootstrapComponentError(errorTypesForComponentTest.init);
   });
 
   it('Call services method returns a map of promises to each service loaded in Workspace', async (done) => {
@@ -285,7 +341,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -324,7 +380,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -357,7 +413,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -384,7 +440,7 @@ describe('Workspace tests', () => {
         Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
         Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
-      mockBootstrapComponent();
+      mockInitComponent();
 
       const workspaceFactory = new WorkspaceFactory();
       const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -410,7 +466,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -435,7 +491,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -472,7 +528,7 @@ describe('Workspace tests', () => {
         Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
         Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
-      mockBootstrapComponent();
+      mockInitComponent();
 
       const workspaceFactory = new WorkspaceFactory();
       const workspace = await workspaceFactory.createWorkspace({ token: '123' });
@@ -509,7 +565,7 @@ describe('Workspace tests', () => {
         Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
         Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
       ]);
-      mockBootstrapComponent();
+      mockInitComponent();
       const workspaceFactory = new WorkspaceFactory();
       const createWorkspaceRequest: API.CreateWorkspaceRequest = { token: '123', configProvider };
       if (configProvider === configurationServiceItems.configurationTypes.scalecube) {
@@ -532,7 +588,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     await workspaceFactory.createWorkspace({ token: '123' });
@@ -569,7 +625,7 @@ describe('Workspace tests', () => {
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
-    mockBootstrapComponent();
+    mockInitComponent();
 
     const workspaceFactory = new WorkspaceFactory();
     await workspaceFactory.createWorkspace({

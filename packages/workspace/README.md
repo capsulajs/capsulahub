@@ -158,6 +158,12 @@ You will be able to open an example on [localhost:1234](http://localhost:1234/).
 
 This example is also being used for running Cypress tests on it.
 
+## Extensions
+
+If an error has happened while importing or bootstrapping of the extension, corresponding console.error will be shown.
+
+Keep in mind, that if an error has happened before the registration of an extension, the promise of this this extension in ServicesMap or ComponentsMap will always stay in pending state.
+
 ## Licence
 
 [CapsulaHub](https://github.com/capsulajs/capsulahub) and related services are released under MIT Licence.

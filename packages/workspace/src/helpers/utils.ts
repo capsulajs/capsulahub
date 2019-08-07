@@ -6,8 +6,8 @@ import {
   getLoadingServiceError,
   getLoadingComponentError,
   getBootstrapServiceError,
-  getInitComponentError,
   getBootstrapComponentError,
+  getInitComponentError,
 } from './const';
 
 export const getConfigurationService = (
@@ -31,19 +31,16 @@ export const getModuleDynamically = <BootstrapResponse>(
   itemName: string
 ): Promise<API.ModuleBootstrap<BootstrapResponse>> =>
   dynamicImport(path).catch((error) => {
-    if (type === 'service') {
-      throw getErrorWithModifiedMessage(error, getLoadingServiceError(error, itemName));
-    } else {
-      throw getErrorWithModifiedMessage(error, getLoadingComponentError(error, itemName));
-    }
+    const errorMessage = type === 'service' ? getLoadingServiceError(itemName) : getLoadingComponentError(itemName);
+    console.error(errorMessage, error);
   });
 
-export const bootstrapComponent = (componentName: string, WebComponent: INTERNAL_TYPES.CustomWebComponentClass) => {
+export const initComponent = (componentName: string, WebComponent: INTERNAL_TYPES.CustomWebComponentClass) => {
   customElements.define(componentName, WebComponent);
   return new WebComponent();
 };
 
-export const initComponent = (
+export const bootstrapComponent = (
   nodeId: string,
   componentsConfig: INTERNAL_TYPES.ComponentsConfig,
   workspace: INTERNAL_TYPES.Workspace,
@@ -56,52 +53,70 @@ export const initComponent = (
     'component',
     componentData.componentName
   )
-    .then((bootstrap) =>
-      bootstrap(workspace, componentData.config).catch((error) => {
-        throw getErrorWithModifiedMessage(error, getBootstrapComponentError(error, componentData.componentName));
-      })
-    )
-    .then((WebComponent) => {
-      let webComponent;
-      try {
-        webComponent = bootstrapComponent(componentData.componentName, WebComponent);
-      } catch (error) {
-        throw getErrorWithModifiedMessage(error, getInitComponentError(error, componentData.componentName));
+    .then((bootstrap) => {
+      if (bootstrap) {
+        const errorMessage = getBootstrapComponentError(componentData.componentName);
+        try {
+          return bootstrap(workspace, componentData.config).catch((error) => {
+            console.error(errorMessage, error);
+          });
+        } catch (error) {
+          console.error(errorMessage, error);
+        }
       }
-      workspace.registerComponent({
-        nodeId,
-        type,
-        componentName: componentData.componentName,
-        reference: webComponent,
-      });
+    })
+    .then((WebComponent) => {
+      if (WebComponent) {
+        let webComponent;
+        try {
+          webComponent = initComponent(componentData.componentName, WebComponent);
+        } catch (error) {
+          console.error(getInitComponentError(componentData.componentName), error);
+        }
+        webComponent &&
+          workspace.registerComponent({
+            nodeId,
+            type,
+            componentName: componentData.componentName,
+            reference: webComponent,
+          });
+      }
     });
 };
 
 export const bootstrapServices = (workspace: API.Workspace, servicesConfig: API.ServiceConfig[]): Promise<any[]> => {
   return Promise.all(
     servicesConfig.map((serviceConfig) => {
-      return getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then((bootstrap) =>
-        bootstrap(workspace, serviceConfig.config).catch((error) => {
-          throw getErrorWithModifiedMessage(error, getBootstrapServiceError(error, serviceConfig.serviceName));
-        })
-      );
+      return getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then((bootstrap) => {
+        if (bootstrap) {
+          const errorMessage = getBootstrapServiceError(serviceConfig.serviceName);
+          try {
+            return bootstrap(workspace, serviceConfig.config).catch((error) => {
+              console.error(errorMessage, error);
+            });
+          } catch (error) {
+            console.error(errorMessage, error);
+          }
+        }
+      });
     })
   );
 };
 
-export const initComponents = (
+export const bootstrapComponents = (
   workspace: INTERNAL_TYPES.Workspace,
   componentsConfig: INTERNAL_TYPES.ComponentsConfig,
   type: API.ComponentType
 ) => {
   return Promise.all(
-    Object.keys(componentsConfig).map((nodeId: string) => initComponent(nodeId, componentsConfig, workspace, type))
+    Object.keys(componentsConfig).map((nodeId: string) => bootstrapComponent(nodeId, componentsConfig, workspace, type))
   );
 };
 
 export const getErrorWithModifiedMessage = (error: Error, newMessage: string): Error => {
-  error.message = newMessage;
-  return error;
+  const newError = new Error(newMessage);
+  newError.stack = error.stack;
+  return newError;
 };
 
 export const generateMicroserviceAddress = (path: string) => ({

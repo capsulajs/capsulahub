@@ -49,4 +49,29 @@ export default {
       }
     };
   },
+
+  getTimeoutPromise<PromiseResponse>({
+    promise,
+    timeout,
+    errorMessage,
+  }: {
+    promise: Promise<PromiseResponse>;
+    timeout: number;
+    errorMessage: string;
+  }): Promise<PromiseResponse> {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error(errorMessage));
+      }, timeout);
+      promise
+        .then((response: PromiseResponse) => {
+          clearTimeout(timeoutId);
+          resolve(response);
+        })
+        .catch((error) => {
+          clearTimeout(timeoutId);
+          reject(error);
+        });
+    });
+  },
 };

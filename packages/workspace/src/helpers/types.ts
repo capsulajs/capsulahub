@@ -24,3 +24,7 @@ export { CustomWebComponentClass };
 export interface ComponentsConfig {
   [nodeId: string]: API.ComponentConfig;
 }
+
+export type ExtensionEventTypeRegistered = 'registered';
+export type ExtensionEventTypeRegistrationFailed = 'registration_failed';
+export type ExtensionEventType = ExtensionEventTypeRegistered | ExtensionEventTypeRegistrationFailed;

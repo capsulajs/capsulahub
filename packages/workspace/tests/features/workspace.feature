@@ -108,42 +108,72 @@ Scenario: An error with importing a service occurs after calling createWorkspace
     And  Configuration for token 123 that includes service A and B and components 1 and 2
     And  Service A and service B include a bootstrap that calls registerService
     When I run createWorkspace method with token 123
-    And  An error with importing a service occurs
-    Then I expect to receive an error
+    And  an error with importing service A occurs
+    Then I expect workspace to be created
+    And  a console error that importing of service A failed is displayed
+    And  calling services method I expect service B promise to be resolved with service B and pending promise for service A
 
 #2.1
 Scenario: An error with importing a component occurs after calling createWorkspace
     Given WorkspaceFactory instance with createWorkspace method
     And  Configuration for token 123 that includes service A and B and components 1 and 2
     When I run createWorkspace method with token 123
-    And  An error with importing a component occurs
-    Then I expect to receive an error
+    And  An error with importing component 2 occurs
+    Then I expect workspace to be created
+    And  a console error that importing of component 2 failed is displayed
+    And  calling components method I expect component 1 promise to be resolved and pending promise for component 2
 
 #3
-Scenario: An error with bootstrapping a service occurs after calling createWorkspace
+Scenario: An error with bootstrapping a service occurs after calling createWorkspace (error in promise)
     Given WorkspaceFactory instance with createWorkspace method
     And  Configuration for token 123 that includes service A and B and components 1 and 2
     And  Service A and service B include a bootstrap that calls registerService
     When I run createWorkspace method with token 123
-    And  An error with bootstrapping a service occurs
-    Then I expect to receive an error with the name of the corresponding service
+    And  An error with bootstrapping service B occurs in promise
+    Then I expect workspace to be created
+    And  a console error that bootstrapping of service B failed is displayed
+    And  calling services method I expect service A promise to be resolved with service A and pending promise for service B
 
 #3.1
-Scenario: An error with bootstrapping a component occurs after calling createWorkspace
+Scenario: An error with bootstrapping a service occurs after calling createWorkspace (error outside of promise)
+    Given WorkspaceFactory instance with createWorkspace method
+    And  Configuration for token 123 that includes service A and B and components 1 and 2
+    And  Service A and service B include a bootstrap that calls registerService
+    When I run createWorkspace method with token 123
+    And  An error with bootstrapping service B occurs outside of the promise
+    Then I expect workspace to be created
+    And  a console error that bootstrapping of service B failed is displayed
+    And  calling services method I expect service A promise to be resolved with service A and pending promise for service B
+
+#3.2
+Scenario: An error with bootstrapping a component occurs after calling createWorkspace (error in promise)
     Given WorkspaceFactory instance with createWorkspace method
     And  Configuration for token 123 that includes service A and B and components 1 and 2
     When I run createWorkspace method with token 123
-    And  An error with bootstrapping a component occurs
-    Then I expect to receive an error with the name of the corresponding component
+    And  An error with bootstrapping a component 2 occurs in the promise
+    Then I expect workspace to be created
+    And  a console error that bootstrapping of component 2 failed is displayed
+    And  calling components method I expect component 1 promise to be resolved and pending promise for component 2
+
+#3.3
+Scenario: An error with bootstrapping a component occurs after calling createWorkspace (error outside of promise)
+    Given WorkspaceFactory instance with createWorkspace method
+    And  Configuration for token 123 that includes service A and B and components 1 and 2
+    When I run createWorkspace method with token 123
+    And  An error with bootstrapping a component 2 occurs outside of the promise
+    Then I expect workspace to be created
+    And  a console error that bootstrapping of component 2 failed is displayed
+    And  calling components method I expect component 1 promise to be resolved and pending promise for component 2
 
 #4
 Scenario: An error with registering a component occurs after calling createWorkspace
     Given WorkspaceFactory instance with createWorkspace method
     And  Configuration for token 123 that includes service A and B and components 1 and 2
     When I run createWorkspace method with token 123
-    And  An error with registering a component occurs
-    Then I expect to receive an error
-
+    And  An error with registering a component 1 occurs
+    Then I expect workspace to be created
+    And  a console error that registering of component 1 failed is displayed
+    And  calling components method I expect component 2 promise to be resolved and pending promise for component 1
 #4.1
 Scenario: Call registerService method with a service already registered is rejected with error
     Given WorkspaceFactory instance with createWorkspace method

@@ -3,7 +3,7 @@ import { Renderer, RenderItemRequest } from './api';
 import { callRenderLayoutsBefore, invalidNodeId, notFoundComponent, notFoundNode } from './helpers/const';
 
 export default (WORKSPACE: API.Workspace) => {
-  return new Promise(async (resolve) => {
+  return new Promise((resolve) => {
     class RendererService implements Renderer {
       private renderedLayouts: boolean = false;
 
