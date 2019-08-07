@@ -1,4 +1,4 @@
-import { helpers } from '@capsulajs/capsulahub-utils/lib/src';
+import { helpers } from '@capsulajs/capsulahub-utils/src';
 
 export const testPendingPromise = (promise: Promise<any>) => {
   const timeoutError = 'timeout';
