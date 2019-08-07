@@ -15,7 +15,6 @@ export class RequestForm extends HTMLElement {
     const Component: React.JSXElementConstructor<any> = this.props$
       ? helpers.dataComponentHoc<RequestFormUIProps>(RequestFormUI, this.props$)
       : RequestFormUI;
-    // @ts-ignore
     ReactDOM.render(<Component />, document.getElementById(mountPoint));
   }
 }
