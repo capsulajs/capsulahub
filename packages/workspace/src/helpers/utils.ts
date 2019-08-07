@@ -53,13 +53,18 @@ export const bootstrapComponent = (
     'component',
     componentData.componentName
   )
-    .then(
-      (bootstrap) =>
-        bootstrap &&
-        bootstrap(workspace, componentData.config).catch((error) => {
-          console.error(getBootstrapComponentError(componentData.componentName), error);
-        })
-    )
+    .then((bootstrap) => {
+      if (bootstrap) {
+        const errorMessage = getBootstrapComponentError(componentData.componentName);
+        try {
+          return bootstrap(workspace, componentData.config).catch((error) => {
+            console.error(errorMessage, error);
+          });
+        } catch (error) {
+          console.error(errorMessage, error);
+        }
+      }
+    })
     .then((WebComponent) => {
       if (WebComponent) {
         let webComponent;
@@ -82,13 +87,18 @@ export const bootstrapComponent = (
 export const bootstrapServices = (workspace: API.Workspace, servicesConfig: API.ServiceConfig[]): Promise<any[]> => {
   return Promise.all(
     servicesConfig.map((serviceConfig) => {
-      return getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then(
-        (bootstrap) =>
-          bootstrap &&
-          bootstrap(workspace, serviceConfig.config).catch((error) => {
-            console.error(getBootstrapServiceError(serviceConfig.serviceName), error);
-          })
-      );
+      return getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then((bootstrap) => {
+        if (bootstrap) {
+          const errorMessage = getBootstrapServiceError(serviceConfig.serviceName);
+          try {
+            return bootstrap(workspace, serviceConfig.config).catch((error) => {
+              console.error(errorMessage, error);
+            });
+          } catch (error) {
+            console.error(errorMessage, error);
+          }
+        }
+      });
     })
   );
 };

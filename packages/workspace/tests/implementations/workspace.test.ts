@@ -1,6 +1,5 @@
 import { take } from 'rxjs/operators';
 import * as configurationServiceItems from '@capsulajs/capsulajs-configuration-service';
-import { helpers } from '@capsulajs/capsulahub-utils/src';
 // @ts-ignore
 import serviceABootstrap from '@capsulajs/capsulahub-cdn-emulator/src/services/serviceA';
 // @ts-ignore
@@ -40,6 +39,8 @@ import baseConfigEntries, {
 } from '../helpers/baseConfigEntries';
 import { applyPostMessagePolyfill } from '../helpers/polyfills/PostMessageWithTransferPolyfill';
 import { applyMessageChannelPolyfill } from '../helpers/polyfills/MessageChannelPolyfill';
+import { importError, bootstrapError } from '../helpers/const';
+import { testPendingPromise } from '../helpers/utils';
 
 const repositoryNotFoundError = `Configuration repository ${configRepositoryName} not found`;
 
@@ -166,7 +167,6 @@ describe('Workspace tests', () => {
   it('An error with importing a service occurs after calling createWorkspace', async () => {
     expect.assertions(3);
     const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
-    const importError = new Error('Module can not be found');
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
     };
@@ -181,35 +181,24 @@ describe('Workspace tests', () => {
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
-
     const expectedErrorMessage = getLoadingServiceError('ServiceA');
     expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, importError);
     const services = await workspace.services({});
-    const serviceB = await services.ServiceB;
-    const numbers$ = await serviceB.proxy.getRandomNumbers();
-    expect(typeof numbers$.subscribe === 'function').toBeTruthy();
+    expect(typeof (await services.ServiceB).proxy.getRandomNumbers().subscribe === 'function').toBeTruthy();
     consoleErrorSpy.mockRestore();
-    const timeoutError = 'timeout';
-    return helpers
-      .getTimeoutPromise({ promise: services.ServiceA, timeout: 1000, errorMessage: timeoutError })
-      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
+    return testPendingPromise(services.ServiceA);
   });
 
-  it('An error with bootstrapping a service occurs after calling createWorkspace', async () => {
+  const testBootstrapServiceError = async (brokenBootstrap: () => Promise<any>) => {
     expect.assertions(3);
     const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
-    const bootstrapError = new Error('Type error: logic is undefined');
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
       Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
-      Promise.resolve(() => {
-        return new Promise(() => {
-          throw bootstrapError;
-        });
-      }),
+      Promise.resolve(brokenBootstrap),
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
@@ -217,23 +206,30 @@ describe('Workspace tests', () => {
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
-
     const expectedErrorMessage = getBootstrapServiceError('ServiceB');
     expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, bootstrapError);
     const services = await workspace.services({});
-    const serviceA = await services.ServiceA;
-    const greetingFromServiceA = await serviceA.proxy.greet('Stephane');
-    expect(greetingFromServiceA).toEqual('Dear Stephane, what pill would you choose: red or blue?');
+    expect(typeof (await services.ServiceA).proxy.greet('Stephane').then === 'function').toBeTruthy();
     consoleErrorSpy.mockRestore();
-    const timeoutError = 'timeout';
-    return helpers
-      .getTimeoutPromise({ promise: services.ServiceB, timeout: 1000, errorMessage: timeoutError })
-      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
+    return testPendingPromise(services.ServiceB);
+  };
+
+  it('An error with bootstrapping a service occurs after calling createWorkspace (error in promise)', () => {
+    return testBootstrapServiceError(() => {
+      return new Promise(() => {
+        throw bootstrapError;
+      });
+    });
+  });
+
+  it('An error with bootstrapping a service occurs after calling createWorkspace (error outside of promise)', () => {
+    return testBootstrapServiceError(() => {
+      throw bootstrapError;
+    });
   });
 
   it('An error with importing a component occurs after calling createWorkspace', async () => {
     expect.assertions(3);
-    const importError = new Error('Module can not be found');
     const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
@@ -255,15 +251,24 @@ describe('Workspace tests', () => {
     const requestFormComponent = await components['request-form'];
     expect(!!requestFormComponent.reference && typeof requestFormComponent.reference === 'object').toBeTruthy();
     consoleErrorSpy.mockRestore();
-    const timeoutError = 'timeout';
-    return helpers
-      .getTimeoutPromise({ promise: components.grid, timeout: 1000, errorMessage: timeoutError })
-      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
+    return testPendingPromise(components.grid);
   });
 
-  it('An error with bootstrapping a component occurs after calling createWorkspace', async () => {
+  interface ErrorTypesForComponentTest {
+    bootstrap: 'bootstrap';
+    init: 'init';
+  }
+
+  const errorTypesForComponentTest: ErrorTypesForComponentTest = {
+    bootstrap: 'bootstrap',
+    init: 'init',
+  };
+
+  const testBootstrapComponentError = async (
+    errorType: keyof ErrorTypesForComponentTest,
+    brokenBootstrap?: () => Promise<any>
+  ) => {
     expect.assertions(3);
-    const bootstrapError = new Error('TypeError: stream$ is not a function');
     const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
     const configurationServiceMock = {
       entries: () => Promise.resolve({ entries: baseConfigEntries }),
@@ -273,56 +278,55 @@ describe('Workspace tests', () => {
       Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
-      Promise.resolve(() => {
-        return new Promise(() => {
-          throw bootstrapError;
-        });
-      }),
+      Promise.resolve(
+        errorType === errorTypesForComponentTest.bootstrap
+          ? brokenBootstrap!
+          : (requestFormComponentBootstrap as API.ModuleBootstrap<object>)
+      ),
     ]);
-    mockInitComponent();
+    mockInitComponent(
+      errorType === errorTypesForComponentTest.init ? { timesToFailWithError: 1, error: bootstrapError } : {}
+    );
+
+    const gridComponentData = { rootId: 'grid', name: 'web-grid' };
+    const requestFormComponentData = { rootId: 'request-form', name: 'web-request-form' };
+    const successfulComponent =
+      errorType === errorTypesForComponentTest.bootstrap ? gridComponentData : requestFormComponentData;
+    const failedComponent =
+      errorType === errorTypesForComponentTest.bootstrap ? requestFormComponentData : gridComponentData;
 
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
-    const expectedErrorMessage = getBootstrapComponentError('web-request-form');
+    const expectedErrorMessage =
+      errorType === errorTypesForComponentTest.bootstrap
+        ? getBootstrapComponentError(failedComponent.name)
+        : getInitComponentError(failedComponent.name);
     expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, bootstrapError);
     const components = await workspace.components({});
-    const gridComponent = await components.grid;
-    expect(!!gridComponent.reference && typeof gridComponent.reference === 'object').toBeTruthy();
+    const successfulComponentFromWorkspace = await components[successfulComponent.rootId];
+    expect(
+      !!successfulComponentFromWorkspace.reference && typeof successfulComponentFromWorkspace.reference === 'object'
+    ).toBeTruthy();
     consoleErrorSpy.mockRestore();
-    const timeoutError = 'timeout';
-    return helpers
-      .getTimeoutPromise({ promise: components['request-form'], timeout: 1000, errorMessage: timeoutError })
-      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
+    return testPendingPromise(components[failedComponent.rootId]);
+  };
+
+  it('An error with bootstrapping a component occurs after calling createWorkspace (error in promise)', () => {
+    return testBootstrapComponentError(errorTypesForComponentTest.bootstrap, () => {
+      return new Promise((_) => {
+        throw bootstrapError;
+      });
+    });
   });
 
-  it('An error with registering a component occurs after calling createWorkspace', async () => {
-    expect.assertions(3);
-    const configurationServiceMock = {
-      entries: () => Promise.resolve({ entries: baseConfigEntries }),
-    };
-    const bootstrapError = new Error('Error while defining custom element');
-    const consoleErrorSpy = jest.spyOn(window.console, 'error').mockImplementation(() => true);
-    mockConfigurationService(configurationServiceMock);
-    mockGetModuleDynamically([
-      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
-      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
-      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
-      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
-    ]);
-    mockInitComponent({ timesToFailWithError: 1, error: bootstrapError });
+  it('An error with bootstrapping a component occurs after calling createWorkspace (error outside of promise)', () => {
+    return testBootstrapComponentError(errorTypesForComponentTest.bootstrap, () => {
+      throw bootstrapError;
+    });
+  });
 
-    const workspaceFactory = new WorkspaceFactory();
-    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
-    const expectedErrorMessage = getInitComponentError('web-grid');
-    expect(consoleErrorSpy).toHaveBeenLastCalledWith(expectedErrorMessage, bootstrapError);
-    const components = await workspace.components({});
-    const requestFormComponent = await components['request-form'];
-    expect(!!requestFormComponent.reference && typeof requestFormComponent.reference === 'object').toBeTruthy();
-    consoleErrorSpy.mockRestore();
-    const timeoutError = 'timeout';
-    return helpers
-      .getTimeoutPromise({ promise: components.grid, timeout: 1000, errorMessage: timeoutError })
-      .catch((error: Error) => expect(error.message).toEqual(timeoutError));
+  it('An error with registering a component occurs after calling createWorkspace', () => {
+    return testBootstrapComponentError(errorTypesForComponentTest.init);
   });
 
   it('Call services method returns a map of promises to each service loaded in Workspace', async (done) => {
