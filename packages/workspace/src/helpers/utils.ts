@@ -107,7 +107,7 @@ export const bootstrapServices = (workspace: API.Workspace, servicesConfig: API.
         );
         return [...promises, promise];
       },
-      [] as Promise<void>[]
+      [] as Array<Promise<void>>
     )
   );
 };
