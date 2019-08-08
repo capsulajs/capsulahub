@@ -86,20 +86,29 @@ export const bootstrapComponent = (
 
 export const bootstrapServices = (workspace: API.Workspace, servicesConfig: API.ServiceConfig[]): Promise<any[]> => {
   return Promise.all(
-    servicesConfig.map((serviceConfig) => {
-      return getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then((bootstrap) => {
-        if (bootstrap) {
-          const errorMessage = getBootstrapServiceError(serviceConfig.serviceName);
-          try {
-            return bootstrap(workspace, serviceConfig.config).catch((error) => {
-              console.error(errorMessage, error);
-            });
-          } catch (error) {
-            console.error(errorMessage, error);
-          }
+    servicesConfig.reduce(
+      (promises, serviceConfig) => {
+        if (!serviceConfig.path) {
+          return [...promises];
         }
-      });
-    })
+        const promise = getModuleDynamically<void>(serviceConfig.path, 'service', serviceConfig.serviceName).then(
+          (bootstrap) => {
+            if (bootstrap) {
+              const errorMessage = getBootstrapServiceError(serviceConfig.serviceName);
+              try {
+                return bootstrap(workspace, serviceConfig.config).catch((error) => {
+                  console.error(errorMessage, error);
+                });
+              } catch (error) {
+                console.error(errorMessage, error);
+              }
+            }
+          }
+        );
+        return [...promises, promise];
+      },
+      [] as Array<Promise<void>>
+    )
   );
 };
 
