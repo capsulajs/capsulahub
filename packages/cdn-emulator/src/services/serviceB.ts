@@ -1,16 +1,17 @@
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+declare var publicExports: object;
+
+export class ServiceB {
+  public getRandomNumbers() {
+    return timer(0, 1000).pipe(map(() => Math.round(Math.random() * 1000)));
+  }
+}
+
 const bootstrap = (WORKSPACE: any) => {
-  return new Promise(async (resolve) => {
-    class ServiceB {
-      public getRandomNumbers() {
-        return timer(0, 1000).pipe(map(() => Math.round(Math.random() * 1000)));
-      }
-    }
-
+  return new Promise((resolve) => {
     const serviceB = new ServiceB();
-
     const registerServiceData = {
       serviceName: 'ServiceB',
       reference: serviceB,
@@ -20,9 +21,7 @@ const bootstrap = (WORKSPACE: any) => {
   });
 };
 
-// @ts-ignore
 if (typeof publicExports !== 'undefined') {
-  // @ts-ignore
   publicExports = bootstrap;
 }
 

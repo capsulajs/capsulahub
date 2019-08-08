@@ -3,13 +3,13 @@ import * as configurationServiceItems from '@capsulajs/capsulajs-configuration-s
 // @ts-ignore
 import serviceABootstrap from '@capsulajs/capsulahub-cdn-emulator/src/services/serviceA';
 // @ts-ignore
+import serviceBRegistersABootstrap from '@capsulajs/capsulahub-cdn-emulator/src/services/serviceBRegistersA';
+// @ts-ignore
 import serviceBBootstrap from '@capsulajs/capsulahub-cdn-emulator/src/services/serviceB';
 // @ts-ignore
 import serviceCBootstrap, { ServiceC } from '@capsulajs/capsulahub-cdn-emulator/src/services/serviceC';
 // @ts-ignore
 import serviceDBootstrap from '@capsulajs/capsulahub-cdn-emulator/src/services/serviceD';
-// @ts-ignore
-import serviceEBootstrap from '@capsulajs/capsulahub-cdn-emulator/src/services/serviceE';
 // @ts-ignore
 import gridComponentBootstrap from '@capsulajs/capsulahub-cdn-emulator/src/widgets/Grid';
 // // @ts-ignore
@@ -34,11 +34,13 @@ import {
 } from '../../src/helpers/const';
 import { mockInitComponent, mockConfigurationService, mockGetModuleDynamically } from '../helpers/mocks';
 import baseConfigEntries, {
+  serviceAConfig,
+  serviceAWithNoPathConfig,
+  serviceBConfig,
+  serviceCConfig,
+  getConfigEntries,
   configEntriesWithIncorrectDefinitionService,
   configEntriesWithUnregisteredService,
-  configEntriesWithServicesEG,
-  serviceAConfig,
-  serviceCConfig,
 } from '../helpers/baseConfigEntries';
 import { applyPostMessagePolyfill } from '../helpers/polyfills/PostMessageWithTransferPolyfill';
 import { applyMessageChannelPolyfill } from '../helpers/polyfills/MessageChannelPolyfill';
@@ -661,15 +663,16 @@ describe('Workspace tests', () => {
     }
   );
 
-  it.only('Call services method when no path is provided (the service is registering himself)', async () => {
-    expect.assertions(4);
+  it('Call services method when no path is provided (the service is registering himself)', async () => {
+    expect.assertions(2);
 
     const configurationServiceMock = {
-      entries: () => Promise.resolve({ entries: configEntriesWithServicesEG }),
+      entries: () =>
+        Promise.resolve({ entries: getConfigEntries({ services: [serviceAWithNoPathConfig, serviceBConfig] }) }),
     };
     mockConfigurationService(configurationServiceMock);
     mockGetModuleDynamically([
-      Promise.resolve(serviceEBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
       Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
       Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
     ]);
@@ -678,12 +681,31 @@ describe('Workspace tests', () => {
     const workspaceFactory = new WorkspaceFactory();
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
     const services = await workspace.services({});
-    const [serviceE, serviceG] = await Promise.all([services.ServiceE, services.ServiceG]);
-    expect(serviceE.serviceName).toEqual('ServiceE');
-    expect(serviceG.serviceName).toEqual('ServiceG');
-    const serviceEMethodResponse = await serviceE.proxy.testServiceE();
-    expect(serviceEMethodResponse).toEqual('response for ServiceE');
-    const serviceGMethodResponse = await serviceG.proxy.testServiceG();
-    expect(serviceGMethodResponse).toEqual('response for ServiceG');
+    const serviceB = await services.ServiceB;
+    expect(serviceB.serviceName).toEqual('ServiceB');
+    return testPendingPromise(services.ServiceA);
+  });
+
+  it('Call services method when no path is provided (a service is registered by another service)', async () => {
+    expect.assertions(2);
+
+    const configurationServiceMock = {
+      entries: () =>
+        Promise.resolve({ entries: getConfigEntries({ services: [serviceAWithNoPathConfig, serviceBConfig] }) }),
+    };
+    mockConfigurationService(configurationServiceMock);
+    mockGetModuleDynamically([
+      Promise.resolve(serviceBRegistersABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
+    ]);
+    mockInitComponent();
+
+    const workspaceFactory = new WorkspaceFactory();
+    const workspace = await workspaceFactory.createWorkspace({ token: '123' });
+    const services = await workspace.services({});
+    const [serviceA, serviceB] = await Promise.all([services.ServiceA, services.ServiceB]);
+    expect(serviceA.serviceName).toEqual('ServiceA');
+    expect(serviceB.serviceName).toEqual('ServiceB');
   });
 });

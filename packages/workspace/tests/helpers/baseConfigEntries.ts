@@ -1,3 +1,4 @@
+import omit from 'lodash/omit';
 import { Api } from '@scalecube/scalecube-microservice';
 import { API } from '../../src';
 
@@ -23,6 +24,8 @@ export const serviceAConfig = {
   },
   config: { name: 'serviceA', message: 'what pill would you choose: red or blue?' },
 };
+
+export const serviceAWithNoPathConfig = omit(serviceAConfig, 'path');
 
 export const serviceBConfig = {
   serviceName: 'ServiceB',
@@ -56,29 +59,6 @@ export const serviceDConfig = {
     methods: {
       hello: { asyncModel: 'requestResponse' as Api.AsyncModel },
       world: { asyncModel: 'requestResponse' as Api.AsyncModel },
-    },
-  },
-  config: {},
-};
-
-export const serviceEConfig = {
-  serviceName: 'ServiceE',
-  path: 'http://localhost:3000/services/serviceE.js',
-  definition: {
-    serviceName: 'ServiceE',
-    methods: {
-      testServiceE: { asyncModel: 'requestResponse' as Api.AsyncModel },
-    },
-  },
-  config: {},
-};
-
-export const serviceGConfig = {
-  serviceName: 'ServiceG',
-  definition: {
-    serviceName: 'ServiceG',
-    methods: {
-      testServiceG: { asyncModel: 'requestResponse' as Api.AsyncModel },
     },
   },
   config: {},
@@ -135,7 +115,5 @@ export const configEntriesWithUnregisteredService = getConfigEntries({
 export const configEntriesWithIncorrectDefinitionService = getConfigEntries({
   services: [...(baseConfigEntries[1] as ServicesConfigEntry).value, serviceDConfig],
 });
-
-export const configEntriesWithServicesEG = getConfigEntries({ services: [serviceEConfig, serviceGConfig] });
 
 export default baseConfigEntries;
