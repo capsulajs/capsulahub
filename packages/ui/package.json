@@ -15,7 +15,7 @@
     "prettier": "prettier --write '{src,stories}/**/*.{js,jsx}'"
   },
   "dependencies": {
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "react": "16.8.6",
     "react-ace": "^6.1.4",
     "react-beautiful-dnd": "^10.1.0",
