@@ -44,7 +44,7 @@ import baseConfigEntries, {
 } from '../helpers/baseConfigEntries';
 import { applyPostMessagePolyfill } from '../helpers/polyfills/PostMessageWithTransferPolyfill';
 import { applyMessageChannelPolyfill } from '../helpers/polyfills/MessageChannelPolyfill';
-import { importError, bootstrapError } from '../helpers/const';
+import { importError, bootstrapError, serviceInWorkspaceKeys } from '../helpers/const';
 import { testPendingPromise } from '../helpers/utils';
 
 const repositoryNotFoundError = `Configuration repository ${configRepositoryName} not found`;
@@ -663,7 +663,7 @@ describe('Workspace tests', () => {
     }
   );
 
-  it('Call services method when no path is provided (the service is registering himself)', async () => {
+  it('Call services method when no path is provided (the service with no path has not been registered)', async () => {
     expect.assertions(2);
 
     const configurationServiceMock = {
@@ -682,11 +682,11 @@ describe('Workspace tests', () => {
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
     const services = await workspace.services({});
     const serviceB = await services.ServiceB;
-    expect(serviceB.serviceName).toEqual('ServiceB');
+    expect(Object.keys(serviceB)).toEqual(serviceInWorkspaceKeys);
     return testPendingPromise(services.ServiceA);
   });
 
-  it('Call services method when no path is provided (a service is registered by another service)', async () => {
+  it('Call services method when no path is provided (a service with no path is registered by another service)', async () => {
     expect.assertions(2);
 
     const configurationServiceMock = {
@@ -705,7 +705,7 @@ describe('Workspace tests', () => {
     const workspace = await workspaceFactory.createWorkspace({ token: '123' });
     const services = await workspace.services({});
     const [serviceA, serviceB] = await Promise.all([services.ServiceA, services.ServiceB]);
-    expect(serviceA.serviceName).toEqual('ServiceA');
-    expect(serviceB.serviceName).toEqual('ServiceB');
+    expect(Object.keys(serviceA)).toEqual(serviceInWorkspaceKeys);
+    expect(Object.keys(serviceB)).toEqual(serviceInWorkspaceKeys);
   });
 });

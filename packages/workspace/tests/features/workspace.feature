@@ -23,6 +23,39 @@ Scenario: Call services method returns a map of promises to each service loaded 
           |proxy      |
     And   each of the promises is resolved with corresponding service
 
+#2.1
+  Scenario: Call services method when no path is provided (the service with no path has not been registered)
+    Given WorkspaceFactory instance with createWorkspace method
+    And   Configuration for token 123 that includes service A and B and components 1 and 2
+    And   No path is provided for service A
+    And   A path is provided for service B
+    And   Service B includes a bootstrap that calls registerService for service B
+    And   the bootstrap includes CAPSULAHUB_WORKSPACE and CAPSULAHUB_CONFIGURATION variable
+    When  I run createWorkspace method with token 123 and Workspace is created
+    And   I call services method
+    Then  I expect to receive a map of promises to service A and B having the following <property>
+          |<property> |
+          |serviceName|
+          |proxy      |
+    And   Service B promise is resolved with service B
+    And   Service A promise stays in pending state
+
+#2.2
+ Scenario: Call services method when no path is provided (a service with no path is registered by another service)
+    Given WorkspaceFactory instance with createWorkspace method
+    And   Configuration for token 123 that includes service A and B and components 1 and 2
+    And   no path is provided for service A
+    And   there is a path provided for service B
+    And   Service B includes a bootstrap that calls registerService for both service A and B
+    And   the bootstrap includes CAPSULAHUB_WORKSPACE and CAPSULAHUB_CONFIGURATION variable
+    When  I run createWorkspace method with token 123 and Workspace is created
+    And   I call services method
+    Then  I expect to receive a map of promises to service A and B having the following <property>
+          |<property> |
+          |serviceName|
+          |proxy      |
+    And   each of the promises is resolved with corresponding service
+
 #3
 Scenario: Call components method returns a map of promises to each component loaded in Workspace
     Given WorkspaceFactory instance with createWorkspace method
