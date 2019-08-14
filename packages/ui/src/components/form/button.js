@@ -26,7 +26,7 @@ const themes = {
   clicked: { bg: '#fff', hoverBg: '#fff', color: '#57D7FF' },
 };
 
-const Button = ({ id, text, theme, onClick, css, dataCy = 'button' }) => {
+const ButtonComponent = ({ id, text, theme, onClick, css, dataCy = 'button' }) => {
   return (
     <Button data-cy={dataCy} id={id} theme={themes[theme] || themes['active']} onClick={onClick} css={css}>
       {text}
@@ -35,7 +35,7 @@ const Button = ({ id, text, theme, onClick, css, dataCy = 'button' }) => {
 };
 
 if (typeof publicExports !== 'undefined') {
-  publicExports = Button;
+  publicExports = ButtonComponent;
 }
 
-export default Button;
+export default ButtonComponent;
