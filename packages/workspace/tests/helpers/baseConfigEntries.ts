@@ -1,5 +1,5 @@
 import omit from 'lodash/omit';
-import { Api } from '@scalecube/scalecube-microservice';
+import { ASYNC_MODEL_TYPES } from '@scalecube/scalecube-microservice';
 import { API } from '../../src';
 
 interface ConfigEntriesParts {
@@ -19,7 +19,7 @@ export const serviceAConfig = {
   definition: {
     serviceName: 'ServiceA',
     methods: {
-      greet: { asyncModel: 'requestResponse' as Api.AsyncModel },
+      greet: { asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE },
     },
   },
   config: { name: 'serviceA', message: 'what pill would you choose: red or blue?' },
@@ -33,7 +33,7 @@ export const serviceBConfig = {
   definition: {
     serviceName: 'ServiceB',
     methods: {
-      getRandomNumbers: { asyncModel: 'requestStream' as Api.AsyncModel },
+      getRandomNumbers: { asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM },
     },
   },
   config: { name: 'serviceB' },
@@ -45,7 +45,7 @@ export const serviceCConfig = {
   definition: {
     serviceName: 'ServiceC',
     methods: {
-      hello: { asyncModel: 'requestResponse' as Api.AsyncModel },
+      hello: { asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE },
     },
   },
   config: {},
@@ -57,8 +57,8 @@ export const serviceDConfig = {
   definition: {
     serviceName: 'ServiceD',
     methods: {
-      hello: { asyncModel: 'requestResponse' as Api.AsyncModel },
-      world: { asyncModel: 'requestResponse' as Api.AsyncModel },
+      hello: { asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE },
+      world: { asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE },
     },
   },
   config: {},
