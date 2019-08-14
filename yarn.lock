@@ -2386,48 +2386,74 @@
     react-lifecycles-compat "^3.0.4"
     warning "^3.0.0"
 
-"@scalecube/api@^0.0.2-alpha.1":
-  version "0.0.2-snapshot.1561972738.8"
-  resolved "https://registry.yarnpkg.com/@scalecube/api/-/api-0.0.2-snapshot.1561972738.8.tgz#a0a241242de72449105e3082b090c86c356f8f6a"
-  integrity sha512-OXnPx5oG6bOPW2Q/d0/PCMKoXBjrksbkmcd4IfnwpaDE4HcFLv8w5vtcIAQJQ+FR+eo3n3Tn9kJ0pD25CcwhXQ==
+"@scalecube/api@0.0.2-alpha.12":
+  version "0.0.2-alpha.12"
+  resolved "https://registry.yarnpkg.com/@scalecube/api/-/api-0.0.2-alpha.12.tgz#9629493f37c015db1533ea4cc0ce939e355695bb"
+  integrity sha512-d5HLZk/ab7OY1lCL4U29GT0jd+dTX+n/svrvAOTiV6Qasfng/8OPVufjhYCsBeqDC8hfyGSVwFg0Lvpz3KjxmA==
 
-"@scalecube/scalecube-discovery@^0.1.1-snapshot.1562076916.11+62f8be0":
-  version "0.1.1-snapshot.1562230640.14"
-  resolved "https://registry.yarnpkg.com/@scalecube/scalecube-discovery/-/scalecube-discovery-0.1.1-snapshot.1562230640.14.tgz#d9f4b3e2905e086d04e48b8acd65ad7ff238fb6d"
-  integrity sha512-VjeZDeJTO9nhHyq13L7j9y+q8AZ0j1S4YwXKdpY72dzJkLAzj5rCv+MVq/JHs6A6A+t4GNAdI18VMBBT7wBqdg==
+"@scalecube/api@^0.0.2-alpha.12", "@scalecube/api@^0.0.2-snapshot.1565528584.2+01f7c6f":
+  version "0.0.2-snapshot.1565528584.2"
+  resolved "https://registry.yarnpkg.com/@scalecube/api/-/api-0.0.2-snapshot.1565528584.2.tgz#d74fe674a9894531f9a9f6b95d071cdaae058898"
+  integrity sha512-65cRY1aZx2+MFvgfwQ1N5BtQpRfVIPoRxA3/HmkJL2ayAVER4JdvjTAulRBnFaG1pbf/x+jLS0aoA13CY10g/Q==
+
+"@scalecube/cluster-browser@^0.0.2-snapshot.1565528584.2+01f7c6f":
+  version "0.0.2-snapshot.1565528584.2"
+  resolved "https://registry.yarnpkg.com/@scalecube/cluster-browser/-/cluster-browser-0.0.2-snapshot.1565528584.2.tgz#1895ed2712f4d4eae1b7af67dcaab6a1fdee0f6b"
+  integrity sha512-/Bcmyo32E7h4Wx1a6/Phfp+9HeJC6jcQEPcGiMVMCjDZW3jvSl5uwkS/e3cwLX/aD2BbkEfijYSoSaEcwl1cfA==
   dependencies:
-    "@scalecube/api" "^0.0.2-alpha.1"
-    "@scalecube/utils" "^0.0.2-alpha.1"
+    "@scalecube/api" "^0.0.2-snapshot.1565528584.2+01f7c6f"
+    "@scalecube/utils" "^0.0.2-snapshot.1565528584.2+01f7c6f"
     rxjs "^6.4.0"
 
-"@scalecube/scalecube-microservice@0.1.3-snapshot.1562076916.11":
-  version "0.1.3-snapshot.1562076916.11"
-  resolved "https://registry.yarnpkg.com/@scalecube/scalecube-microservice/-/scalecube-microservice-0.1.3-snapshot.1562076916.11.tgz#3c2f837f9bfb187d52e3e9110f51aaa18862ffb0"
-  integrity sha512-PO2bYLNGjGOORn99HraiHCYWAcTOrebu9xJ7j4LBmsQFstDEUOanUGzJf/GIFtYwQJPIv7YvnZP3n+ZNKDoZEg==
+"@scalecube/routers@^0.0.2-alpha.1":
+  version "0.0.2-snapshot.1565528584.2"
+  resolved "https://registry.yarnpkg.com/@scalecube/routers/-/routers-0.0.2-snapshot.1565528584.2.tgz#a75ae044794c0fc7fc31c2bb742e92c0903bf388"
+  integrity sha512-uJzDasPCfaoyYjWbhrTb3EUhZsG9ketc8jIr+8cCRFbDyzBXT38gFpio9NcLbJ3JlPWOm2ZP7CHy8atlcxQ9ZA==
   dependencies:
-    "@scalecube/api" "^0.0.2-alpha.1"
-    "@scalecube/scalecube-discovery" "^0.1.1-snapshot.1562076916.11+62f8be0"
-    "@scalecube/transport-browser" "^0.0.2-alpha.2"
-    "@scalecube/utils" "^0.0.2-alpha.1"
+    "@scalecube/api" "^0.0.2-snapshot.1565528584.2+01f7c6f"
+    "@scalecube/utils" "^0.0.2-snapshot.1565528584.2+01f7c6f"
+
+"@scalecube/scalecube-discovery@^0.1.1-alpha.19":
+  version "0.1.1-snapshot.1565528584.2"
+  resolved "https://registry.yarnpkg.com/@scalecube/scalecube-discovery/-/scalecube-discovery-0.1.1-snapshot.1565528584.2.tgz#3ae2c3125b7bbb07311af6edb8ab1c80a4d333a7"
+  integrity sha512-WuTm/85P0hJTDRnnRHKqFrx6aGjYCyCGaTAbP94SljVCSfE208+zXuXBjxkBqA/JPmADKnm+jxadEh4hL7HDMw==
+  dependencies:
+    "@scalecube/api" "^0.0.2-snapshot.1565528584.2+01f7c6f"
+    "@scalecube/cluster-browser" "^0.0.2-snapshot.1565528584.2+01f7c6f"
+    "@scalecube/utils" "^0.0.2-snapshot.1565528584.2+01f7c6f"
+    rxjs "^6.4.0"
+
+"@scalecube/scalecube-microservice@0.1.3-alpha.35":
+  version "0.1.3-alpha.35"
+  resolved "https://registry.yarnpkg.com/@scalecube/scalecube-microservice/-/scalecube-microservice-0.1.3-alpha.35.tgz#7d30dbd2a4814e3d127f92e65e63d61a2137b0c4"
+  integrity sha512-cu0L0RqjEj7n/OrKyQDbRrkCzp/WEzwx2slC0MWpC7rNXib7dqwlENkjCcW4bgihkPNvZI35VHqMR8w2qmUJ+A==
+  dependencies:
+    "@scalecube/api" "^0.0.2-alpha.12"
+    "@scalecube/routers" "^0.0.2-alpha.1"
+    "@scalecube/scalecube-discovery" "^0.1.1-alpha.19"
+    "@scalecube/transport-browser" "^0.0.2-alpha.14"
+    "@scalecube/utils" "^0.0.2-alpha.13"
     rsocket-core "^0.0.10"
     rsocket-flowable "^0.0.10"
     rxjs "^6.4.0"
 
-"@scalecube/transport-browser@^0.0.2-alpha.2":
-  version "0.0.2-snapshot.1562058980.9"
-  resolved "https://registry.yarnpkg.com/@scalecube/transport-browser/-/transport-browser-0.0.2-snapshot.1562058980.9.tgz#2bb2c1da80522e4fa1345d0671f1fa17c4412b81"
-  integrity sha512-DCE/1ao/JushOg4J5mv7hzuyPK06Qy1X5k+ho6u8iNmaShGCwBhSFAVR20b3lrSBiXu2SkyLWHciukDBWcm+kQ==
+"@scalecube/transport-browser@^0.0.2-alpha.14":
+  version "0.0.2-snapshot.1565528584.2"
+  resolved "https://registry.yarnpkg.com/@scalecube/transport-browser/-/transport-browser-0.0.2-snapshot.1565528584.2.tgz#4120ebf966c003135e3dbcc4b2738a3920ef8324"
+  integrity sha512-NU6T+NhqXNAhN+rWddd7IRbq7cW8/ugTQ518zPkT9i744pewqqDqoGWpn5JrZO/cnWu0N+sqbytA/YLu/+Jl7A==
   dependencies:
-    "@scalecube/api" "^0.0.2-alpha.1"
-    "@scalecube/utils" "^0.0.2-alpha.1"
+    "@scalecube/api" "^0.0.2-snapshot.1565528584.2+01f7c6f"
+    "@scalecube/utils" "^0.0.2-snapshot.1565528584.2+01f7c6f"
     rsocket-core "^0.0.10"
-    rsocket-events-client "^0.0.16"
-    rsocket-events-server "^0.0.16"
+    rsocket-events-client "^0.0.16-6"
+    rsocket-events-server "^0.0.16-6"
 
-"@scalecube/utils@^0.0.2-alpha.1":
-  version "0.0.2-snapshot.1561972738.6"
-  resolved "https://registry.yarnpkg.com/@scalecube/utils/-/utils-0.0.2-snapshot.1561972738.6.tgz#4078dcbead6964735b36b92d094802006fb0ebdd"
-  integrity sha512-6PKPqOomWJgGzNNJDMVVHGG267XTd/yGq6wRjY5kVcuoEyAKhjdkhlDYvbox5wdSdQuetmGp99GxumP7A4U5fQ==
+"@scalecube/utils@^0.0.2-alpha.13", "@scalecube/utils@^0.0.2-snapshot.1565528584.2+01f7c6f":
+  version "0.0.2-snapshot.1565528584.2"
+  resolved "https://registry.yarnpkg.com/@scalecube/utils/-/utils-0.0.2-snapshot.1565528584.2.tgz#f9f6b89058a38c472a37e1539d09b6b3710e3bac"
+  integrity sha512-jsW9Dibs0FhibhP6HO+d/g1NtuoOIw0TbeJ6jdU00X4wP/b44XY3Sxg8uP1vG/dW1IyHXtjoKqOuFZtHVREXWQ==
+  dependencies:
+    "@scalecube/api" "^0.0.2-snapshot.1565528584.2+01f7c6f"
 
 "@storybook/addon-actions@^5.0.11":
   version "5.1.9"
@@ -13646,24 +13672,24 @@ rsocket-core@^0.0.10:
     rsocket-flowable "^0.0.10"
     rsocket-types "^0.0.10"
 
-rsocket-events-client@^0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/rsocket-events-client/-/rsocket-events-client-0.0.16.tgz#836304b99cf77cecf1e142acfdc04c59c55a769f"
-  integrity sha512-BAQSm9FskqR+SGAsxNk9/M4/vlEOA1+2hN+yrXABOUhjvY0hxj8KS1Gxj4BTEqNXR5immeGTchSe7/ev9qegNQ==
+rsocket-events-client@^0.0.16-6:
+  version "0.0.16-6"
+  resolved "https://registry.yarnpkg.com/rsocket-events-client/-/rsocket-events-client-0.0.16-6.tgz#b23ae4bc790bffb8ade0db704544823b293167ce"
+  integrity sha512-VUwiz/Oby0YgHLJkqNBIRbReOQ0yatEAklJtUd1vCBTebDbX6st+7fEK/gNRiGHwMxdOsmmmTYt5MnGQx2VAtQ==
   dependencies:
     fbjs "^0.8.12"
     rsocket-core "^0.0.10"
     rsocket-flowable "^0.0.10"
     rsocket-types "^0.0.10"
 
-rsocket-events-server@^0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/rsocket-events-server/-/rsocket-events-server-0.0.16.tgz#77c9648648afff54c5f8ac37642d09e27b7ce895"
-  integrity sha512-VIvniVUsifuIcKx75slANPfbAR9PFp5EWCyZX56EqrSbNbqLSkkdV+voMw/FTV7LycJ7YLUDWfUr71XE1h+UVw==
+rsocket-events-server@^0.0.16-6:
+  version "0.0.16-6"
+  resolved "https://registry.yarnpkg.com/rsocket-events-server/-/rsocket-events-server-0.0.16-6.tgz#894c3e67d71a8d8fba1904aef704f5a933b07e24"
+  integrity sha512-6vm1lFw8Nh+jtpu0V8J+B5vU7DLxUvvmvEBRGvSNIZ+iQ0vvZMp+AyRBhHNB/aGY5reFnzCyazgP8VBlBwEaQA==
   dependencies:
     fbjs "^0.8.12"
     rsocket-core "^0.0.10"
-    rsocket-events-client "^0.0.16"
+    rsocket-events-client "^0.0.16-6"
     rsocket-flowable "^0.0.10"
     rsocket-types "^0.0.10"
 
