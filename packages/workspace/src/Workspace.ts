@@ -1,5 +1,6 @@
 import uuidv4 from 'uuid/v4';
-import { Api as SCALECUBE_API, Microservices } from '@scalecube/scalecube-microservice';
+import { createMicroservice } from '@scalecube/scalecube-microservice';
+import { MicroserviceApi } from '@scalecube/api';
 import { API } from '.';
 import * as INTERNAL_TYPES from './helpers/types';
 import {
@@ -34,7 +35,7 @@ export class Workspace implements API.Workspace {
   private configuration: API.WorkspaceConfig;
   private serviceRegistry: INTERNAL_TYPES.ServiceRegistry;
   private componentRegistry: INTERNAL_TYPES.ComponentRegistry;
-  private microservice?: SCALECUBE_API.Microservice;
+  private microservice?: MicroserviceApi.Microservice;
   private servicesMap: API.ServicesMap;
   private componentsMap: API.ComponentsMap;
   private listeners: INTERNAL_TYPES.EventListeners;
@@ -102,7 +103,7 @@ export class Workspace implements API.Workspace {
           (serviceConfiguration) => serviceConfiguration.serviceName === registerServiceRequest.serviceName
         );
         try {
-          const microserviceOptions: SCALECUBE_API.MicroserviceOptions = {
+          const microserviceOptions: MicroserviceApi.MicroserviceOptions = {
             services: [{ definition: serviceConfig!.definition, reference: registerServiceRequest.reference }],
           };
           if (!this.seedAddress) {
@@ -112,7 +113,7 @@ export class Workspace implements API.Workspace {
             microserviceOptions.address = generateMicroserviceAddress(uuidv4());
             microserviceOptions.seedAddress = generateMicroserviceAddress(this.seedAddress);
           }
-          this.microservice = Microservices.create(microserviceOptions);
+          this.microservice = createMicroservice(microserviceOptions);
         } catch (error) {
           const errorMessage = getScalecubeCreationError(error, registerServiceRequest.serviceName);
           emitServiceRegistrationFailedEvent({
