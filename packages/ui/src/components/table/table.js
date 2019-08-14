@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTable from 'react-table';
 import { of } from 'rxjs';
-import { Button } from '..';
 import { defaultFontStyle, defaultFontSize, defaultFontFamily, defaultBackgroundColor } from '../constants';
 
 export default class Table extends React.Component {

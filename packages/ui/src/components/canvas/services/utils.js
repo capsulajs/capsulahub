@@ -1,5 +1,5 @@
 import { filter } from 'rxjs/operators';
-import { intersection } from 'lodash';
+import intersection from 'lodash/intersection';
 
 export const mergeMetadata = (metadatas) => metadatas.reduce((a, b) => ({ ...a, ...b }), {});
 export const getSectorCouple = (sectors, sector) => {

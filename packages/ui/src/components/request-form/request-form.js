@@ -2,7 +2,9 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Editor from './editor';
-import { Dropdown, Input, Button } from '..';
+import Dropdown from '../form/dropdown';
+import Input from '../form/input';
+import Button from '../form/button';
 import {
   defaultFontStyle,
   defaultFontWeight,
@@ -76,7 +78,7 @@ const defaultHeight = 561;
 
 const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
-export default class RequestForm extends PureComponent {
+class RequestForm extends PureComponent {
   static propTypes = {
     selectedMethodPath: PropTypes.string.isRequired,
     content: PropTypes.shape({
@@ -304,3 +306,9 @@ export default class RequestForm extends PureComponent {
     );
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = RequestForm;
+}
+
+export default RequestForm;

@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default (tree, metadata) => {
   const clonedTree = cloneDeep(tree);

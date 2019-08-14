@@ -1,4 +1,4 @@
-import { flattenDeep } from 'lodash';
+import flattenDeep from 'lodash/flattenDeep';
 
 const simplify = (methods) => methods.map((method) => (method.children ? simplify(method.children) : method));
 

@@ -1,5 +1,4 @@
-import { cloneDeep } from 'lodash';
-import { guid, emptyNode, getNode, updateNode } from '..';
+import { emptyNode, getNode, updateNode } from '..';
 
 const isNodeValid = (node) => {
   if (node.tabs) {
