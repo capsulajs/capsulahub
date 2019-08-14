@@ -1,5 +1,4 @@
 const WrapperPlugin = require('wrapper-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const path = require('path');
 
 module.exports = {
@@ -19,7 +18,7 @@ module.exports = {
     'Span/index': './src/components/text/span.js',
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'lib'),
   },
   module: {
     rules: [
@@ -57,6 +56,5 @@ module.exports = {
       header: 'var publicExports = {}; (function () {\n',
       footer: '})();export default publicExports',
     }),
-    new BundleAnalyzerPlugin(),
   ],
 };
