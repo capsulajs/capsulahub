@@ -39,7 +39,6 @@
     "@capsulajs/capsulahub-cdn-emulator": "^0.0.2-alpha.2",
     "@capsulajs/capsulahub-utils": "0.0.2-alpha.2",
     "@types/uuid": "^3.4.5",
-    "babel-loader": "^8.0.6",
     "lodash": "^4.17.15",
     "rxjs": "6.5.2"
   }
