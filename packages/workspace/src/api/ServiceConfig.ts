@@ -1,8 +1,8 @@
-import { ServiceDefinition } from '@scalecube/scalecube-microservice/lib/api';
+import { MicroserviceApi } from '@scalecube/api';
 
 export default interface ServiceConfig {
   serviceName: string;
   path?: string;
-  definition: ServiceDefinition;
+  definition: MicroserviceApi.ServiceDefinition;
   config: { [key: string]: any };
 }
