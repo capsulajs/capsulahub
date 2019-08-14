@@ -9,15 +9,15 @@ ace.define('ace/theme/capsula-js', ['require', 'exports', 'module', 'ace/lib/dom
     '\
   \
 .ace-capsula-js .ace_gutter {\
-  background: #3F3F3F;\
+  background: #212121;\
   color: #767676\
 }\
 .ace-capsula-js .ace_print-margin {\
   width: 1px;\
-  background: #3F3F3F\
+  background: #212121\
 }\
 .ace-capsula-js {\
-  background: #3F3F3F;\
+  background: #212121;\
   color: #DEDEDE;\
 }\
 .ace-capsula-js .ace_selection {\
