@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 // @ts-ignore
-import { RequestForm as RequestFormUI } from '@capsulajs/capsulahub-ui';
+import RequestFormUI from '@capsulajs/capsulahub-ui/lib/RequestForm';
 import { helpers } from '@capsulajs/capsulahub-utils';
 import { RequestFormUIProps } from './api';
 

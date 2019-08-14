@@ -8,7 +8,7 @@
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "build": "rimraf dist && webpack --mode production",
+    "build": "rimraf lib && webpack --mode production",
     "lint": "eslint src/components/**",
     "lint:fix": "yarn lint --fix",
     "prettier": "prettier --write '{src,stories}/**/*.{js,jsx}'"

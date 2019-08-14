@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 // @ts-ignore
-import { Logger as LoggerUI } from '@capsulajs/capsulahub-ui';
+import LoggerUI from '@capsulajs/capsulahub-ui/lib/Logger';
 import { helpers } from '@capsulajs/capsulahub-utils';
 import { LoggerUIProps } from './api';
 

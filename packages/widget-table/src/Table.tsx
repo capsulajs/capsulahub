@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 // @ts-ignore
-import { Table as TableUI } from '@capsulajs/capsulahub-ui';
+import TableUI from '@capsulajs/capsulahub-ui/lib/Table';
 import { helpers } from '@capsulajs/capsulahub-utils';
 import { TableUIProps } from './api';
 

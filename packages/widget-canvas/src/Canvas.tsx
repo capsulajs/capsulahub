@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 // @ts-ignore
-import { Canvas as CanvasUI } from '@capsulajs/capsulahub-ui';
+import CanvasUI from '@capsulajs/capsulahub-ui/lib/Canvas';
 import { helpers } from '@capsulajs/capsulahub-utils';
 import { CanvasUIProps } from './api';
 

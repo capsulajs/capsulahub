@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 // @ts-ignore
-import { Modal as ModalUI } from '@capsulajs/capsulahub-ui';
+import ModalUI from '@capsulajs/capsulahub-ui/lib/Modal';
 import { helpers } from '@capsulajs/capsulahub-utils';
 import { ModalUIProps } from './api';
 
