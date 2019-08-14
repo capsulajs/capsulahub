@@ -5,7 +5,7 @@ import ReactTable from 'react-table';
 import { of } from 'rxjs';
 import { defaultFontStyle, defaultFontSize, defaultFontFamily, defaultBackgroundColor } from '../constants';
 
-export default class Table extends React.Component {
+class Table extends React.Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
     columns: PropTypes.array.isRequired,
@@ -83,3 +83,9 @@ export default class Table extends React.Component {
     this.sub && this.sub.unsubscribe();
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Table;
+}
+
+export default Table;

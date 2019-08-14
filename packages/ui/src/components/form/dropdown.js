@@ -146,4 +146,10 @@ const DropdownItem = ({ select, item, dataCy }) => {
   );
 };
 
-export default enhanceWithClickOutside(Dropdown);
+const DropdownEnhanced = enhanceWithClickOutside(Dropdown);
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = DropdownEnhanced;
+}
+
+export default DropdownEnhanced;

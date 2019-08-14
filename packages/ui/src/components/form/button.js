@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { defaultFontFamily, defaultFontSize } from '../constants';
 
@@ -27,10 +26,16 @@ const themes = {
   clicked: { bg: '#fff', hoverBg: '#fff', color: '#57D7FF' },
 };
 
-export default ({ id, text, theme, onClick, css, dataCy = 'button' }) => {
+const Button = ({ id, text, theme, onClick, css, dataCy = 'button' }) => {
   return (
     <Button data-cy={dataCy} id={id} theme={themes[theme] || themes['active']} onClick={onClick} css={css}>
       {text}
     </Button>
   );
 };
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Button;
+}
+
+export default Button;

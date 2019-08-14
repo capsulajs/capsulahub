@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { defaultFontFamily } from '../constants';
 
@@ -18,4 +17,10 @@ const Input = styled.input`
   }
 `;
 
-export default (props) => <Input {...props} onChange={(e) => props.onChange(e.target.value)} />;
+const InputComponent = (props) => <Input {...props} onChange={(e) => props.onChange(e.target.value)} />;
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = InputComponent;
+}
+
+export default InputComponent;

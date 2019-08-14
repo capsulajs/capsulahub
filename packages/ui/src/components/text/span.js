@@ -19,7 +19,7 @@ const Container = styled.span`
   background-color: ${(props) => props.theme.bgColor};
 `;
 
-export default class Span extends React.Component {
+class Span extends React.Component {
   static propTypes = {
     theme: PropTypes.object,
   };
@@ -41,3 +41,9 @@ export default class Span extends React.Component {
     return <Container theme={theme}>{children}</Container>;
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Span;
+}
+
+export default Span;

@@ -20,7 +20,7 @@ const Container = styled.p`
   margin: 0;
 `;
 
-export default class Paragraph extends React.Component {
+class Paragraph extends React.Component {
   static propTypes = {
     theme: PropTypes.object,
   };
@@ -42,3 +42,9 @@ export default class Paragraph extends React.Component {
     return <Container theme={theme}>{children}</Container>;
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Paragraph;
+}
+
+export default Paragraph;

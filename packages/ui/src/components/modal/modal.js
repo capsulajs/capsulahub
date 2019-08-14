@@ -29,7 +29,7 @@ const Header = styled.div`
   font-size: 10px;
 `;
 
-export default class Modal extends React.Component {
+class Modal extends React.Component {
   static propTypes = {
     onToggle: PropTypes.func,
     isOpen: PropTypes.bool,
@@ -114,3 +114,9 @@ export default class Modal extends React.Component {
     document.removeEventListener('click', this.handleClick, true);
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Modal;
+}
+
+export default Modal;

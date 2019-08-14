@@ -14,7 +14,7 @@ const Container = styled.div`
   overflow-y: scroll;
 `;
 
-export default class Catalog extends React.Component {
+class Catalog extends React.Component {
   static propTypes = {
     methods: PropTypes.array.isRequired,
     selectMethod: PropTypes.func.isRequired,
@@ -33,3 +33,9 @@ export default class Catalog extends React.Component {
     );
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Catalog;
+}
+
+export default Catalog;

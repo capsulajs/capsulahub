@@ -49,7 +49,7 @@ const CheckMark = styled.span`
   }
 `;
 
-export default class Checkbox extends React.Component {
+class Checkbox extends React.Component {
   static defaultProps = {
     theme: {
       fontStyle: defaultFontStyle,
@@ -78,3 +78,9 @@ export default class Checkbox extends React.Component {
     );
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Checkbox;
+}
+
+export default Checkbox;

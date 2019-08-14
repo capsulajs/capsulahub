@@ -7,4 +7,10 @@ const LoaderImg = styled.img`
   height: 20px;
 `;
 
-export default () => <LoaderImg src={image} />;
+const Loader = () => <LoaderImg src={image} />;
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Loader;
+}
+
+export default Loader;

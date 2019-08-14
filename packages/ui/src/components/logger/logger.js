@@ -53,7 +53,7 @@ const Clear = styled.div`
   cursor: pointer;
 `;
 
-export default class Logger extends React.Component {
+class Logger extends React.Component {
   static defaultProps = {
     theme: {
       fontStyle: defaultFontStyle,
@@ -113,3 +113,9 @@ export default class Logger extends React.Component {
     this.sub && this.sub.unsubscribe();
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Logger;
+}
+
+export default Logger;

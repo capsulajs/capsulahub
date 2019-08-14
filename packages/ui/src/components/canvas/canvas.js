@@ -21,7 +21,7 @@ const Container = styled.div`
   padding 8px;
 `;
 
-export default class Canvas extends React.Component {
+class Canvas extends React.Component {
   static propTypes = {
     layout: PropTypes.object.isRequired,
     onUpdate: PropTypes.func.isRequired,
@@ -74,3 +74,9 @@ export default class Canvas extends React.Component {
     this.eventsSubscription.unsubscribe();
   }
 }
+
+if (typeof publicExports !== 'undefined') {
+  publicExports = Canvas;
+}
+
+export default Canvas;
