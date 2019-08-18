@@ -538,14 +538,16 @@ describe('Workspace tests', () => {
       const workspaceFactory = new WorkspaceFactory();
       const workspace = await workspaceFactory.createWorkspace({ token: '123' });
       const services = await workspace.services({});
-      return expect(services.ServiceD).rejects.toEqual(
-        new Error(
+      try {
+        await services.ServiceD;
+      } catch (e) {
+        return expect(e.message).toMatch(
           getScalecubeCreationError(
-            new Error('ServiceD/world has valid definition but reference is not a function.'),
+            new Error(''), // testing only capsula error message
             'ServiceD'
           )
-        )
-      );
+        );
+      }
     }
   );
 
