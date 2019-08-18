@@ -9,7 +9,7 @@ import {
   defaultFontSize,
   defaultFontFamily,
   defaultColor,
-  defaultBackgroundColor,
+  defaultRequestFormBgColor,
   codeModes,
 } from '../constants';
 import './styles.css';
@@ -99,7 +99,7 @@ export default class RequestForm extends PureComponent {
       fontWeight: defaultFontWeight,
       fontSize: defaultFontSize,
       fontFamily: defaultFontFamily,
-      bgColor: defaultBackgroundColor,
+      bgColor: defaultRequestFormBgColor,
       color: defaultColor,
     },
     isChangeLanguageVisible: true,
