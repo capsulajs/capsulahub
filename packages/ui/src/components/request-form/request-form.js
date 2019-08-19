@@ -2,7 +2,9 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Editor from './editor';
-import { Dropdown, Input, Button } from '..';
+import Dropdown from '../form/dropdown';
+import Input from '../form/input';
+import Button from '../form/button';
 import {
   defaultFontStyle,
   defaultFontWeight,
