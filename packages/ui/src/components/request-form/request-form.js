@@ -289,7 +289,7 @@ export default class RequestForm extends PureComponent {
               dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
               text="Send"
               theme={this.isFormValid() ? 'active' : 'disabled'}
-              css="padding: 5px 45px; margin-right: 30px; font-size: 13px;"
+              css="padding: 5px 45px; margin-right: 16px; font-size: 13px;"
               onClick={this.onSubmit}
             />
             {this.state.executionError && (
