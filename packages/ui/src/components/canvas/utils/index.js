@@ -1,4 +1,5 @@
-import { first, flatten, cloneDeep } from 'lodash';
+import first from 'lodash/first';
+import cloneDeep from 'lodash/cloneDeep';
 
 export const isSizeLessThan = (container, size) => {
   if (container) {

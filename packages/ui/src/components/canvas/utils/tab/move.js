@@ -1,6 +1,5 @@
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import removeTab from './remove';
-import reorderTab from './reorder';
 import { getNode, updateNode } from '..';
 
 const move = (source, destination, droppableSource, droppableDestination) => {

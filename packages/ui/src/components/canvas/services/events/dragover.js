@@ -1,6 +1,6 @@
 import { map, distinctUntilChanged, scan } from 'rxjs/operators';
 import { fromEvent, combineLatest } from 'rxjs';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { mergeMetadata, getSectorCouple } from '../utils';
 
 export default (container, obs) => {

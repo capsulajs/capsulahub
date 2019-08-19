@@ -1,4 +1,4 @@
-import { findIndex } from 'lodash';
+import findIndex from 'lodash/findIndex';
 import { getNode } from '.';
 import createNode from './node/create';
 import updateNode from './node/update';
