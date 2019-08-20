@@ -11,7 +11,7 @@ import {
   defaultFontSize,
   defaultFontFamily,
   defaultColor,
-  defaultBackgroundColor,
+  defaultRequestFormBgColor,
   codeModes,
 } from '../constants';
 import './styles.css';
@@ -101,7 +101,7 @@ export default class RequestForm extends PureComponent {
       fontWeight: defaultFontWeight,
       fontSize: defaultFontSize,
       fontFamily: defaultFontFamily,
-      bgColor: defaultBackgroundColor,
+      bgColor: defaultRequestFormBgColor,
       color: defaultColor,
     },
     isChangeLanguageVisible: true,
@@ -289,7 +289,7 @@ export default class RequestForm extends PureComponent {
               dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
               text="Send"
               theme={this.isFormValid() ? 'active' : 'disabled'}
-              css="padding: 5px 45px; margin-right: 30px; font-size: 13px;"
+              css="padding: 5px 45px; margin-right: 16px; font-size: 13px;"
               onClick={this.onSubmit}
             />
             {this.state.executionError && (

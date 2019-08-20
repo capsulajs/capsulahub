@@ -5,6 +5,7 @@ export const defaultFontFamily = 'Montserrat, sans-serif';
 
 export const defaultColor = '#767676';
 export const defaultBackgroundColor = '#3F3F3F';
+export const defaultRequestFormBgColor = '#212121';
 export const defaultBackgroundHoverColor = '#fff';
 export const defaultButtonPadding = '3px 5px 5px 5px';
 export const defaultCursor = 'pointer';
