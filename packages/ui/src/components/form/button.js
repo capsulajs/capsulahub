@@ -11,7 +11,7 @@ const Button = styled.button`
   padding: 3px 5px 5px 5px;
   padding: ${(props) => props.theme.padding};
   margin: 0;
-  cursor: ${(props) => props.theme.cursor};
+  pointer-events: ${(props) => props.theme.pointerEvents};
   border: none;
   transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 
@@ -29,9 +29,9 @@ const boxShadow = {
 };
 
 const themes = {
-  active: { bg: gradient, color: '#fff', cursor: 'pointer', shadow: boxShadow.active },
-  disabled: { bg: '#737373', color: '#999999', cursor: 'not-allowed', shadow: boxShadow.disabled },
-  clicked: { bg: '#fff', color: '#57D7FF', shadow: boxShadow.clicked },
+  active: { bg: gradient, color: '#fff', pointerEvents: 'auto', shadow: boxShadow.active },
+  disabled: { bg: '#737373', color: '#999999', pointerEvents: 'none', shadow: boxShadow.disabled },
+  clicked: { bg: '#fff', color: '#57D7FF', pointerEvents: 'auto', shadow: boxShadow.clicked },
 };
 
 export default ({ id, text, theme, onClick, css, dataCy = 'button' }) => {
