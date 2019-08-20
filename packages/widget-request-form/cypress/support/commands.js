@@ -27,10 +27,10 @@ Cypress.Commands.add('checkEditorsLanguage', (language) => {
   return cy.get('[data-cy="request-form-language-dropdown-title"]').should('have.text', language);
 });
 
-Cypress.Commands.add('submitRequest', ({ onSubmitSpy = undefined, callCount = 1 } = {}) => {
+Cypress.Commands.add('submitRequest', ({ onSubmitSpy = undefined, callCount = 1, force = false } = {}) => {
   return cy
     .get(`[data-cy^=request-form-submit-btn]`)
-    .click()
+    .click({ force })
     .then(() => {
       if (onSubmitSpy) {
         expect(onSubmitSpy.callCount).to.equal(callCount);
