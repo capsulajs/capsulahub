@@ -142,9 +142,9 @@ describe('Request Form TCs', () => {
         window.requestFormPropsSubject = requestFormPropsSubject;
       },
     });
-    cy.submitRequest({ onSubmitSpy, callCount: 0 })
+    cy.submitRequest({ onSubmitSpy, callCount: 0, force: true })
       .changeLanguage('json')
-      .submitRequest({ onSubmitSpy, callCount: 0 })
+      .submitRequest({ onSubmitSpy, callCount: 0, force: true })
       .then(() => {
         requestFormPropsSubject.next({
           ...basicProps,
@@ -170,22 +170,22 @@ describe('Request Form TCs', () => {
         .each((input) => {
           cy.wait(500)
             .typeInEditor(input, 0, 'disabled')
-            .submitRequest({ onSubmitSpy, callCount: 0 });
+            .submitRequest({ onSubmitSpy, callCount: 0, force: true });
         })
         .changeArgsAmount(2)
         .typeInEditor('return "test"', 1, 'disabled')
-        .submitRequest({ onSubmitSpy, callCount: 0 })
+        .submitRequest({ onSubmitSpy, callCount: 0, force: true })
         .changeLanguage('json')
         .changeArgsAmount(1)
         .wrap(['{{} test: "world" }', '{{} "test: "world" }', 'return {{} test: "world" };', 'test', ''])
         .each((input) => {
           cy.wait(500)
             .typeInEditor(input, 0, 'disabled')
-            .submitRequest({ onSubmitSpy, callCount: 0 });
+            .submitRequest({ onSubmitSpy, callCount: 0, force: true });
         })
         .changeArgsAmount(2)
         .typeInEditor('{{} "test": "world" }', 1, 'disabled')
-        .submitRequest({ onSubmitSpy, callCount: 0 });
+        .submitRequest({ onSubmitSpy, callCount: 0, force: true });
     }
   );
 
@@ -295,13 +295,13 @@ describe('Request Form TCs', () => {
 
     cy.changeArgsAmount(2)
       .typeInEditor('return {{} test: }', 1, 'disabled')
-      .submitRequest({ onSubmitSpy, callCount: 0 })
+      .submitRequest({ onSubmitSpy, callCount: 0, force: true })
       .changeArgsAmount(1)
       .submitRequest({ onSubmitSpy, callCount: 1 })
       .changeLanguage('json')
       .changeArgsAmount(2)
       .typeInEditor('{{} test: "test" }', 1, 'disabled')
-      .submitRequest({ onSubmitSpy, callCount: 1 })
+      .submitRequest({ onSubmitSpy, callCount: 1, force: true })
       .changeArgsAmount(1)
       .submitRequest({ onSubmitSpy, callCount: 2 });
   });
