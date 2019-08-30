@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@capsulajs/capsulahub-workspace": "^0.0.2-alpha.3",
-    "@capsulajs/capsulajs-configuration-service": "0.1.11",
+    "@capsulajs/capsulajs-configuration-service": "^0.1.14",
     "@capsulajs/capsulajs-transport-providers": "0.1.1",
     "rxjs": "6.5.2"
   }

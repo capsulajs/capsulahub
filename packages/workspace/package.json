@@ -29,7 +29,7 @@
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
-    "@capsulajs/capsulajs-configuration-service": "0.1.14",
+    "@capsulajs/capsulajs-configuration-service": "^0.1.14",
     "@capsulajs/capsulajs-transport-providers": "0.1.1",
     "@scalecube/scalecube-microservice": "0.1.3-snapshot.1566108010.1",
     "uuid": "^3.3.2"
