@@ -28,6 +28,6 @@
   },
   "dependencies": {
     "@capsulajs/capsulahub-workspace": "^0.0.2-alpha.3",
-    "@capsulajs/environment-registry": "0.0.4-next.1567160959.0"
+    "@capsulajs/environment-registry": "next"
   }
 }

@@ -1091,14 +1091,14 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@capsulajs/capsulajs-configuration-service@^0.1.14":
+"@capsulajs/capsulajs-configuration-service@^0.1.14", "@capsulajs/capsulajs-configuration-service@latest":
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/@capsulajs/capsulajs-configuration-service/-/capsulajs-configuration-service-0.1.14.tgz#5a1cae76f4cbce96aa07ce19f3a1505110976eca"
   integrity sha512-v1rLmDwakfgmAf2DpCUkrhecGGc+vf9HWzaNnjGhmYSqefJ+NqBihq0ZZ5+nIFQnpUjnRjxtvPEsxpX498ONOQ==
   dependencies:
     "@capsulajs/capsulajs-transport-providers" "^0.1.1"
 
-"@capsulajs/capsulajs-transport-providers@0.1.1", "@capsulajs/capsulajs-transport-providers@^0.1.1":
+"@capsulajs/capsulajs-transport-providers@^0.1.1", "@capsulajs/capsulajs-transport-providers@latest":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@capsulajs/capsulajs-transport-providers/-/capsulajs-transport-providers-0.1.1.tgz#c4f08cda57af8a1e1eef36b9ec13eb68434181fb"
   integrity sha512-ik0DfBMngNailwoUHIBJtuHdG9AKN0X+/LdR/cbLcP3Oc3KHdiH+bGmwQWqUffApbT1tFWC5u8OKtDpK3lGZrA==
@@ -1106,7 +1106,7 @@
     axios "^0.18.0"
     typescript "^3.1.3"
 
-"@capsulajs/environment-registry@0.0.4-next.1567160959.0":
+"@capsulajs/environment-registry@next":
   version "0.0.4-next.1567160959.0"
   resolved "https://registry.yarnpkg.com/@capsulajs/environment-registry/-/environment-registry-0.0.4-next.1567160959.0.tgz#effa2f9bb1d11855eefef754ae0fce1363979358"
   integrity sha512-kGw3taXDcfkKQI8YcR+P+78nyTJq4HcTlrtaOfOmRrkJLgoPoVrQWRIapW+34vUkSJ1AEV/JpueFW9px9ff0+g==
