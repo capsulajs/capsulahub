@@ -10,6 +10,11 @@ export default interface CreateWorkspaceRequest {
    */
   configProvider?: API.ConfigurationProvider;
   /**
+   * The name of the repository, where workspace configuration has been placed
+   * @default "workspace"
+   */
+  repository?: string;
+  /**
    * Dispatcher url, that will be used in "scalecube" config provider
    */
   dispatcherUrl?: string;

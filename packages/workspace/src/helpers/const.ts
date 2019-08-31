@@ -1,6 +1,6 @@
 import { ExtensionEventTypeRegistered, ExtensionEventTypeRegistrationFailed } from './types';
 
-export const configRepositoryName = 'workspace';
+export const configDefaultRepositoryName = 'workspace';
 
 export const configWrongFormatError = 'Workspace configuration does not have the correct format';
 

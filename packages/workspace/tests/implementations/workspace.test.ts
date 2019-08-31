@@ -17,7 +17,7 @@ import requestFormComponentBootstrap from '@capsulajs/capsulahub-cdn-emulator/sr
 import WorkspaceFactory from '../../src/WorkspaceFactory';
 import { API } from '../..';
 import {
-  configRepositoryName,
+  configDefaultRepositoryName,
   configWrongFormatError,
   createWorkspaceWrongRequestError,
   getBootstrapComponentError,
@@ -47,7 +47,7 @@ import { applyMessageChannelPolyfill } from '../helpers/polyfills/MessageChannel
 import { importError, bootstrapError, serviceInWorkspaceKeys } from '../helpers/const';
 import { testPendingPromise } from '../helpers/utils';
 
-const repositoryNotFoundError = `Configuration repository ${configRepositoryName} not found`;
+const repositoryNotFoundError = `Configuration repository ${configDefaultRepositoryName} not found`;
 
 describe('Workspace tests', () => {
   applyPostMessagePolyfill();

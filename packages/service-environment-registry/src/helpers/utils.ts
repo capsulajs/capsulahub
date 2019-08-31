@@ -3,6 +3,6 @@ import * as API from '../api';
 
 export default {
   getServiceInstance(config: API.EnvironmentRegistryConfig) {
-    return new EnvRegistry(config.token);
+    return new EnvRegistry({ token: config.token });
   },
 };

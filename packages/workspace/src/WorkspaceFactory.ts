@@ -10,7 +10,7 @@ import {
 } from './helpers/utils';
 import {
   configNotLoadedError,
-  configRepositoryName,
+  configDefaultRepositoryName,
   configWrongFormatError,
   createWorkspaceWrongRequestError,
   createWorkspaceWrongRequestForScalecubeProviderError,
@@ -52,7 +52,7 @@ export default class WorkspaceFactory implements API.WorkspaceFactory {
       // Getting configuration and initializing Workspace
 
       return configurationService!
-        .entries({ repository: configRepositoryName })
+        .entries({ repository: createWorkspaceRequest.repository || configDefaultRepositoryName })
         .then((configuration: { entries: Entity[] }) => {
           // Preparing and validating formattedConfiguration
           const formattedConfiguration = configuration.entries.reduce(
