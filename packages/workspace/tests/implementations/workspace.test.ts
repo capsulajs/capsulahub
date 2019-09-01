@@ -689,8 +689,7 @@ describe('Workspace tests', () => {
     return workspaceFactory.createWorkspace({ token: '123' });
   });
 
-  // TODO Add feature
-  it('Repository is applied correctly while the creation of ConfigurationService', () => {
+  it('Repository is applied correctly while the creation of Workspace', () => {
     expect.assertions(1);
 
     const customRepositoryName = 'customRepo';

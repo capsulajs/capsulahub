@@ -100,6 +100,13 @@ Scenario: DispatcherUrl is applied correctly while the creation of Configuration
     Then I expect workspace to be created with "scalecube" configuration provider
     And  DispatcherUrl is applied correctly
 
+#6
+Scenario: Repository is applied correctly while the creation of Workspace
+    Given WorkspaceFactory instance with createWorkspace method
+    And  Configuration for token 123 that includes service A and B and components 1 and 2
+    And  Service A and service B include a bootstrap that calls registerService
+    When I run createWorkspace method with token 123 and a valid repository
+    Then Workspace configuration has been taken from the correct repository
 
 #______________________________________NEGATIVE______________________________________
 
