@@ -8,28 +8,17 @@ import {
   getErrorWithModifiedMessage,
   bootstrapComponents,
 } from './helpers/utils';
-import {
-  configNotLoadedError,
-  configDefaultRepositoryName,
-  configWrongFormatError,
-  createWorkspaceWrongRequestError,
-  createWorkspaceWrongRequestForScalecubeProviderError,
-} from './helpers/const';
-import {
-  validateCreateWorkspaceRequestScalecubeConfigProvider,
-  validateCreateWorkspaceRequestToken,
-  validateWorkspaceConfig,
-} from './helpers/validators';
+import { configNotLoadedError, configDefaultRepositoryName, configWrongFormatError } from './helpers/const';
+import { validateCreateWorkspaceRequest, validateWorkspaceConfig } from './helpers/validators';
 
 export default class WorkspaceFactory implements API.WorkspaceFactory {
   public createWorkspace(createWorkspaceRequest: API.CreateWorkspaceRequest): Promise<API.Workspace> {
     return new Promise((resolve, reject) => {
       // createWorkspaceRequest validation
-      if (!validateCreateWorkspaceRequestToken(createWorkspaceRequest)) {
-        return reject(new Error(createWorkspaceWrongRequestError));
-      }
-      if (!validateCreateWorkspaceRequestScalecubeConfigProvider(createWorkspaceRequest)) {
-        return reject(new Error(createWorkspaceWrongRequestForScalecubeProviderError));
+      try {
+        validateCreateWorkspaceRequest(createWorkspaceRequest);
+      } catch (validationError) {
+        return reject(validationError);
       }
 
       // Getting configurationService
