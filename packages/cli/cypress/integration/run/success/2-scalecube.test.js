@@ -9,7 +9,7 @@ describe('Capsulahub run TCs #2 success (Scalecube)', () => {
           key: entry[0],
           value: entry[1],
         })),
-        url: 'http://localhost:4000/configuration/entries',
+        url: 'http://localhost:4000/configuration/readList',
         onRequest: (requestData) => {
           expect(requestData.request.body.token).to.equal('secretToken');
         },
