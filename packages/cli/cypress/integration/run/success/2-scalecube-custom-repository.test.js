@@ -16,7 +16,7 @@ describe('Capsulahub run TCs #2 success (Scalecube - Custom repository)', () => 
           expect(requestData.request.body.repository).to.equal('customRepository');
         },
       });
-      cy.visit('http://localhost:7780', {
+      cy.visit('http://localhost:7781', {
         retryOnNetworkFailure: true,
         retryOnStatusCodeFailure: true,
       }).testCapsulahubAppRender('PORT 1111 Scalecube');

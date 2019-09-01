@@ -8,7 +8,7 @@ let dispatcherUrl = process.env.CAPSULAHUB_DISPATCHER_URL || config.dispatcherUr
 if (dispatcherUrl === 'undefined') {
   dispatcherUrl = undefined;
 }
-let repository = process.env.CAPSULAHUB_DISPATCHER_URL || config.repository;
+let repository = process.env.CAPSULAHUB_REPOSITORY || config.repository;
 if (repository === 'undefined') {
   repository = undefined;
 }
