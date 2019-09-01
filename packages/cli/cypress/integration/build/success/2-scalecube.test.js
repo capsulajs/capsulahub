@@ -11,7 +11,8 @@ describe('Capsulahub build TCs #2 success (Scalecube)', () => {
         })),
         url: 'http://localhost:4000/configuration/readList',
         onRequest: (requestData) => {
-          expect(requestData.request.body.token).to.equal('secretToken');
+          expect(requestData.request.body.apiKey).to.equal('secretToken');
+          expect(requestData.request.body.repository).to.equal('workspace');
         },
       });
       cy.visit('http://localhost:8888', {

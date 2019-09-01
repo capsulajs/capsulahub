@@ -97,6 +97,17 @@ wait_port 7780
 did_test_failed
 kill "$pid_server_7780"
 
+## scalecube configProvider - custom repository
+## capsulahub run --token="secretToken" --dispatcherUrl="http://localhost:4000" --configProvider=scalecube --port=7781 --repository=customRepository
+nohup "$BIN"capsulahub run --token="secretToken" --dispatcherUrl="http://localhost:4000" --configProvider=scalecube --port=7781 --repository=customRepository &>/dev/null &
+pid_server_7781=$!
+wait_port 7781
+
+"$BIN"cypress run --browser chrome --spec "cypress/integration/run/success/2-scalecube-custom-repository.test.js"
+did_test_failed
+kill "$pid_server_7781"
+
+
 ## Run Success scenario #3
 ## capsulahub run --token=http://localhost:1111/port-1111/configuration
 nohup "$BIN"capsulahub run --token=http://localhost:1111/port-1111/configuration &>/dev/null &
@@ -213,6 +224,13 @@ rm -rf outputDir/
 "$BIN"capsulahub build --token=secretToken --configProvider=scalecube --output=outputDir --dispatcherUrl="http://localhost:4000"
 
 "$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-scalecube.test.js"
+did_test_failed
+rm -rf outputDir/
+
+## scalecube configProvider - custom repository
+"$BIN"capsulahub build --token=secretToken --configProvider=scalecube --output=outputDir --dispatcherUrl="http://localhost:4000" --repository="customRepository"
+
+"$BIN"cypress run --browser chrome --spec "cypress/integration/build/success/2-scalecube-custom-repository.test.js"
 did_test_failed
 rm -rf outputDir/
 

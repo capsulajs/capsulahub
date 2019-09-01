@@ -1,7 +1,8 @@
 const { cy, describe, it } = global;
 
-describe('Capsulahub run TCs #2 success (Scalecube)', () => {
-  it('Run CapsulaHub instance with specifying valid arguments (check for ScalecubeConfigurationProvider)', () => {
+// TODO Add feature
+describe('Capsulahub build TCs #2 success (Scalecube - custom repository)', () => {
+  it('Build CapsulaHub instance with specifying valid arguments (check for ScalecubeConfigurationProvider custom repository)', () => {
     cy.fixture('port-1111-scalecube/workspace.json').then((configuration) => {
       cy.server().route({
         method: 'POST',
@@ -12,10 +13,10 @@ describe('Capsulahub run TCs #2 success (Scalecube)', () => {
         url: 'http://localhost:4000/configuration/readList',
         onRequest: (requestData) => {
           expect(requestData.request.body.apiKey).to.equal('secretToken');
-          expect(requestData.request.body.repository).to.equal('workspace');
+          expect(requestData.request.body.repository).to.equal('customRepository');
         },
       });
-      cy.visit('http://localhost:7780', {
+      cy.visit('http://localhost:8888', {
         retryOnNetworkFailure: true,
         retryOnStatusCodeFailure: true,
       }).testCapsulahubAppRender('PORT 1111 Scalecube');
