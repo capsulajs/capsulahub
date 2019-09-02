@@ -108,6 +108,14 @@ Scenario: Repository is applied correctly while the creation of Workspace
     When I run createWorkspace method with token 123 and a valid repository
     Then Workspace configuration has been taken from the correct repository
 
+#7
+Scenario: If no repository is provided while the creation of Workspace, default repository is applied
+    Given WorkspaceFactory instance with createWorkspace method
+    And  Configuration for token 123 that includes service A and B and components 1 and 2
+    And  Service A and service B include a bootstrap that calls registerService
+    And  Default repository is 'workspace'
+    When I run createWorkspace method with token 123
+    Then Workspace configuration has been taken from the default repository
 #______________________________________NEGATIVE______________________________________
 
 #1
@@ -313,6 +321,25 @@ Scenario: Call createWorkspace for "scalecube" configProvider with a dispatcherU
     And  Service A and service B include a bootstrap that calls registerService
     When I run createWorkspace method with token 123, with "scalecube" configProvider and invalid values for <dispatcherUrl>
         |<dispatcherUrl> |
+        |''        |
+        |{}        |
+        |{ test: 'test' }|
+        |[]        |
+        |['test']  |
+        |null      |
+        |true      |
+        |false     |
+        |0         |
+        |-1        |
+    Then I expect to receive an error
+
+#7
+Scenario: Call createWorkspace with invalid "repository" is rejected with error
+    Given WorkspaceFactory instance with createWorkspace method
+    And  Configuration for token 123 that includes service A and B and components 1 and 2
+    And  Service A and service B include a bootstrap that calls registerService
+    When I run createWorkspace method with token 123 and invalid values for <repository>
+        |<repository> |
         |''        |
         |{}        |
         |{ test: 'test' }|
