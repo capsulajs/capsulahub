@@ -4,6 +4,7 @@ Feature: Build and Run commands for CapsulaHub CLI
     Given an npm package called @capsulajs/capsulahub
     And   a default configProvider httpFile
     And   a default path to the output folder "./dist"
+    And   a default repository 'workspace'
 
 #______________________________________POSITIVE______________________________________
 
@@ -24,8 +25,8 @@ Feature: Build and Run commands for CapsulaHub CLI
           |ScalecubeConfigurationProvider     |'http://localhost:3000'|
           |HttpServerConfigurationProvider    |(empty)                |
           |LocalStorageConfigurationProvider  |(empty)                |
-    When  I run the command `capsulahub build --token="tokenB" --configProvider="<configProvider>" --output="output" --dispatcherUrl="<dispatcherUrl>"`# add dispatcherUrl argument in the command only for Scalecube
-    Then  the app is built in the specified output path using right configuration provider
+    When  I run the command `capsulahub build --token="tokenB" --configProvider="<configProvider>" --output="output" --dispatcherUrl="<dispatcherUrl>" --repository="customRepository"`# add dispatcherUrl argument in the command only for Scalecube
+    Then  the app is built in the specified output path using right configuration provider and repository
 
    #3
   Scenario: Run `capsulahub build` without specifying the output and configProvider
@@ -34,6 +35,15 @@ Feature: Build and Run commands for CapsulaHub CLI
     When  I run the command `capsulahub build --token="tokenB"`
     Then  the app is built in the default output path "./dist"
     And   HttpFile is the provider used to get configuration A
+
+   #4
+  Scenario: Run `capsulahub build` without specifying the repository
+    Given configuration A
+    And   token B that allow access to this configuration
+    And   a default repository 'workspace'
+    When  I run the command `capsulahub build --token="tokenB" --configProvider="scalecube" --dispatcherUrl="http://localhost:3000" --output="output"`
+    Then  the app is built in the specified output path using right configuration provider
+    And   default repository is applied
 
 #______________________________________NEGATIVE______________________________________
 

@@ -14,6 +14,7 @@ commander
   .option(`-t, --${args.token.title} <${args.token.title}>`, args.token.description)
   .option(`-c, --${args.configProvider.title} <${args.configProvider.title}>`, args.configProvider.description)
   .option(`-p, --${args.port.title} <${args.port.title}>`, args.port.description)
+  .option(`-r, --${args.repository.title} <${args.repository.title}>`, args.repository.description)
   .option(`-d, --${args.dispatcherUrl.title} <${args.dispatcherUrl.title}>`, args.dispatcherUrl.description)
   .action((opts) => {
     const { isValid, error } = argsValidator(opts);
@@ -22,7 +23,7 @@ commander
       process.exit(1);
     }
     const runner = require('./helpers/runner').default;
-    const { token, port = 55555, configProvider = configurationTypes.httpFile, dispatcherUrl } = opts;
+    const { token, port = 55555, configProvider = configurationTypes.httpFile, dispatcherUrl, repository } = opts;
 
     const appConfigPath = path.resolve(getTempPath(), '..', 'app-config.json');
 
@@ -38,6 +39,7 @@ commander
           token,
           configProvider,
           dispatcherUrl,
+          repository,
         },
       };
 
@@ -57,6 +59,7 @@ commander
   .option(`-t, --${args.token.title} <${args.token.title}>`, args.token.description)
   .option(`-c, --${args.configProvider.title} <${args.configProvider.title}>`, args.configProvider.description)
   .option(`-o, --${args.output.title} <${args.output.title}>`, args.output.description)
+  .option(`-r, --${args.repository.title} <${args.repository.title}>`, args.repository.description)
   .option(`-d, --${args.dispatcherUrl.title} <${args.dispatcherUrl.title}>`, args.dispatcherUrl.description)
   .action((opts) => {
     const { isValid, error } = argsValidator(opts);
@@ -65,10 +68,11 @@ commander
       process.exit(1);
     }
     const builder = require('./helpers/builder').default;
-    const { token, output = './dist', configProvider = configurationTypes.httpFile, dispatcherUrl } = opts;
+    const { token, output = './dist', configProvider = configurationTypes.httpFile, dispatcherUrl, repository } = opts;
     process.env.CAPSULAHUB_TOKEN = token;
     process.env.CAPSULAHUB_CONFIG_PROVIDER = configProvider;
     process.env.CAPSULAHUB_DISPATCHER_URL = dispatcherUrl;
+    process.env.CAPSULAHUB_REPOSITORY = repository;
 
     builder({
       entryFile: path.join(__dirname, '..', 'app', 'index.html'),

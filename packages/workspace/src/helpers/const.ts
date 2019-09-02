@@ -1,12 +1,14 @@
 import { ExtensionEventTypeRegistered, ExtensionEventTypeRegistrationFailed } from './types';
 
-export const configRepositoryName = 'workspace';
+export const configDefaultRepositoryName = 'workspace';
 
 export const configWrongFormatError = 'Workspace configuration does not have the correct format';
 
 export const configNotLoadedError = (error: Error) => `Workspace configuration can not be loaded: ${error.message}`;
 
 export const createWorkspaceWrongRequestError = 'createWorkspace has been called with invalid token';
+
+export const createWorkspaceWrongRequestRepositoryError = 'createWorkspace has been called with invalid repository';
 
 export const createWorkspaceWrongRequestForScalecubeProviderError =
   'createWorkspace has been called with invalid dispatcherUrl for configProvider: "scalecube"';

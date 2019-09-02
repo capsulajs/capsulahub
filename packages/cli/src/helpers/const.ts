@@ -19,6 +19,11 @@ export const args = {
       'The port on which the application will run locally (for instance, http://localhost:55555/) (optional - default is "55555")',
     error: 'Port must be a number included between 1 and 65535',
   },
+  repository: {
+    title: 'repository',
+    description:
+      'The name of the repository, where Workspace configuration has been placed (optional - default is "workspace")',
+  },
   dispatcherUrl: {
     title: 'dispatcherUrl',
     description: 'The url of the dispatcher for those providers that use dispatcher (optional)',

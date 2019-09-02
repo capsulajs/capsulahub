@@ -1,5 +1,10 @@
 import { configurationTypes } from '@capsulajs/capsulajs-configuration-service';
 import { API } from '..';
+import {
+  createWorkspaceWrongRequestError,
+  createWorkspaceWrongRequestForScalecubeProviderError,
+  createWorkspaceWrongRequestRepositoryError,
+} from './const';
 
 export const validateWorkspaceConfig = (workspaceConfig: any): boolean => {
   const requiredKeys = ['name', 'services', 'components'];
@@ -7,21 +12,28 @@ export const validateWorkspaceConfig = (workspaceConfig: any): boolean => {
   return !requiredKeys.find((requiredKey) => !configKeys.includes(requiredKey));
 };
 
-export const validateCreateWorkspaceRequestToken = (createWorkspaceRequest: any): boolean => {
-  return !(
+export const validateCreateWorkspaceRequest = (createWorkspaceRequest: any): boolean | never => {
+  if (
+    !createWorkspaceRequest ||
+    typeof createWorkspaceRequest !== 'object' ||
     !createWorkspaceRequest.token ||
     typeof createWorkspaceRequest.token !== 'string' ||
     !createWorkspaceRequest.token.trim()
-  );
-};
+  ) {
+    throw new Error(createWorkspaceWrongRequestError);
+  }
 
-export const validateCreateWorkspaceRequestScalecubeConfigProvider = (createWorkspaceRequest: any): boolean => {
-  const { configProvider, dispatcherUrl } = createWorkspaceRequest;
+  const { configProvider, dispatcherUrl, repository } = createWorkspaceRequest;
   if (configProvider === configurationTypes.scalecube) {
     if (!dispatcherUrl || typeof dispatcherUrl !== 'string' || !dispatcherUrl.trim()) {
-      return false;
+      throw new Error(createWorkspaceWrongRequestForScalecubeProviderError);
     }
   }
+
+  if (typeof repository !== 'undefined' && (typeof repository !== 'string' || !repository.trim())) {
+    throw new Error(createWorkspaceWrongRequestRepositoryError);
+  }
+
   return true;
 };
 

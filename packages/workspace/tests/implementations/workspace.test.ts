@@ -17,7 +17,7 @@ import requestFormComponentBootstrap from '@capsulajs/capsulahub-cdn-emulator/sr
 import WorkspaceFactory from '../../src/WorkspaceFactory';
 import { API } from '../..';
 import {
-  configRepositoryName,
+  configDefaultRepositoryName,
   configWrongFormatError,
   createWorkspaceWrongRequestError,
   getBootstrapComponentError,
@@ -31,6 +31,7 @@ import {
   getScalecubeCreationError,
   configNotLoadedError,
   createWorkspaceWrongRequestForScalecubeProviderError,
+  createWorkspaceWrongRequestRepositoryError,
 } from '../../src/helpers/const';
 import { mockInitComponent, mockConfigurationService, mockGetModuleDynamically } from '../helpers/mocks';
 import baseConfigEntries, {
@@ -47,7 +48,7 @@ import { applyMessageChannelPolyfill } from '../helpers/polyfills/MessageChannel
 import { importError, bootstrapError, serviceInWorkspaceKeys } from '../helpers/const';
 import { testPendingPromise } from '../helpers/utils';
 
-const repositoryNotFoundError = `Configuration repository ${configRepositoryName} not found`;
+const repositoryNotFoundError = `Configuration repository ${configDefaultRepositoryName} not found`;
 
 describe('Workspace tests', () => {
   applyPostMessagePolyfill();
@@ -662,6 +663,69 @@ describe('Workspace tests', () => {
           dispatcherUrl: invalidDispatcherUrl,
         })
       ).rejects.toEqual(new Error(createWorkspaceWrongRequestForScalecubeProviderError));
+    }
+  );
+
+  // TODO Add feature
+  it('If no repository is provided while the creation of Workspace, default repository is applied', () => {
+    expect.assertions(1);
+
+    const configurationServiceMock = {
+      entries: (entriesRequest?: { repository: string }) => {
+        expect(entriesRequest!.repository).toBe(configDefaultRepositoryName);
+        return Promise.resolve({ entries: baseConfigEntries });
+      },
+    };
+    mockConfigurationService(configurationServiceMock);
+    mockGetModuleDynamically([
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
+    ]);
+    mockInitComponent();
+
+    const workspaceFactory = new WorkspaceFactory();
+    return workspaceFactory.createWorkspace({ token: '123' });
+  });
+
+  it('Repository is applied correctly while the creation of Workspace', () => {
+    expect.assertions(1);
+
+    const customRepositoryName = 'customRepo';
+    const configurationServiceMock = {
+      entries: (entriesRequest?: { repository: string }) => {
+        expect(entriesRequest!.repository).toBe(customRepositoryName);
+        return Promise.resolve({ entries: baseConfigEntries });
+      },
+    };
+    mockConfigurationService(configurationServiceMock);
+    mockGetModuleDynamically([
+      Promise.resolve(serviceABootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(serviceBBootstrap as API.ModuleBootstrap<void>),
+      Promise.resolve(gridComponentBootstrap as API.ModuleBootstrap<object>),
+      Promise.resolve(requestFormComponentBootstrap as API.ModuleBootstrap<object>),
+    ]);
+    mockInitComponent();
+
+    const workspaceFactory = new WorkspaceFactory();
+    return workspaceFactory.createWorkspace({ token: '123', repository: customRepositoryName });
+  });
+
+  // TODO Add feature
+  test.each(invalidCreateWorkspaceRequest.filter((val) => typeof val !== 'undefined'))(
+    'Call createWorkspace with invalid "repository" is rejected with error (%s)',
+    (invalidRepository) => {
+      expect.assertions(1);
+      const workspaceFactory = new WorkspaceFactory();
+      return expect(
+        workspaceFactory.createWorkspace({
+          token: '123',
+          configProvider: configurationServiceItems.configurationTypes.httpFile,
+          // @ts-ignore
+          repository: invalidRepository,
+        })
+      ).rejects.toEqual(new Error(createWorkspaceWrongRequestRepositoryError));
     }
   );
 

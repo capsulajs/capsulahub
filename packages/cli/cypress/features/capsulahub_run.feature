@@ -4,6 +4,7 @@ Feature: Build and Run commands for CapsulaHub CLI
     Given an npm package called @capsulajs/capsulahub
     And   a default port 55555
     And   a default configProvider httpFile
+    And   a default repository 'workspace'
 
 #______________________________________POSITIVE______________________________________
 
@@ -26,8 +27,8 @@ Feature: Build and Run commands for CapsulaHub CLI
           |ScalecubeConfigurationProvider     |'http://localhost:3000'|
           |HttpServerConfigurationProvider    |(empty)                |
           |LocalStorageConfigurationProvider  |(empty)                |
-    When  I run the command `capsulahub run --token="tokenB" --configProvider="<configProvider>"  --port="8888" --dispatcherUrl="<dispatcherUrl>"`# add dispatcherUrl argument in the command only for Scalecube
-    Then  an workspace is created using the right configuration provider
+    When  I run the command `capsulahub run --token="tokenB" --configProvider="<configProvider>"  --port="8888" --dispatcherUrl="<dispatcherUrl>" --repository="customRepository"`# add dispatcherUrl argument in the command only for Scalecube
+    Then  an workspace is created using the right configuration provider and repository
 
   #3
   Scenario: Run CapsulaHub instance without specifying the port and configProvider
@@ -66,6 +67,14 @@ Feature: Build and Run commands for CapsulaHub CLI
     Then  I see component A1 rendered in the app on port "1234"
     And   I see component A2 rendered in the other app on port "4321"
     And   HttpFile is the provider used to get configuration of token B for both workspaces
+
+  #6
+  Scenario: Run CapsulaHub instance without specifying the repository
+    Given a configuration that includes component A
+    And   token B that allow access to this configuration
+    When  I run the command `capsulahub run --token="tokenB" --configProvider="scalecube" --dispatcherUrl="http://localhost:3000" --port="8888"`
+    Then  an workspace is created using the right configuration provider
+    And   default repository is applied
 
 #______________________________________NEGATIVE______________________________________
 

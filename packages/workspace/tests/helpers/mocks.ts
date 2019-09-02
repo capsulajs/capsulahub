@@ -5,7 +5,7 @@ import { API } from '../../src';
 const utilsToMock: any = utils;
 
 export const mockConfigurationService = (configurationServiceMock: {
-  entries: () => Promise<{ entries: Entity[] } | never>;
+  entries: (entriesRequest?: { repository: string }) => Promise<{ entries: Entity[] } | never>;
 }) => {
   const stub = jest.fn(() => {
     return configurationServiceMock;

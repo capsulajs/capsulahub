@@ -4,6 +4,7 @@ export interface AppConfigItem {
   token: string;
   configProvider: API.ConfigurationProvider;
   dispatcherUrl?: string;
+  repository?: string;
 }
 
 export interface AppConfig {
