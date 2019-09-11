@@ -93,6 +93,8 @@ export default class RequestForm extends PureComponent {
     isChangeArgsCountVisible: PropTypes.bool,
     isSelectedMethodPathVisible: PropTypes.bool,
     title: PropTypes.string,
+    width: PropTypes.string,
+    height: PropTypes.string,
   };
 
   static defaultProps = {
@@ -108,6 +110,8 @@ export default class RequestForm extends PureComponent {
     isChangeArgsCountVisible: true,
     isSelectedMethodPathVisible: true,
     title: 'Request Form',
+    width: '100%',
+    height: '100%',
   };
 
   state = {
@@ -231,6 +235,7 @@ export default class RequestForm extends PureComponent {
       title,
       selectedMethodPath,
       isSelectedMethodPathVisible,
+      width,
     } = this.props;
 
     return (
@@ -267,7 +272,7 @@ export default class RequestForm extends PureComponent {
             </Wrapper>
           </Header>
           {requestArgs.map((value, index) => {
-            let height = '100%';
+            let height = this.props.height;
             if (isChangeArgsCountVisible) {
               height = `${(defaultHeight - (65 + 2 * requestArgs.length)) / requestArgs.length}px`;
             }
@@ -280,6 +285,7 @@ export default class RequestForm extends PureComponent {
                 onChange={this.onChangeArgument}
                 onValid={this.onValid}
                 height={height}
+                width={width}
                 isLineVisible={index + 1 !== argsCount}
               />
             );
