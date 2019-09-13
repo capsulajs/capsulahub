@@ -34,6 +34,8 @@ export default class Dropzone extends React.PureComponent {
     metadata: PropTypes.any,
   };
 
+  dropZoneRef = React.createRef();
+
   getStyle(sector) {
     const { nodeId, metadata } = this.props;
     const { destination } = metadata;
@@ -49,11 +51,10 @@ export default class Dropzone extends React.PureComponent {
 
   render() {
     const { nodeId, tabId } = this.props;
-    const ref = React.createRef();
-    const ratio = tabId || isSizeLessThan(ref, dropzone.minSize) ? 1 : dropzone.ratio;
+    const ratio = tabId || isSizeLessThan(this.dropZoneRef.current, dropzone.minSize) ? 1 : dropzone.ratio;
 
     return (
-      <Container ref={ref} data-cy="canvas-dropzone">
+      <Container ref={this.dropZoneRef} data-cy="canvas-dropzone">
         <Centre data-node-id={nodeId} data-sectors={dropzone.sectors} ratio={ratio} />
         {dropzone.sectors.map((sector) => (
           <Sector data-node-id={nodeId} data-sectors={sector} key={sector} style={this.getStyle(sector)} />

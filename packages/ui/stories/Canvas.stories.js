@@ -27,7 +27,7 @@ export default class CanvasExample extends React.Component {
               {
                 id: 'tab11',
                 name: 'Tab 11',
-                content: '&lt;web-cmponent-11&gt;&lt;/web-component-11&gt;',
+                content: () => <h1>Test</h1>,
               },
             ],
             activeTabIndex: 0,
