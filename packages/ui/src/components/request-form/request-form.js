@@ -92,6 +92,7 @@ export default class RequestForm extends PureComponent {
     isChangeLanguageVisible: PropTypes.bool,
     isChangeArgsCountVisible: PropTypes.bool,
     isSelectedMethodPathVisible: PropTypes.bool,
+    isLineNumberVisible: PropTypes.bool,
     title: PropTypes.string,
     width: PropTypes.string,
     height: PropTypes.string,
@@ -236,6 +237,7 @@ export default class RequestForm extends PureComponent {
       selectedMethodPath,
       isSelectedMethodPathVisible,
       width,
+      isLineNumberVisible,
     } = this.props;
 
     return (
@@ -287,6 +289,7 @@ export default class RequestForm extends PureComponent {
                 height={height}
                 width={width}
                 isLineVisible={index + 1 !== argsCount}
+                isLineNumberVisible={isLineNumberVisible}
               />
             );
           })}

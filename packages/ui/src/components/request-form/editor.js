@@ -49,7 +49,7 @@ export default class Editor extends React.Component {
   onLoad = (editor) => (this.editor = editor);
 
   render() {
-    const { height, width, mode, value, index, isLineVisible } = this.props;
+    const { height, width, mode, value, index, isLineVisible, isLineNumberVisible } = this.props;
 
     return (
       <EditorWrapper data-cy={`request-form-editor-${index}`}>
@@ -62,6 +62,7 @@ export default class Editor extends React.Component {
           onValidate={this.onValid}
           fontSize={12}
           setOptions={{
+            showLineNumbers: isLineNumberVisible,
             tabSize: 2,
           }}
           editorProps={{ $blockScrolling: true }}
