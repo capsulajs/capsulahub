@@ -5,6 +5,16 @@ import Dropzone from './dropzone';
 import Tabs from './tabs';
 import { dropzone } from './settings';
 
+class Simple extends React.Component {
+  render() {
+    return <h1>{this.props.title}</h1>;
+  }
+
+  componentWillUnmount() {
+    console.log('Simple unmount!!');
+  }
+}
+
 const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? dropzone.highlight : '#676767',
   width: '100%',
@@ -50,7 +60,7 @@ export default class Content extends React.PureComponent {
             )}
             {typeof tab.content === 'function' && (
               <div className="canvas-node-content" data-cy="canvas-content">
-                {tab.content()}
+                {<Simple title="Hello World" />}
               </div>
             )}
           </div>
