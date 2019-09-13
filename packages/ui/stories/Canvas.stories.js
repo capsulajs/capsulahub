@@ -29,11 +29,6 @@ export default class CanvasExample extends React.Component {
                 name: 'Tab 11',
                 content: '&lt;web-cmponent-11&gt;&lt;/web-component-11&gt;',
               },
-              {
-                id: 'tab12',
-                name: 'Tab 12',
-                content: '&lt;web-cmponent-12&gt;&lt;/web-component-12&gt;',
-              },
             ],
             activeTabIndex: 0,
           },
@@ -47,11 +42,6 @@ export default class CanvasExample extends React.Component {
                 name: 'Tab 21',
                 content: '&lt;web-cmponent-21&gt;&lt;/web-component-21&gt;',
               },
-              {
-                id: 'tab22',
-                name: 'Tab 22',
-                content: '&lt;web-cmponent-22&gt;&lt;/web-component-22&gt;',
-              },
             ],
             activeTabIndex: 0,
           },
@@ -62,6 +52,7 @@ export default class CanvasExample extends React.Component {
   }
 
   onUpdate(layout) {
+    console.log('layout', layout);
     this.setState({ layout });
   }
 

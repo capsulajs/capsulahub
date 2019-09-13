@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ReflexContainer, ReflexSplitter } from 'react-reflex';
+import { ReflexContainer, ReflexSplitter, ReflexElement } from 'react-reflex';
 import Element from './element';
 import bus from '../services';
-import styles from './styles';
 
-export default class Container extends React.Component {
+export default class Container extends React.PureComponent {
   static propTypes = {
     nodes: PropTypes.array.isRequired,
     orientation: PropTypes.string.isRequired,
@@ -13,34 +12,40 @@ export default class Container extends React.Component {
   };
 
   onResize = (e) => {
-    const { node, flex } = e.component.props;
-    bus.emit('resize', { nodeId: node.id, flex });
+    const { nodeId, flex } = e.component.props;
+    bus.emit('resize', { nodeId, flex });
   };
 
   onStopResize = (e) => {
-    const { node, flex } = e.component.props;
-    bus.emit('resizestop', { nodeId: node.id, flex });
+    const { nodeId, flex } = e.component.props;
+    bus.emit('resizestop', { nodeId, flex });
   };
 
   render() {
     const { id, nodes, orientation, metadata } = this.props;
     const reduce = (acc, node, idx) => {
-      const splitter = <ReflexSplitter key={'S' + idx} style={styles.splitter[orientation || 'horizontal']} />;
+      const splitter = <ReflexSplitter key={'S' + idx} className="canvas-reflex-resizer" />;
       const n = (
-        <Element
+        <ReflexElement
+          className="canvas-reflex-element"
           flex={node.flex}
-          node={node}
           key={'N' + idx}
+          nodeId={node.id}
           onResize={this.onResize}
           onStopResize={this.onStopResize}
-          metadata={metadata}
-        />
+        >
+          <Element node={node} key={'N' + idx} metadata={metadata} />
+        </ReflexElement>
       );
       return idx > 0 ? [...acc, splitter, n] : [...acc, n];
     };
 
     return (
-      <ReflexContainer orientation={orientation || 'horizontal'} style={styles.container} data-cy={`canvas-node-${id}`}>
+      <ReflexContainer
+        className="canvas-node-container"
+        orientation={orientation || 'horizontal'}
+        data-cy={`canvas-node-${id}`}
+      >
         {nodes.reduce(reduce, [])}
       </ReflexContainer>
     );

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { dropzone } from './settings';
@@ -28,7 +27,7 @@ const Centre = styled.div`
   background: transparent;
 `;
 
-export default class Dropzone extends React.Component {
+export default class Dropzone extends React.PureComponent {
   static propTypes = {
     nodeId: PropTypes.string.isRequired,
     tabId: PropTypes.string,
@@ -36,8 +35,8 @@ export default class Dropzone extends React.Component {
   };
 
   getStyle(sector) {
-    const { nodeId, tabId, metadata } = this.props;
-    const { source, destination } = metadata;
+    const { nodeId, metadata } = this.props;
+    const { destination } = metadata;
 
     if (destination) {
       if (nodeId === destination.nodeId && destination.sectors.includes(sector)) {
@@ -49,7 +48,7 @@ export default class Dropzone extends React.Component {
   }
 
   render() {
-    const { nodeId, tabId, metadata } = this.props;
+    const { nodeId, tabId } = this.props;
     const ref = React.createRef();
     const ratio = tabId || isSizeLessThan(ref, dropzone.minSize) ? 1 : dropzone.ratio;
 

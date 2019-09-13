@@ -1,38 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Tab from './tab';
 import bus from './services';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  background: #515151;
-  color: #a9a9a9;
-  width: 100%;
-  overflow-x: scroll;
-  overflow-y: hidden;
-
-  ::-webkit-scrollbar {
-    background: #515151;
-    height: 2px;
-  }
-  ::-webkit-scrollbar-corner {
-    background: #3f3f3f;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #797979;
-  }
-`;
-
-const getListStyle = () => ({
-  background: '#515151',
-  display: 'flex',
-  flexDirection: 'row',
-});
-
-export default class Tabs extends React.Component {
+export default class Tabs extends React.PureComponent {
   static propTypes = {
     nodeId: PropTypes.string.isRequired,
     tabs: PropTypes.array.isRequired,
@@ -44,11 +16,11 @@ export default class Tabs extends React.Component {
   onRemove = (tabId) => bus.emit('remove', { tabId, nodeId: this.props.nodeId });
 
   renderDraggable(tab, index) {
-    const { nodeId, activeTabIndex } = this.props;
+    const { activeTabIndex } = this.props;
 
     return (
       <Draggable key={tab.id} draggableId={tab.id} index={index}>
-        {(provided, snapshot) => (
+        {(provided) => (
           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
             <Tab
               tab={tab}
@@ -67,16 +39,16 @@ export default class Tabs extends React.Component {
     const { nodeId, tabs } = this.props;
 
     return (
-      <Container data-cy="canvas-tabs">
+      <div className="canvas-tabs-container" data-cy="canvas-tabs">
         <Droppable droppableId={nodeId} direction="horizontal">
           {(provided) => (
-            <div ref={provided.innerRef} style={getListStyle()} {...provided.droppableProps}>
+            <div ref={provided.innerRef} className="canvas-tab-wrapper" {...provided.droppableProps}>
               {tabs.map((tab, index) => this.renderDraggable(tab, index))}
               {provided.placeholder}
             </div>
           )}
         </Droppable>
-      </Container>
+      </div>
     );
   }
 }

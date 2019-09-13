@@ -1,14 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Droppable } from 'react-beautiful-dnd';
 import Dropzone from './dropzone';
 import Tabs from './tabs';
 import { dropzone } from './settings';
-
-const Container = styled.div`
-  width: 100%;
-`;
 
 const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? dropzone.highlight : '#676767',
@@ -16,7 +11,7 @@ const getListStyle = (isDraggingOver) => ({
   height: '100%',
 });
 
-export default class Content extends React.Component {
+export default class Content extends React.PureComponent {
   static propTypes = {
     nodeId: PropTypes.string.isRequired,
     tabs: PropTypes.array.isRequired,
@@ -34,9 +29,9 @@ export default class Content extends React.Component {
         if (metadata.source || metadata.destination) {
           if (metadata.source) {
             return (
-              <Container data-cy={`canvas-node-${nodeId}`}>
+              <div data-cy={`canvas-node-${nodeId}`}>
                 <Tabs nodeId={nodeId} tabs={tabs} activeTabIndex={activeTabIndex} />
-              </Container>
+              </div>
             );
           }
 
@@ -44,10 +39,21 @@ export default class Content extends React.Component {
         }
 
         return (
-          <Container data-cy={`canvas-node-${nodeId}`}>
+          <div className="canvas-node" data-cy={`canvas-node-${nodeId}`}>
             <Tabs nodeId={nodeId} tabs={tabs} activeTabIndex={activeTabIndex} />
-            <div data-cy="canvas-content" dangerouslySetInnerHTML={{ __html: tab.content }} />
-          </Container>
+            {typeof tab.content === 'string' && (
+              <div
+                className="canvas-node-content"
+                data-cy="canvas-content"
+                dangerouslySetInnerHTML={{ __html: tab.content }}
+              />
+            )}
+            {typeof tab.content === 'function' && (
+              <div className="canvas-node-content" data-cy="canvas-content">
+                {tab.content()}
+              </div>
+            )}
+          </div>
         );
       }
 
