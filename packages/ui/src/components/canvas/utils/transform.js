@@ -13,7 +13,8 @@ export default (layout, event, metadata) => {
   switch (event) {
     case 'drop':
       return createNode(layout, metadata);
-    case 'resizestop': {
+    case 'resizestop':
+    case 'resize': {
       const updateMultipleNodes = (layout, updates = []) => {
         const [update, ...rest] = updates;
         if (update) {
