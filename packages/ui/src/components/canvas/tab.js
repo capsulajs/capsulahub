@@ -70,7 +70,7 @@ export default class Tab extends React.PureComponent {
       <div
         data-cy={`canvas-tab-${tab.id}`}
         className="canvas-tab"
-        isActive={isActive}
+        // isActive={isActive}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
       >
