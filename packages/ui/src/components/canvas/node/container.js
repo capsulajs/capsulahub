@@ -32,6 +32,7 @@ export default class Container extends React.PureComponent {
           className="canvas-reflex-element"
           flex={node.flex}
           key={'N' + idx}
+          minSize={node.minSize}
           nodeId={node.id}
           onResize={this.onResize}
           onStopResize={this.onStopResize}

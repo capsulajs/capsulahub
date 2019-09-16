@@ -34,7 +34,15 @@ export default (layout, event, metadata) => {
       return { eventType: event, data: { ...metadata }, layout: undefined };
     }
     case 'reorder':
-      return { eventType: event, layout: reorderTab(layout, source, destination) };
+      return {
+        eventType: event,
+        data: {
+          source: { tabId: source.index, nodeId: source.droppableId },
+          destination: { tabId: destination.index, nodeId: destination.droppableId },
+        },
+        layout: reorderTab(layout, source, destination),
+      };
+
     case 'move':
       return {
         eventType: event,
@@ -46,7 +54,11 @@ export default (layout, event, metadata) => {
       };
     case 'select':
       const activeTabIndex = findIndex(node.tabs, (tab) => tab.id === tabId);
-      return { eventType: event, layout: updateNode(layout, { nodeId, activeTabIndex }) };
+      return {
+        eventType: event,
+        data: { nodeId, activeTabIndex },
+        layout: updateNode(layout, { nodeId, activeTabIndex }),
+      };
     case 'update': {
       const tabs = node.tabs.map((tab) => {
         if (tab.id === tabId) {
