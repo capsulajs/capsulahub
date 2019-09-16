@@ -5,7 +5,7 @@ Background:
   And   a valid sendMessageRequest has the following model
         |property |type  |
         |envKey   |string|
-		|data     |any   |
+	|data     |any   |
         |model    |'request/response' or 'request/stream'|
 
 Scenario: Calling send with a valid request (rsocket/websocket)
