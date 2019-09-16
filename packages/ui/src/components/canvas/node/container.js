@@ -24,7 +24,9 @@ export default class Container extends React.PureComponent {
   render() {
     const { id, nodes, orientation, metadata } = this.props;
     const reduce = (acc, node, idx) => {
-      const splitter = <ReflexSplitter key={'S' + idx} className="canvas-reflex-resizer" />;
+      const splitter = (
+        <ReflexSplitter key={'S' + idx} className={`canvas-reflex-resizer canvas-reflex-resizer-${orientation}`} />
+      );
       const n = (
         <ReflexElement
           className="canvas-reflex-element"
