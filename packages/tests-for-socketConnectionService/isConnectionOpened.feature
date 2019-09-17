@@ -1,7 +1,7 @@
-Feature: SocketConnectionService. isConnectionOpened method
+Feature: ConnectionService. isConnectionOpened method
 
   Background:
-  Given SocketConnectionService with isConnectionOpened
+  Given ConnectionService with isConnectionOpened
   And   a valid isConnectedRequest has the following model
         |property |type  |
         |envKey   |string|
