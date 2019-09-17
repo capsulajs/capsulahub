@@ -1,7 +1,7 @@
 Feature: SocketConnectionService. Tests related to open method
 
 Background:
-  Given  SocketConnection with open method
+  Given SocketConnectionService with open method
   And   a valid openConnectionRequest has the following model
         |property |type  |
         |envKey   |string|

@@ -1,11 +1,11 @@
 Feature: SocketConnectionService. Tests related to send method
 
 Background:
-  Given SocketConnection with send method
+  Given SocketConnectionService with send method
   And   a valid sendMessageRequest has the following model
         |property |type  |
         |envKey   |string|
-	|data     |any   |
+        |data     |any   |
         |model    |'request/response' or 'request/stream'|
 
 Scenario: Calling send with a valid request (rsocket/websocket)

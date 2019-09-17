@@ -1,7 +1,7 @@
 Feature: SocketConnectionService. Tests related to close method
 
 Background:
-  Given SocketConnection with close method
+  Given SocketConnectionService with close method
   And   a valid closeConnectionRequest has the following model
         |property |type  |
         |envKey   |string|
