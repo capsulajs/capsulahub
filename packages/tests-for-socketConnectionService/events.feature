@@ -1,7 +1,7 @@
-Feature: SocketConnectionService. events method
+Feature: ConnectionService. events method
 
 Scenario: Subscribe to events and receive all the existing events + the new events
-  Given SocketConnectionService with events method
+  Given ConnectionService with events method
   And   the following events have been recorded
       |events                |
 		  |connectionStarted     |
@@ -16,7 +16,6 @@ Scenario: Subscribe to events and receive all the existing events + the new even
   And   the new events that occur afterwards are emitted from the subscription
 
 Scenario: Subscribe to events when there are no events
-  Given SocketConnectionService with events method
-  And   no events have been recorded
+  Given  no events have been recorded
   When  user subscribes to events method with a valid request
   Then  subscription is opened and it doesn't emit anything
