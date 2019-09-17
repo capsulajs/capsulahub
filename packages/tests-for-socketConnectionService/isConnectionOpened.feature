@@ -23,7 +23,7 @@ Scenario: Call isConnectionOpened method when connection is pending
   #Then  TBD
 
 Scenario: Call isConnectionOpened with invalid request
-  When user calls isConnectionOpened with an invalid envKey
+  When user calls isConnectionOpened with an invalid isConnectedRequest
   Then a relevant error is returned
 
 Scenario: Call isConnectionOpened with an envKey that does not exist
