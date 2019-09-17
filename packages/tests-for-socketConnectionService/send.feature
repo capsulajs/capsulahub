@@ -1,7 +1,7 @@
-Feature: SocketConnectionService. Tests related to send method
+Feature: ConnectionService. Tests related to send method
 
 Background:
-  Given SocketConnectionService with send method
+  Given ConnectionService with send method
   And   a valid sendMessageRequest has the following model
         |property |type  |
         |envKey   |string|
