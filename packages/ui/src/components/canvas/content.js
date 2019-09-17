@@ -49,7 +49,7 @@ export default class Content extends React.PureComponent {
               />
             )}
             {typeof tab.content === 'function' && (
-              <div className="canvas-node-content" data-cy="canvas-content">
+              <div className={`canvas-node-content ${tab.id}`} data-cy="canvas-content">
                 {tab.content()}
               </div>
             )}
