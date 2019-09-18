@@ -24,3 +24,9 @@ Feature: Create Connection service extension for CapsulaHub
     And   The creation of ConnectionService instance fails with an error "Error1"
     Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "Error1"
     And   The registration of the ConnectionService in Workspace was not triggered
+    
+  Scenario: ConnectionService extension bootstrap function rejects with an error if "provider" is not in configuration
+    When  ConnectionService extension bootstrap function is called
+    And   The registration of ConnectionService in Workspace is triggered without any provider in config
+    Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "noProvider"
+    And   he registration of the ConnectionService in Workspace was not triggered
