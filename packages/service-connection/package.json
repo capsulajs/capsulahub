@@ -1,0 +1,31 @@
+{
+  "name": "@capsulajs/capsulahub-service-connection",
+  "version": "0.0.1",
+  "description": "Connection extension allows to use different protocols to establish connection to a server",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "author": "CapsulaJS",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "yarn build:lib && yarn build:dist",
+    "test": "jest",
+    "lint": "yarn lint:md && yarn lint:ts",
+    "prettier": "prettier --write '{src,tests}/**/*.{js,ts,tsx}'",
+    "clean": "rimraf lib dist node_modules",
+    "doc": "typedoc src/api --out ./doc --mode file --hideGenerator",
+    "build:dist": "rimraf dist && webpack --env.production=true",
+    "build:lib": "rimraf lib && tsc",
+    "lint:md": "remark . --rc-path ../../.remarkrc --output",
+    "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix",
+    "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
+    "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
+  },
+  "dependencies": {
+    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3",
+    "@capsulajs/capsulajs-configuration-service": "latest",
+    "@capsulajs/capsulajs-transport-providers": "latest",
+    "rxjs": "6.5.2"
+  }
+}
