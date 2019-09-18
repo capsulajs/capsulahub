@@ -7,25 +7,23 @@ Feature: ConnectionService. isConnectionOpened method
         |envKey   |string|
   And   an environment with envKey A
 
-Scenario: Call isConnectionOpened method when connection is opened
+Scenario: Call isConnectionOpened method when connection is established
   Given a connection to the provided environment is established
   When  user calls isConnectionOpened with envKey A
-  Then  the promise is resolved with "true"
+  Then  user receives "true"
 
-Scenario: Call isConnectionOpened method when connection is closed
+Scenario: Call isConnectionOpened method when there's no connection established
   Given connection to the provided environment has not been established
   When  user calls isConnectionOpened with the envKey A
-  Then  the promise is resolved with "false"
+  Then  user receives "false"
 
 Scenario: Call isConnectionOpened method when connection is pending
   Given connection to the provided environment is in pending state
   When  user calls isConnectionOpened with the envKey A
-  #Then  TBD
+  Then  user receives "false"
 
 Scenario: Call isConnectionOpened with invalid request
   When user calls isConnectionOpened with an invalid isConnectedRequest
   Then a relevant error is returned
 
-Scenario: Call isConnectionOpened with an envKey that does not exist
-  When  user calls isConnectionOpened with envKey B
-  Then  an error message informing that such env doesn't exist is returned
+
