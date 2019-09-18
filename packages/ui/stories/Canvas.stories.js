@@ -61,7 +61,7 @@ export default class CanvasExample extends React.Component {
   }
 
   onUpdate({ layout }) {
-    this.setState({ layout });
+    !!layout && this.setState({ layout });
   }
 
   render() {

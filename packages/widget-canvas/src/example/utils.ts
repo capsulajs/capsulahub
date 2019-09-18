@@ -7,7 +7,9 @@ import { Canvas } from '../Canvas';
 const subject = new BehaviorSubject(defaultLayout);
 export const props$: Observable<CanvasUIProps> = subject
   .asObservable()
-  .pipe(map((layout: Layout) => ({ layout, onUpdate: (data: OnUpdateEvent) => subject.next(data.layout) })));
+  .pipe(
+    map((layout: Layout) => ({ layout, onUpdate: (data: OnUpdateEvent) => data.layout && subject.next(data.layout) }))
+  );
 
 export const mountWebComponentRequest = {
   WebComponent: Canvas,

@@ -1,7 +1,7 @@
 import { Layout } from './index';
 
 interface UpdatedLayout {
-  layout: Layout;
+  layout?: Layout;
 }
 
 export type EventType = 'drop' | 'resize' | 'resizestop' | 'reorder' | 'move' | 'select' | 'update' | 'remove';
