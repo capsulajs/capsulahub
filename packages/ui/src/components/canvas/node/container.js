@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ReflexContainer, ReflexSplitter, ReflexElement } from 'react-reflex';
 import Element from './element';
 import bus from '../services';
+import styles from './styles';
 
 export default class Container extends React.PureComponent {
   static propTypes = {
@@ -24,12 +25,18 @@ export default class Container extends React.PureComponent {
   render() {
     const { id, nodes, orientation, metadata } = this.props;
     const reduce = (acc, node, idx) => {
+      const style = node.type === 'container' ? styles.container : styles.element[orientation || 'horizontal'];
       const splitter = (
-        <ReflexSplitter key={'S' + idx} className={`canvas-reflex-resizer canvas-reflex-resizer-${orientation}`} />
+        <ReflexSplitter
+          style={styles.splitter[orientation || 'horizontal']}
+          key={'S' + idx}
+          className={`canvas-reflex-resizer ${orientation}`}
+        />
       );
       const n = (
         <ReflexElement
-          className="canvas-reflex-element"
+          style={style}
+          className={`canvas-reflex-element ${orientation}`}
           flex={node.flex}
           key={'N' + idx}
           minSize={node.minSize}

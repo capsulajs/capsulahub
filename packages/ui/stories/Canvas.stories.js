@@ -1,6 +1,5 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import { Canvas } from 'src';
 import styled from 'styled-components';
 
@@ -27,7 +26,12 @@ export default class CanvasExample extends React.Component {
               {
                 id: 'tab11',
                 name: 'Tab 11',
-                content: () => <h1>Test</h1>,
+                content: '&lt;web-cmponent-11&gt;&lt;/web-component-11&gt;',
+              },
+              {
+                id: 'tab12',
+                name: 'Tab 12',
+                content: '&lt;web-cmponent-12&gt;&lt;/web-component-12&gt;',
               },
             ],
             activeTabIndex: 0,
@@ -42,6 +46,11 @@ export default class CanvasExample extends React.Component {
                 name: 'Tab 21',
                 content: '&lt;web-cmponent-21&gt;&lt;/web-component-21&gt;',
               },
+              {
+                id: 'tab22',
+                name: 'Tab 22',
+                content: '&lt;web-cmponent-22&gt;&lt;/web-component-22&gt;',
+              },
             ],
             activeTabIndex: 0,
           },
@@ -51,10 +60,8 @@ export default class CanvasExample extends React.Component {
     this.onUpdate = this.onUpdate.bind(this);
   }
 
-  onUpdate({ eventType, layout }) {
-    if (eventType === 'move') {
-      this.setState({ layout });
-    }
+  onUpdate({ layout }) {
+    this.setState({ layout });
   }
 
   render() {

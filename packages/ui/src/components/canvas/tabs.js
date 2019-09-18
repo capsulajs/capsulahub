@@ -1,10 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import Tab from './tab';
 import bus from './services';
 
-export default class Tabs extends React.PureComponent {
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  background: #515151;
+  color: #a9a9a9;
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  ::-webkit-scrollbar {
+    background: #515151;
+    height: 2px;
+  }
+  ::-webkit-scrollbar-corner {
+    background: #3f3f3f;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #797979;
+  }
+`;
+
+const getListStyle = () => ({
+  background: '#515151',
+  display: 'flex',
+  flexDirection: 'row',
+});
+
+export default class Tabs extends React.Component {
   static propTypes = {
     nodeId: PropTypes.string.isRequired,
     tabs: PropTypes.array.isRequired,
@@ -39,16 +67,21 @@ export default class Tabs extends React.PureComponent {
     const { nodeId, tabs } = this.props;
 
     return (
-      <div className="canvas-tabs-container" data-cy="canvas-tabs">
+      <Container className="canvas-tabs-container" data-cy="canvas-tabs">
         <Droppable droppableId={nodeId} direction="horizontal">
           {(provided) => (
-            <div ref={provided.innerRef} className="canvas-tab-wrapper" {...provided.droppableProps}>
+            <div
+              ref={provided.innerRef}
+              className="canvas-tab-wrapper"
+              style={getListStyle()}
+              {...provided.droppableProps}
+            >
               {tabs.map((tab, index) => this.renderDraggable(tab, index))}
               {provided.placeholder}
             </div>
           )}
         </Droppable>
-      </div>
+      </Container>
     );
   }
 }

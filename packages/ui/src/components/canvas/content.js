@@ -1,9 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Droppable } from 'react-beautiful-dnd';
 import Dropzone from './dropzone';
 import Tabs from './tabs';
 import { dropzone } from './settings';
+
+const Container = styled.div`
+  width: 100%;
+`;
 
 const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? dropzone.highlight : '#676767',
@@ -29,9 +34,9 @@ export default class Content extends React.PureComponent {
         if (metadata.source || metadata.destination) {
           if (metadata.source) {
             return (
-              <div data-cy={`canvas-node-${nodeId}`}>
+              <Container data-cy={`canvas-node-${nodeId}`}>
                 <Tabs nodeId={nodeId} tabs={tabs} activeTabIndex={activeTabIndex} />
-              </div>
+              </Container>
             );
           }
 
@@ -39,7 +44,7 @@ export default class Content extends React.PureComponent {
         }
 
         return (
-          <div className="canvas-node" data-cy={`canvas-node-${nodeId}`}>
+          <Container className="canvas-node" data-cy={`canvas-node-${nodeId}`}>
             <Tabs nodeId={nodeId} tabs={tabs} activeTabIndex={activeTabIndex} />
             {typeof tab.content === 'string' && (
               <div
@@ -53,7 +58,7 @@ export default class Content extends React.PureComponent {
                 {tab.content()}
               </div>
             )}
-          </div>
+          </Container>
         );
       }
 

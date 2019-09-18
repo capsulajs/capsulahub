@@ -1,14 +1,3 @@
-.canvas-container {
-  font-family: 'Montserrat';
-  font-size: 13px;
-  color: #A9A9A;
-  width: 100%;
-  height: 100%;
-  min-width: 500px;
-  min-height: 100px;
-  padding: 8px;
-}
-
 .canvas-node-container {
   overflow: hidden;
   background: #414141;
@@ -22,55 +11,4 @@
 
 .canvas-reflex-element {
   overflow: hidden !important;
-}
-
-.canvas-tabs-container {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.canvas-tab-wrapper {
-  display: flex;
-  flex-direction: row;
-}
-
-.canvas-tab {
-  display: flex;
-  flex-direction: row;
-  user-select: none;
-  text-transform: uppercase;
-  padding: 2px;
-  margin: 0 8px 0 0;
-  background: #515151;
-}
-
-.canvas-tab-title {
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.canvas-tab-input {
-  font-size: 12px;
-  padding-left: 10px;
-  padding-right: 10px;
-  background: #737373;
-  color: #b1b1b1;
-  border: none;
-}
-
-.canvas-tab-input:focus {
-  outline: none;
-}
-
-.canvas-tab-input::placeholder {
-  outline: none;
-}
-
-.canvas-tab-close {
-  cursor: pointer;
-  margin: auto;
-  padding-left: 5px;
 }

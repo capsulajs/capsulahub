@@ -1,6 +1,52 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { keyboard } from './settings';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  user-select: none;
+  text-transform: uppercase;
+  padding: 2px;
+  margin: 0 8px 0 0;
+  background: #515151;
+  color: ${(props) => (props.isActive ? '#FEFEFE' : '#A9A9A9')};
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 2px;
+`;
+
+const Close = styled.span`
+  cursor: pointer;
+  margin: auto;
+  padding-left: 5px;
+  color: ${(props) => (props.isHover ? '' : '#515151')};
+`;
+
+const Title = styled.div`
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: ${(props) => (props.isActive ? 'solid 1px #FEFEFE' : 'none')};
+`;
+
+const Input = styled.input`
+  font-style: regular;
+  font-size: 12px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: #737373;
+  color: #b1b1b1;
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  ::placeholder {
+    color: #b1b1b1;
+  }
+`;
 
 export default class Tab extends React.PureComponent {
   static propTypes = {
@@ -33,14 +79,13 @@ export default class Tab extends React.PureComponent {
   onDoubleClick = () => this.setState({ isEdit: true });
 
   renderContent() {
-    const { isHover, isEdit, value } = this.state;
+    const { isEdit, value } = this.state;
     const { tab, isActive } = this.props;
 
     if (isEdit) {
       return (
-        <input
+        <Input
           data-cy="canvas-tab-input"
-          className="canvas-tab-input"
           value={value}
           onChange={this.onChange}
           onBlur={this.onSave}
@@ -50,15 +95,14 @@ export default class Tab extends React.PureComponent {
     }
 
     return (
-      <div
+      <Title
         data-cy={isActive ? 'canvas-tab-title-active' : 'canvas-tab-title'}
-        className="canvas-tab-title"
-        // isActive={isActive}
+        isActive={isActive}
         onClick={this.onSelect}
         onDoubleClick={this.onDoubleClick}
       >
         {tab.name}
-      </div>
+      </Title>
     );
   }
 
@@ -67,25 +111,20 @@ export default class Tab extends React.PureComponent {
     const { isActive, tab } = this.props;
 
     return (
-      <div
+      <Container
         data-cy={`canvas-tab-${tab.id}`}
         className="canvas-tab"
-        // isActive={isActive}
+        isActive={isActive}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
       >
         {this.renderContent()}
         {!isEdit && (
-          <span
-            className="canvas-tab-close"
-            data-cy="canvas-tab-remove"
-            // isHover={isHover}
-            onClick={this.onRemove}
-          >
+          <Close data-cy="canvas-tab-remove" isHover={isHover} onClick={this.onRemove}>
             &#10005;
-          </span>
+          </Close>
         )}
-      </div>
+      </Container>
     );
   }
 }
