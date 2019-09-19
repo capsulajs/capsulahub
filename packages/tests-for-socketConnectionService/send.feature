@@ -32,10 +32,10 @@ Scenario: Calling send without providing model for rsocket
 Scenario: Calling send when the connection is in "pending" state
   Given the socket connection is in a pending state
   When  user calls send method with a valid sendMessageRequest
-  And   'messageSent' event is emitted
   Then  the method is waiting for the connection to be established
-  And   once connection is established the message is sent successfully to the connected environment
+  And   once connection is established 'messageSent' event will be emitted 
   And   the promise, that was returned from send method will be resolved with void
+  And   the message will arrive successfully to the connected environment
   And   'messageReceived' event will be emitted
   
 Scenario: Calling send with a invalid envKey
@@ -45,7 +45,7 @@ Scenario: Calling send with a invalid envKey
         |null        |
         |undefined   |
         |123         |
-        |'test test' |
+        |' '         |
         |true        |
         |[]          |
         |['test']    |
@@ -53,29 +53,14 @@ Scenario: Calling send with a invalid envKey
         |{ test: [] }|
   Then  the promise, that is returned from the call of the send method, rejects with an error
   
-Scenario: Calling send with a invalid data
-  Given a socket connection is established for 'develop' envKey
-  When  user calls send method with a valid request and with the following <data>
-        |<data>      |
-        |null        |
-        |undefined   |
-        |123         |
-        |'test test' |
-        |true        |
-        |[]          |
-        |['test']    |
-        |{}          |
-        |{ test: [] }|
-  Then  the promise, that is returned from the call of the send method, rejects with an error
- 
-Scenario: Calling send with a invalid model
+Scenario: Calling send with a invalid model (for rsocket connection)
   Given a socket connection is established for 'develop' envKey
   When  user calls send method with a valid request and with the following <model>
         |<model>      |
         |null        |
         |undefined   |
         |123         |
-        |'test test' |
+        |' '         |
         |true        |
         |[]          |
         |['test']    |
@@ -91,7 +76,6 @@ Scenario: Calling send when there is no open connection and "pending" state of c
 Scenario: Calling send when "pending" state of connection failed
   Given the socket connection is in a pending state
   When  user calls send method with a valid sendMessageRequest
-  And   'messageSent' event is emitted
   And   connection to the socket failed
   And   'error' event is emitted
   Then  the promise, that is returned from the call of the send method, rejects with an error
