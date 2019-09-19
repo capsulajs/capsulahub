@@ -25,7 +25,7 @@ Scenario: Calling open with an invalid envKey
         |null        |
         |undefined   |
         |123         |
-        |'test test' |
+        |' '         |
         |true        |
         |[]          |
         |['test']    |
@@ -41,7 +41,7 @@ Scenario: Calling open with an invalid endpoint
         |null        |
         |undefined   |
         |123         |
-        |'test test' |
+        |' '         |
         |true        |
         |[]          |
         |['test']    |
