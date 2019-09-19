@@ -24,7 +24,7 @@ Scenario: Calling close with an invalid request
         |null                      |
         |undefined                 |
         |123                       |
-        |'test test'               |
+        |' '                       |
         |true                      |
         |[]                        |
         |['test']                  |
@@ -37,7 +37,7 @@ Scenario: Calling close when no connection has been currently established
   Given there is no socket connection established
   When  user calls close method with a valid closeConnectionRequest
   Then  the promise, that is returned from the call of the close method, rejects with an error
-  And   no "pending connection" or socket connection is established
+  And   'disconnectionStarted' event is not emitted
 
 Scenario: Calling close when there is a "pending closing of connection"
   Given a socket connection is established for envKey 'develop'
