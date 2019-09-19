@@ -82,3 +82,5 @@ export interface ConnectionEvent {
   envKey: string;
   data?: any;
 }
+
+export type Provider = 'websocket' | 'rsocket';
