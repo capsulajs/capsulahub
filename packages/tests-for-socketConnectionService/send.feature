@@ -14,6 +14,7 @@ Scenario: Calling send with a valid request (rsocket/websocket)
   And   'messageSent' event is emitted
   And   the promise, that was returned from send method has been resolved with void
   Then  the message is sent successfully to the connected environment
+  And   socket sends a message back that user's request has been received
   And   'messageReceived' event is emitted
 
 Scenario: Calling send with a valid request (websocket)
@@ -22,6 +23,7 @@ Scenario: Calling send with a valid request (websocket)
   And   'messageSent' event is emitted
   And   the promise, that was returned from send method has been resolved with void
   Then  the message is sent successfully to the connected environment
+  And   socket sends a message back that user's request has been received
   And   'messageReceived' event is emitted
   
 Scenario: Calling send without providing model for rsocket
@@ -33,9 +35,10 @@ Scenario: Calling send when the connection is in "pending" state
   Given the socket connection is in a pending state
   When  user calls send method with a valid sendMessageRequest
   Then  the method is waiting for the connection to be established
-  And   once connection is established 'messageSent' event will be emitted 
+  And   once connection is established the message will be send successfully to the connected environment
+  And   'messageSent' event will be emitted 
   And   the promise, that was returned from send method will be resolved with void
-  And   the message will arrive successfully to the connected environment
+  And   socket will send a message back that user's request has been received
   And   'messageReceived' event will be emitted
   
 Scenario: Calling send with a invalid envKey
