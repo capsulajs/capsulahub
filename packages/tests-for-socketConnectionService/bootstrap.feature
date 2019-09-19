@@ -7,6 +7,7 @@ Feature: Create Connection service extension for CapsulaHub
 
   Scenario: ConnectionService extension bootstrap function resolves correctly and triggers the registration of an instance of WebSocketConnectionService in Workspace
     When  ConnectionService extension bootstrap function is called
+    And   serviceConfig is { provider: 'websocket' }
     And   The registration of ConnectionService in Workspace is triggered with the correct arguments
     Then  The promise, that is returned from the call of the bootstrap function, resolves with no args
     And   The returned promise from a call of registration function is resolved (only after the resolve of bootstrap function)
@@ -14,6 +15,7 @@ Feature: Create Connection service extension for CapsulaHub
 
   Scenario: ConnectionService extension bootstrap function resolves correctly and triggers the registration of an instance of RSocketConnectionService in Workspace
     When  ConnectionService extension bootstrap function is called
+    And   serviceConfig is { provider: 'rsocket' }
     And   The registration of ConnectionService in Workspace is triggered with the correct arguments
     Then  The promise, that is returned from the call of the bootstrap function, resolves with no args
     And   The returned promise from a call of registration function is resolved (only after the resolve of bootstrap function)
