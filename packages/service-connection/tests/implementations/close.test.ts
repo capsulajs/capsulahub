@@ -1,8 +1,7 @@
 import { Connection as ConnectionInterface, ConnectionEvent } from '../../src/api';
-import { defaultRequests, eventTypes } from '../consts';
+import { defaultRequests, eventTypes, providers } from '../consts';
 import { messages } from '../../src/consts';
-
-const providers = ['websocket', 'rsocket'];
+import WebSocketConnection from '../../src/providers/WebSocketConnection';
 
 describe.each(providers)('ConnectionService (%s) close method test suite', (provider) => {
   let connection: ConnectionInterface;
@@ -11,10 +10,10 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
   beforeEach(() => {
     switch (provider) {
       case 'websocket':
-        connection = new WebsocketConnection();
+        connection = new WebSocketConnection();
         break;
       case 'rsocket':
-        connection = new RsocketConnection();
+        // connection = new RSocketConnection();
         break;
       default:
         return new Error(messages.noProvider);

@@ -1,3 +1,6 @@
+export const providers = ['websocket'];
+// export const providers = ['websocket', 'rsocket'];
+
 const endpoints = {
   websocket: 'wss://echo.websocket.org',
   rsocket: '',
