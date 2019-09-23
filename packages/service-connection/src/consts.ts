@@ -9,6 +9,9 @@ export const messages = {
   alreadyConnected: (envKey: string) => `${envKey} is already connected.`,
   pendingConnection: (envKey: string) => `${envKey} is already connecting, please wait.`,
   failedToSend: 'The request has not been sent due to connection failure.',
+  connectionError: 'The connection failed to connect.',
+  modelRequired: 'The model is required to send this message through RSocket',
+  invalidModel: 'The model should be "request/response" or "request/stream"',
 };
 
 /**
