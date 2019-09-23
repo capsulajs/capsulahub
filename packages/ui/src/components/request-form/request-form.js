@@ -124,6 +124,7 @@ export default class RequestForm extends PureComponent {
     argsCount: 1,
     editorsIsValid: [true],
     executionError: '',
+    lastPastedContentTimestamp: `${Date.now()}`,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -187,11 +188,26 @@ export default class RequestForm extends PureComponent {
   };
 
   onChangeArgument = (index, newArgument) => {
-    this.setState((prevState) => {
-      const newArgs = [...prevState.requestArgs];
-      newArgs[index] = newArgument;
-      return { requestArgs: newArgs, executionError: '' };
-    });
+    this.setState(
+      (prevState) => {
+        const newArgs = [...prevState.requestArgs];
+        newArgs[index] = newArgument;
+        return { requestArgs: newArgs, executionError: '' };
+      },
+      () => {
+        const triggerRemountAfterPasting = () => {
+          this.contentHasBeenPasted = false;
+          setTimeout(() => {
+            this.setState({ lastPastedContentTimestamp: `${Date.now()}` });
+          }, 0);
+        };
+        this.contentHasBeenPasted && triggerRemountAfterPasting();
+      }
+    );
+  };
+
+  onPaste = () => {
+    this.contentHasBeenPasted = true;
   };
 
   onValid = ({ isValid, index }) =>
@@ -241,7 +257,7 @@ export default class RequestForm extends PureComponent {
     } = this.props;
 
     return (
-      <Container theme={theme} data-cy="request-form-container">
+      <Container key={this.state.lastPastedContentTimestamp} theme={theme} data-cy="request-form-container">
         <Column>
           <Header data-cy="request-form-header">
             <Wrapper>
@@ -285,6 +301,7 @@ export default class RequestForm extends PureComponent {
                 mode={language}
                 value={value}
                 onChange={this.onChangeArgument}
+                onPaste={this.onPaste}
                 onValid={this.onValid}
                 height={height}
                 width={width}

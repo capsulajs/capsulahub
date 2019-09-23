@@ -50,7 +50,6 @@ export default class Editor extends React.Component {
 
   render() {
     const { height, width, mode, value, index, isLineVisible, isLineNumberVisible } = this.props;
-
     return (
       <EditorWrapper data-cy={`request-form-editor-${index}`}>
         <AceEditor
@@ -59,6 +58,7 @@ export default class Editor extends React.Component {
           value={value}
           onLoad={this.onLoad}
           onChange={this.onChange}
+          onPaste={this.props.onPaste}
           onValidate={this.onValid}
           fontSize={12}
           setOptions={{
