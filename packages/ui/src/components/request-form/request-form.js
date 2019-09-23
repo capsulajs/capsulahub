@@ -110,6 +110,7 @@ export default class RequestForm extends PureComponent {
     isChangeLanguageVisible: true,
     isChangeArgsCountVisible: true,
     isSelectedMethodPathVisible: true,
+    isLineNumberVisible: true,
     title: 'Request Form',
     width: '100%',
     height: '100%',
@@ -124,6 +125,9 @@ export default class RequestForm extends PureComponent {
     argsCount: 1,
     editorsIsValid: [true],
     executionError: '',
+    // When a new content has been pasted, Editor does not recalculate the width in order to show the correct scrollbar
+    // So that we want to generate unique ID each time when "paste" event happens and use it as a key
+    // It will trigger the component to remount completely and recalculate the scrollbar
     lastPastedContentTimestamp: `${Date.now()}`,
   };
 
@@ -197,6 +201,8 @@ export default class RequestForm extends PureComponent {
       () => {
         const triggerRemountAfterPasting = () => {
           this.contentHasBeenPasted = false;
+          // We need to simulate some delay after "paste" event occurs to give Editor some time to complete its
+          // inner formatting logic
           setTimeout(() => {
             this.setState({ lastPastedContentTimestamp: `${Date.now()}` });
           }, 0);
