@@ -12,8 +12,8 @@ export default (layout, event, metadata) => {
 
   switch (event) {
     case 'drop':
-      return createNode(layout, metadata);
-    case 'resizestop': {
+      return { eventType: event, data: { ...metadata }, layout: createNode(layout, metadata) };
+    case 'resizestop':
       const updateMultipleNodes = (layout, updates = []) => {
         const [update, ...rest] = updates;
         if (update) {
@@ -21,15 +21,44 @@ export default (layout, event, metadata) => {
         }
         return layout;
       };
-      return updateMultipleNodes(layout, metadata);
+      return { eventType: event, data: { ...metadata }, layout: updateMultipleNodes(layout, metadata) };
+    case 'resize': {
+      const updateMultipleNodes = (layout, updates = []) => {
+        const [update, ...rest] = updates;
+        if (update) {
+          return updateMultipleNodes(updateNode(layout, update), rest);
+        }
+        return layout;
+      };
+      // No need to recalculate each resize
+      return { eventType: event, data: { ...metadata }, layout: undefined };
     }
     case 'reorder':
-      return reorderTab(layout, source, destination);
+      return {
+        eventType: event,
+        data: {
+          source: { tabId: source.index, nodeId: source.droppableId },
+          destination: { tabId: destination.index, nodeId: destination.droppableId },
+        },
+        layout: reorderTab(layout, source, destination),
+      };
+
     case 'move':
-      return moveTab(layout, source, destination);
+      return {
+        eventType: event,
+        data: {
+          source: { tabId: source.index, nodeId: source.droppableId },
+          destination: { tabId: destination.index, nodeId: destination.droppableId },
+        },
+        layout: moveTab(layout, source, destination),
+      };
     case 'select':
       const activeTabIndex = findIndex(node.tabs, (tab) => tab.id === tabId);
-      return updateNode(layout, { nodeId, activeTabIndex });
+      return {
+        eventType: event,
+        data: { nodeId, activeTabIndex },
+        layout: updateNode(layout, { nodeId, activeTabIndex }),
+      };
     case 'update': {
       const tabs = node.tabs.map((tab) => {
         if (tab.id === tabId) {
@@ -37,10 +66,10 @@ export default (layout, event, metadata) => {
         }
         return tab;
       });
-      return updateNode(layout, { nodeId, tabs });
+      return { eventType: event, layout: updateNode(layout, { nodeId, tabs }) };
     }
     case 'remove':
-      return removeTab(layout, metadata);
+      return { eventType: event, layout: removeTab(layout, metadata) };
     default:
       return layout;
   }

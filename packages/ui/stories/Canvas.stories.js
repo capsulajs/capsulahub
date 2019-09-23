@@ -1,6 +1,5 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import { Canvas } from 'src';
 import styled from 'styled-components';
 
@@ -61,8 +60,8 @@ export default class CanvasExample extends React.Component {
     this.onUpdate = this.onUpdate.bind(this);
   }
 
-  onUpdate(layout) {
-    this.setState({ layout });
+  onUpdate({ layout }) {
+    !!layout && this.setState({ layout });
   }
 
   render() {
