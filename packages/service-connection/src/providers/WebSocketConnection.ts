@@ -67,8 +67,8 @@ export default class WebSocketConnection implements ConnectionInterface {
         this.send(sendMessageRequest).catch(() => reject(new Error(messages.failedToSend)));
       }
       // @ts-ignore
-      this.connections[envKey].ws &&
-        this.connections[envKey].ws.send(typeof data === 'string' ? data : JSON.stringify(data));
+      !!this.connections[envKey].ws &&
+        this.connections[envKey].ws!.send(typeof data === 'string' ? data : JSON.stringify(data));
       resolve();
     });
   };
@@ -85,11 +85,11 @@ export default class WebSocketConnection implements ConnectionInterface {
   private createNewConnection = ({ envKey, endpoint }: OpenConnectionRequest) => {
     return new Promise((resolve, reject) => {
       try {
+        this.connections = { ...this.connections, envKey: { readyState: wsReadyStates.connecting } };
         const ws = new WebSocket(endpoint);
-        this.connections = { envKey: { ws, readyState: wsReadyStates.connecting } };
-
         ws.onopen = () => {
-          this.connections[envKey].readyState = wsReadyStates.connected;
+          this.connections[envKey] = { ...this.connections[envKey], ws, readyState: wsReadyStates.connected };
+          resolve();
         };
 
         ws.onmessage = (event: MessageEvent) => {
@@ -111,7 +111,6 @@ export default class WebSocketConnection implements ConnectionInterface {
         ws.onclose = () => {
           this.connections[envKey] = { ws: undefined, readyState: wsReadyStates.disconnected };
         };
-        resolve();
       } catch (error) {
         this.connections[envKey].readyState = wsReadyStates.disconnected;
         reject(error);

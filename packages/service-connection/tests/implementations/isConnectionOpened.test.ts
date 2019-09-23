@@ -21,12 +21,12 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
     }
   });
 
-  it('Call isConnectionOpened method when connection is established', async () => {
+  it.only('Call isConnectionOpened method when connection is established', async () => {
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
-    console.info('-------------');
-    console.info(connection.isConnectionOpened({ envKey }));
-    console.info('-------------');
+    // console.info('-------------');
+    // console.info(connection.isConnectionOpened({ envKey }));
+    // console.info('-------------');
     return expect(connection.isConnectionOpened({ envKey })).toBeTruthy();
   });
 
