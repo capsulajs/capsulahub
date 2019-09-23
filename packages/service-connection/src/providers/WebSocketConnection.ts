@@ -62,9 +62,9 @@ export default class WebSocketConnection implements ConnectionInterface {
       ) {
         reject(new Error(messages.noConnection(envKey)));
       }
-      if (connection && connection.readyState === wsReadyStates.connecting) {
-        this.send(sendMessageRequest).catch(() => reject(new Error(messages.failedToSend)));
-      }
+      // if (connection && connection.readyState === wsReadyStates.connecting) {
+      //   this.send(sendMessageRequest).catch(() => reject(new Error(messages.failedToSend)));
+      // }
       !!this.connections[envKey].ws &&
         this.connections[envKey].ws!.send(typeof data === 'string' ? data : JSON.stringify(data));
       resolve();
@@ -83,10 +83,10 @@ export default class WebSocketConnection implements ConnectionInterface {
   private createNewConnection = ({ envKey, endpoint }: OpenConnectionRequest) => {
     return new Promise((resolve, reject) => {
       try {
-        this.connections = { ...this.connections, envKey: { readyState: wsReadyStates.connecting } };
         const ws = new WebSocket(endpoint);
+        this.connections = { ...this.connections, [envKey]: { ws, readyState: wsReadyStates.connecting } };
         ws.onopen = () => {
-          this.connections[envKey] = { ...this.connections[envKey], ws, readyState: wsReadyStates.connected };
+          this.connections[envKey] = { ...this.connections[envKey], readyState: wsReadyStates.connected };
           resolve();
         };
 
