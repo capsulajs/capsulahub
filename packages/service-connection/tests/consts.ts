@@ -11,6 +11,11 @@ export const defaultRequests: { [key: string]: any } = {
   rsocket: { envKey: 'develop', endpoint: endpoints.rsocket, data: {} },
 };
 
+export const rsocketModels = {
+  response: 'request/response',
+  stream: 'request/stream',
+};
+
 export const eventTypes = {
   connectionStarted: 'connectionStarted',
   connectionCompleted: 'connectionCompleted',

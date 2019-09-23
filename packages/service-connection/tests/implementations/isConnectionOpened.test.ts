@@ -21,12 +21,9 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
     }
   });
 
-  it.only('Call isConnectionOpened method when connection is established', async () => {
+  it('Call isConnectionOpened method when connection is established', async () => {
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
-    // console.info('-------------');
-    // console.info(connection.isConnectionOpened({ envKey }));
-    // console.info('-------------');
     return expect(connection.isConnectionOpened({ envKey })).toBeTruthy();
   });
 
@@ -44,7 +41,7 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
 
   const invalidRequests = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
 
-  it.each(invalidRequests)('Call isConnectionOpened with invalid request', async (invalidRequest) => {
+  it.each(invalidRequests)('Call isConnectionOpened with invalid request: %s', async (invalidRequest) => {
     expect.assertions(1);
     // @ts-ignore
     return expect(connection.isConnectionOpened(invalidRequest)).toBeFalsy();
