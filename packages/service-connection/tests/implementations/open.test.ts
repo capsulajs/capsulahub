@@ -3,7 +3,7 @@ import { Connection as ConnectionInterface, ConnectionEvent } from '../../src/ap
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
 import { messages } from '../../src/consts';
 
-describe.each(providers)('ConnectionService (%s) close method test suite', (provider) => {
+describe.each(providers)('ConnectionService (%s) open method test suite', (provider) => {
   let connection: ConnectionInterface;
   const { envKey, endpoint } = defaultRequests[provider];
 
@@ -20,30 +20,27 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
     }
   });
 
-  it.only('Calling open with a valid request', (done) => {
-    connection.open({ envKey, endpoint }).then((data) => {
-      console.log('data', data);
-      done();
+  it('Calling open with a valid request', async (done) => {
+    expect.assertions(3);
+    let count = 0;
+    connection.events$({}).subscribe((event: ConnectionEvent) => {
+      switch (count) {
+        case 0:
+          expect(event.type).toBe(eventTypes.connectionStarted);
+          break;
+        case 1:
+          expect(event.type).toBe(eventTypes.connectionCompleted);
+          done();
+          break;
+      }
+      count = count + 1;
     });
-    // expect.assertions(3);
-    // let count = 0;
-    // connection.events$({}).subscribe((event: ConnectionEvent) => {
-    //   switch (count) {
-    //     case 0:
-    //       expect(event.type).toBe(eventTypes.connectionStarted);
-    //       break;
-    //     case 1:
-    //       expect(event.type).toBe(eventTypes.connectionCompleted);
-    //       break;
-    //   }
-    //   count = count + 1;
-    // });
-    // connection.open({ envKey, endpoint }).then(() => expect(connection.isConnectionOpened({ envKey })).toBeTruthy());
+    connection.open({ envKey, endpoint }).then(() => expect(connection.isConnectionOpened({ envKey })).toBeTruthy());
   });
 
   const invalidValues = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
 
-  it.each(invalidValues)('Calling open with an invalid envKey: %s', async (invalidEnvKey) => {
+  it.only.each(invalidValues)('Calling open with an invalid envKey: %s', async (invalidEnvKey) => {
     expect.assertions(1);
     // @ts-ignore
     return expect(connection.open({ envKey: invalidEnvKey, endpoint })).rejects.toBe(

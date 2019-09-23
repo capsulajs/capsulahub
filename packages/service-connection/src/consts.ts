@@ -14,22 +14,12 @@ export const messages = {
   invalidModel: 'The model should be "request/response" or "request/stream"',
 };
 
-/**
- * The readyState of WebSocket connection:
- * 'Connecting' - 0
- * 'Connected' - 1
- * 'Disconnecting' - 2
- * 'Disconnected' - 3
- */
-export const wsReadyStates = {
-  connecting: 'Connecting',
-  connected: 'Connected',
-  disconnecting: 'Disconnecting',
-  disconnected: 'Disconnected',
-};
-
-export const connectionEventType = {
-  request: 'Request',
-  response: 'Response',
-  error: 'Error',
+export const eventTypes = {
+  connectionStarted: 'connectionStarted',
+  connectionCompleted: 'connectionCompleted',
+  disconnectionStarted: 'disconnectionStarted',
+  disconnectionCompleted: 'disconnectionCompleted',
+  error: 'error',
+  messageSent: 'messageSent',
+  messageReceived: 'messageReceived',
 };
