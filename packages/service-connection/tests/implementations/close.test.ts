@@ -20,30 +20,29 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
     }
   });
 
-  it('Calling close with a valid request', async () => {
+  it('Calling close with a valid request', async (done) => {
     expect.assertions(5);
     let count = 0;
     connection.events$({}).subscribe((event: ConnectionEvent) => {
+      count++;
       switch (count) {
-        case 0:
+        case 1:
           expect(event.type).toBe(eventTypes.connectionStarted);
           break;
-        case 1:
+        case 2:
           expect(event.type).toBe(eventTypes.connectionCompleted);
           break;
-        case 2:
+        case 3:
           expect(event.type).toBe(eventTypes.disconnectionStarted);
           break;
-        case 3:
+        case 4:
           expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          done();
           break;
       }
-      count = count + 1;
     });
     await connection.open({ envKey, endpoint });
-    connection.close({ envKey }).then(() => {
-      expect(connection.isConnectionOpened({ envKey })).toBeFalsy();
-    });
+    return expect(connection.close({ envKey })).resolves.toEqual(undefined);
   });
 
   const invalidRequests = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
@@ -52,22 +51,37 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
     // @ts-ignore
-    return expect(connection.close(invalidRequest)).rejects.toBe(new Error(messages.invalidRequest));
+    return expect(connection.close({ invalidRequest })).rejects.toEqual(new Error(messages.invalidRequest));
   });
 
-  it('Calling close when no connection has been currently established', async () => {
+  it('Calling close when no connection has been currently established', () => {
     expect.assertions(1);
-    return expect(connection.close({ envKey })).rejects.toBe(new Error(messages.noConnection(envKey)));
+    return expect(connection.close({ envKey })).rejects.toEqual(new Error(messages.noConnection(envKey)));
   });
 
-  it('Calling close when there is a "pending closing of connection"', async () => {
-    expect.assertions(1);
+  it('Calling close when there is a "pending closing of connection"', async (done) => {
+    expect.assertions(6);
+    let count = 0;
     connection.events$({}).subscribe((event: ConnectionEvent) => {
-      if (event.type === eventTypes.disconnectionStarted) {
-        return expect(connection.close({ envKey })).rejects.toBe(new Error(messages.pendingDisconnection(envKey)));
+      count++;
+      switch (count) {
+        case 1:
+          expect(event.type).toBe(eventTypes.connectionStarted);
+          break;
+        case 2:
+          expect(event.type).toBe(eventTypes.connectionCompleted);
+          break;
+        case 3:
+          expect(event.type).toBe(eventTypes.disconnectionStarted);
+          break;
+        case 4:
+          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          done();
+          break;
       }
     });
     await connection.open({ envKey, endpoint });
-    return expect(connection.close({ envKey })).resolves;
+    connection.close({ envKey }).then((response) => expect(response).toEqual(undefined));
+    return expect(connection.close({ envKey })).rejects.toEqual(new Error(messages.pendingDisconnection(envKey)));
   });
 });
