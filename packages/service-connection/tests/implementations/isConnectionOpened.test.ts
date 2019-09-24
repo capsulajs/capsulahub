@@ -44,6 +44,6 @@ describe.each(providers)('ConnectionService (%s) isConnectionOpened method test 
   it.each(invalidRequests)('Call isConnectionOpened with invalid request: %s', async (invalidRequest) => {
     expect.assertions(1);
     // @ts-ignore
-    return expect(connection.isConnectionOpened(invalidRequest)).toBeFalsy();
+    return expect(connection.isConnectionOpened({ invalidRequest })).toBeFalsy();
   });
 });

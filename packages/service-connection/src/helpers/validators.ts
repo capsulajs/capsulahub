@@ -1,4 +1,4 @@
-import { CloseConnectionRequest, OpenConnectionRequest } from '../api';
+import { CloseConnectionRequest, OpenConnectionRequest, SendMessageRequest } from '../api';
 
 // const isRSocketModelValid = model => model === 'request/response' || model === 'request/stream';
 
@@ -9,5 +9,9 @@ export const isOpenReqValid = (request: OpenConnectionRequest) => {
 };
 
 export const isCloseReqValid = (request: CloseConnectionRequest) => {
+  return request.envKey && isNonEmptyString(request.envKey);
+};
+
+export const isSendReqValid = (request: SendMessageRequest) => {
   return request.envKey && isNonEmptyString(request.envKey);
 };

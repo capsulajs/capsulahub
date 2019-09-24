@@ -11,7 +11,7 @@ import {
   SendMessageRequest,
 } from '../api';
 import { eventTypes, messages } from '../consts';
-import { isCloseReqValid, isOpenReqValid } from '../helpers/validators';
+import { isCloseReqValid, isOpenReqValid, isSendReqValid } from '../helpers/validators';
 
 export default class WebSocketConnection implements ConnectionInterface {
   private connections: {
@@ -75,9 +75,14 @@ export default class WebSocketConnection implements ConnectionInterface {
   };
 
   public send = (sendMessageRequest: SendMessageRequest): Promise<void> => {
-    const { envKey, data } = sendMessageRequest;
-    const connection = this.connections[envKey] || undefined;
     return new Promise((resolve, reject) => {
+      if (!isSendReqValid(sendMessageRequest)) {
+        return reject(new Error(messages.invalidRequest));
+      }
+
+      const { envKey, data } = sendMessageRequest;
+      const connection = this.connections[envKey] || undefined;
+
       if (
         (connection && connection.readyState === eventTypes.disconnectionStarted) ||
         !connection ||
