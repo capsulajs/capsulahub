@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
 
 export type EventType =
-  | 'connectionStarted'
-  | 'connectionCompleted'
-  | 'disconnectionStarted'
-  | 'disconnectionCompleted'
+  | 'connecting'
+  | 'connected'
+  | 'disconnecting'
+  | 'disconnected'
   | 'error'
   | 'messageSent'
   | 'messageReceived';

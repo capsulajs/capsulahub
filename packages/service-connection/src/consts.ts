@@ -15,10 +15,10 @@ export const messages = {
 };
 
 export const eventTypes = {
-  connectionStarted: 'connectionStarted',
-  connectionCompleted: 'connectionCompleted',
-  disconnectionStarted: 'disconnectionStarted',
-  disconnectionCompleted: 'disconnectionCompleted',
+  connectionStarted: 'connecting',
+  connectionCompleted: 'connected',
+  disconnectionStarted: 'disconnecting',
+  disconnectionCompleted: 'disconnected',
   error: 'error',
   messageSent: 'messageSent',
   messageReceived: 'messageReceived',
