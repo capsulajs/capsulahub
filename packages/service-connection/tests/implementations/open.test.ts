@@ -1,6 +1,7 @@
 import { defaultRequests, providers } from '../consts';
 import { Connection as ConnectionInterface, ConnectionEvent } from '../../src/api';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
+import RSocketConnection from '../../src/providers/RSocketConnection';
 import { eventTypes, messages } from '../../src/consts';
 
 describe.each(providers)('ConnectionService (%s) open method test suite', (provider) => {
@@ -13,14 +14,14 @@ describe.each(providers)('ConnectionService (%s) open method test suite', (provi
         connection = new WebSocketConnection();
         break;
       case 'rsocket':
-        // connection = new RSocketConnection();
+        connection = new RSocketConnection();
         break;
       default:
         return new Error(messages.noProvider);
     }
   });
 
-  it('Calling open with a valid request', (done) => {
+  it.only('Calling open with a valid request', (done) => {
     expect.assertions(3);
     let count = 0;
     connection.events$({}).subscribe((event: ConnectionEvent) => {

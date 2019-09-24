@@ -49,11 +49,6 @@ export interface Connection {
    * An Observable, that will emit all the possible events
    */
   events$(events$Request: Events$Request): Observable<ConnectionEvent>;
-  /**
-   * Checks if a provided connection is active
-   * Will throw an error if a request is not correct
-   */
-  isConnectionOpened(isConnectedRequest: IsConnectedRequest): boolean;
 }
 
 export interface OpenConnectionRequest {
@@ -72,10 +67,6 @@ export interface SendMessageRequest {
 }
 
 export interface Events$Request {}
-
-export interface IsConnectedRequest {
-  envKey: string;
-}
 
 export interface ConnectionEvent {
   type: EventType;

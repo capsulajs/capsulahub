@@ -26,6 +26,8 @@
     "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3",
     "@capsulajs/capsulajs-configuration-service": "latest",
     "@capsulajs/capsulajs-transport-providers": "latest",
+    "rsocket-core": "^0.0.10",
+    "rsocket-websocket-client": "^0.0.10",
     "rxjs": "6.5.2"
   }
 }

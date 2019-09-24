@@ -5,7 +5,6 @@ import {
   CloseConnectionRequest,
   SendMessageRequest,
   Events$Request,
-  IsConnectedRequest,
   ConnectionEvent,
 } from './Connection';
 
@@ -20,7 +19,6 @@ export {
   CloseConnectionRequest,
   SendMessageRequest,
   Events$Request,
-  IsConnectedRequest,
   ConnectionEvent,
   ConnectionConfig,
   Provider,

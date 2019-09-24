@@ -1,5 +1,9 @@
 import { Subject } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
+// @ts-ignore
+import RSocketWebSocketClient from 'rsocket-websocket-client';
+// @ts-ignore
+import { RSocketClient, JsonSerializers } from 'rsocket-core';
 import {
   CloseConnectionRequest,
   Connection as ConnectionInterface,
@@ -12,9 +16,9 @@ import {
 import { eventTypes, messages } from '../consts';
 import { isCloseReqValid, isOpenReqValid, isSendReqValid } from '../helpers/validators';
 
-export default class WebSocketConnection implements ConnectionInterface {
+export default class RSocketConnection implements ConnectionInterface {
   private connections: {
-    [envKey: string]: { connectedWs: Promise<WebSocket>; wsDisconnected: Promise<void>; readyState: any };
+    [envKey: string]: { connectedRs: Promise<any>; client: RSocketClient; readyState: any };
   };
   private readonly receivedEvents$: Subject<ConnectionEvent>;
 
@@ -63,13 +67,10 @@ export default class WebSocketConnection implements ConnectionInterface {
 
       this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionStarted };
       this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionStarted as Partial<EventType> });
-
-      return connection.connectedWs
-        .then((ws) => {
-          ws.close();
-        })
-        .then(() => connection.wsDisconnected)
-        .then(resolve);
+      this.connections[envKey].client.close();
+      this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
+      this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionCompleted as Partial<EventType> });
+      resolve();
     });
   };
 
@@ -79,7 +80,7 @@ export default class WebSocketConnection implements ConnectionInterface {
         return reject(new Error(messages.invalidRequest));
       }
 
-      const { envKey, data } = sendMessageRequest;
+      const { envKey, model, data } = sendMessageRequest;
       const connection = this.connections[envKey] || undefined;
 
       if (
@@ -90,10 +91,55 @@ export default class WebSocketConnection implements ConnectionInterface {
         return reject(new Error(messages.noConnection(envKey)));
       }
 
-      return this.connections[envKey].connectedWs.then((ws) => {
-        ws.send(typeof data === 'string' ? data : JSON.stringify(data));
-        this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
-        resolve();
+      this.connections[envKey].connectedRs.then((socket) => {
+        const formattedData = typeof data === 'string' ? data : JSON.stringify(data);
+        if (model === 'request/response') {
+          socket.requestResponse({ data: formattedData }).subscribe({
+            onComplete: (response: any) => {
+              this.receivedEvents$.next({
+                envKey,
+                data: response || '',
+                type: eventTypes.messageReceived as Partial<EventType>,
+              });
+            },
+            onError: (error: Error) => {
+              this.receivedEvents$.next({
+                envKey,
+                data: error.message,
+                type: eventTypes.error as Partial<EventType>,
+              });
+            },
+          });
+          this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
+          resolve();
+        } else if (model === 'request/stream') {
+          socket
+            .requestStream({
+              data: formattedData,
+            })
+            .subscribe({
+              onSubscribe(subscription: any) {
+                subscription.request(2147483647);
+              },
+              onNext: (response: any) => {
+                this.receivedEvents$.next({
+                  envKey,
+                  data: response || '',
+                  type: eventTypes.messageReceived as Partial<EventType>,
+                });
+              },
+              onComplete: () => {
+                console.log('request/stream has been completed');
+              },
+              onError: (error: Error) => {
+                this.receivedEvents$.next({
+                  envKey,
+                  data: error.message,
+                  type: eventTypes.error as Partial<EventType>,
+                });
+              },
+            });
+        }
       });
     });
   };
@@ -105,11 +151,22 @@ export default class WebSocketConnection implements ConnectionInterface {
   private createNewConnection = ({ envKey, endpoint }: OpenConnectionRequest): Promise<void> => {
     return new Promise((resolve, reject) => {
       try {
-        const ws = new WebSocket(endpoint);
+        let socket: any;
+        const client = new RSocketClient({
+          serializers: JsonSerializers,
+          setup: {
+            dataMimeType: 'application/json',
+            keepAlive: 100000,
+            lifetime: 100000,
+            metadataMimeType: 'application/json',
+          },
+          transport: new RSocketWebSocketClient({ url: endpoint }),
+        });
+
         const receivedEventsForCurrentConnection$ = this.receivedEvents$.pipe(
           filter((event: ConnectionEvent) => event.envKey === envKey)
         );
-        const connectedWs = new Promise<WebSocket>((resolveWithWs, rejectConnection) => {
+        const connectedRs = new Promise<any>((resolveWithRs, rejectConnection) => {
           receivedEventsForCurrentConnection$
             .pipe(
               filter(
@@ -121,7 +178,7 @@ export default class WebSocketConnection implements ConnectionInterface {
             .subscribe((event) => {
               switch (event.type) {
                 case eventTypes.connectionCompleted: {
-                  resolveWithWs(ws);
+                  resolveWithRs(socket);
                   break;
                 }
                 case eventTypes.error: {
@@ -131,56 +188,32 @@ export default class WebSocketConnection implements ConnectionInterface {
               }
             });
         });
-        const wsDisconnected = new Promise<void>((resolveWhenDisconnected) => {
-          receivedEventsForCurrentConnection$
-            .pipe(
-              filter((event: ConnectionEvent) => event.type === eventTypes.disconnectionCompleted),
-              first()
-            )
-            .subscribe(() => {
-              resolveWhenDisconnected();
-            });
-        });
 
         this.connections = {
           ...this.connections,
-          [envKey]: { connectedWs, wsDisconnected, readyState: eventTypes.connectionStarted },
+          [envKey]: { connectedRs, client, readyState: eventTypes.connectionStarted },
         };
         this.receivedEvents$.next({ envKey, type: eventTypes.connectionStarted as Partial<EventType> });
 
-        ws.onopen = () => {
-          this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.connectionCompleted };
-          this.receivedEvents$.next({ envKey, type: eventTypes.connectionCompleted as Partial<EventType> });
-          resolve();
-        };
-
-        ws.onmessage = (event: MessageEvent) => {
-          this.receivedEvents$.next({
-            envKey,
-            data: event.data || '',
-            type: eventTypes.messageReceived as Partial<EventType>,
-          });
-        };
-
-        ws.onerror = (event: Event) => {
-          this.receivedEvents$.next({
-            envKey,
-            data: event,
-            type: eventTypes.error as Partial<EventType>,
-          });
-          this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
-        };
-
-        ws.onclose = () => {
-          this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
-          this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionCompleted as Partial<EventType> });
-        };
+        client.connect().subscribe({
+          onComplete: (rsSocket: any) => {
+            socket = rsSocket;
+            this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.connectionCompleted };
+            this.receivedEvents$.next({ envKey, type: eventTypes.connectionCompleted as Partial<EventType> });
+            resolve();
+          },
+          onError: (error: Error) => {
+            this.receivedEvents$.next({
+              envKey,
+              data: error.message,
+              type: eventTypes.error as Partial<EventType>,
+            });
+            this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
+            console.log('Connection to rsocket has failed', error);
+            reject(new Error(`RSocket Connection error: ${error.message}`));
+          },
+        });
       } catch (error) {
-        // this.receivedEvents$.next({
-        //   envKey,
-        //   data: error.message,
-        //   type: eventTypes.error as Partial<EventType>,
-        // });
         this.connections[envKey].readyState = eventTypes.disconnectionCompleted;
         reject(messages.connectionError);
       }

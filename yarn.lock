@@ -13703,6 +13703,16 @@ rsocket-types@^0.0.10:
     fbjs "^0.8.12"
     rsocket-flowable "^0.0.10"
 
+rsocket-websocket-client@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/rsocket-websocket-client/-/rsocket-websocket-client-0.0.10.tgz#2e1379dd017125cbe46a64a15986241f18e9d2df"
+  integrity sha512-l/BTSgfhL/Cg4mCCRcYq3IP/oagWY+HJJKRWAtzOHFJs/W1/MYajmJCzdIqp5czrGnUwQ3JSLvShGeknNLwNdQ==
+  dependencies:
+    fbjs "^0.8.12"
+    rsocket-core "^0.0.10"
+    rsocket-flowable "^0.0.10"
+    rsocket-types "^0.0.10"
+
 rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"

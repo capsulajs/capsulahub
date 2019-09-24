@@ -2,6 +2,7 @@ import { API } from '@capsulajs/capsulahub-workspace';
 import { Connection, ConnectionConfig } from './api';
 import { messages } from './consts';
 import WebSocketConnection from './providers/WebSocketConnection';
+import RSocketConnection from './providers/RSocketConnection';
 
 export default (workspace: API.Workspace, serviceConfig: ConnectionConfig) => {
   return new Promise((resolve, reject) => {
@@ -14,8 +15,7 @@ export default (workspace: API.Workspace, serviceConfig: ConnectionConfig) => {
         connectionService = new WebSocketConnection();
         break;
       case 'rsocket':
-        console.info('not ready yet');
-        // bootstrap(new RSocketConnection(), workspace);
+        connectionService = new RSocketConnection();
         break;
       default:
         connectionService = undefined;

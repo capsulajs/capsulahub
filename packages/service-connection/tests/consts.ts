@@ -1,9 +1,10 @@
-export const providers = ['websocket'];
+export const providers = ['rsocket'];
+// export const providers = ['websocket'];
 // export const providers = ['websocket', 'rsocket'];
 
 const endpoints = {
   websocket: 'wss://echo.websocket.org',
-  rsocket: '',
+  rsocket: 'wss://configuration-service-staging-rs.genesis.om2.com',
 };
 
 export const defaultRequests: { [key: string]: any } = {
@@ -17,10 +18,10 @@ export const rsocketModels = {
 };
 
 export const eventTypes = {
-  connectionStarted: 'connectionStarted',
-  connectionCompleted: 'connectionCompleted',
-  disconnectionStarted: 'disconnectionStarted',
-  disconnectionCompleted: 'disconnectionCompleted',
+  connectionStarted: 'connecting',
+  connectionCompleted: 'connected',
+  disconnectionStarted: 'disconnecting',
+  disconnectionCompleted: 'disconnected',
   error: 'error',
   messageSent: 'messageSent',
   messageReceived: 'messageReceived',
