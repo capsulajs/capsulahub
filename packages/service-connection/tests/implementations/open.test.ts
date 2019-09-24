@@ -40,10 +40,10 @@ describe.each(providers)('ConnectionService (%s) open method test suite', (provi
 
   const invalidValues = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
 
-  it.only.each(invalidValues)('Calling open with an invalid envKey: %s', async (invalidEnvKey) => {
+  it.each(invalidValues)('Calling open with an invalid envKey: %s', async (invalidEnvKey) => {
     expect.assertions(1);
     // @ts-ignore
-    return expect(connection.open({ envKey: invalidEnvKey, endpoint })).rejects.toBe(
+    return expect(connection.open({ envKey: invalidEnvKey, endpoint })).rejects.toEqual(
       new Error(messages.invalidRequest)
     );
   });
@@ -51,12 +51,12 @@ describe.each(providers)('ConnectionService (%s) open method test suite', (provi
   it.each(invalidValues)('Calling open with an invalid endpoint: %s', async (invalidEndPoint) => {
     expect.assertions(1);
     // @ts-ignore
-    return expect(connection.open({ envKey, endpoint: invalidEndPoint })).rejects.toBe(
+    return expect(connection.open({ envKey, endpoint: invalidEndPoint })).rejects.toEqual(
       new Error(messages.invalidRequest)
     );
   });
 
-  it('Calling open with a valid request and an error while establishing the connection occurs', async () => {
+  it.only('Calling open with a valid request and an error while establishing the connection occurs', async (done) => {
     expect.assertions(4);
     let count = 0;
     connection.events$({}).subscribe((event: ConnectionEvent) => {
@@ -66,6 +66,7 @@ describe.each(providers)('ConnectionService (%s) open method test suite', (provi
           break;
         case 1:
           expect(event.type).toBe(eventTypes.error);
+          done();
           break;
       }
       count = count + 1;

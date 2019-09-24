@@ -1,10 +1,10 @@
-import { mockIsConnectionOpenedResponse, mockConfig } from '../helpers/wsMock';
+// import { mockIsConnectionOpenedResponse, mockConfig } from '../helpers/wsMock';
 import { Connection as ConnectionInterface } from '../../src/api';
 import { defaultRequests, providers } from '../consts';
-import { messages, wsReadyStates } from '../../src/consts';
+import { messages } from '../../src/consts';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
 
-describe.each(providers)('ConnectionService (%s) close method test suite', (provider) => {
+describe.each(providers)('ConnectionService (%s) isConnectionOpened method test suite', (provider) => {
   let connection: ConnectionInterface;
   const { envKey, endpoint } = defaultRequests[provider];
 
@@ -34,8 +34,8 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
 
   it('Call isConnectionOpened method when connection is pending', async () => {
     expect.assertions(1);
-    mockConfig(true);
-    mockIsConnectionOpenedResponse(wsReadyStates.connecting);
+    // mockConfig(true);
+    // mockIsConnectionOpenedResponse(wsReadyStates.connecting);
     return expect(connection.isConnectionOpened({ envKey })).toBeFalsy();
   });
 

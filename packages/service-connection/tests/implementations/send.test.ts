@@ -3,7 +3,7 @@ import { Connection as ConnectionInterface, ConnectionEvent, SendMessageRequest 
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
 import { messages } from '../../src/consts';
 
-describe.each(providers)('ConnectionService (%s) close method test suite', (provider) => {
+describe.each(providers)('ConnectionService (%s) send method test suite', (provider) => {
   let connection: ConnectionInterface;
   const { envKey, endpoint, data } = defaultRequests[provider];
 

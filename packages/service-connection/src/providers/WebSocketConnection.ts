@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import {
   CloseConnectionRequest,
   Connection as ConnectionInterface,
@@ -9,7 +10,7 @@ import {
   SendMessageRequest,
 } from '../api';
 import { eventTypes, messages } from '../consts';
-import { Subject } from 'rxjs';
+import { isOpenReqValid } from '../helpers/validators';
 
 export default class WebSocketConnection implements ConnectionInterface {
   private connections: { [envKey: string]: { ws?: WebSocket; readyState: any } };
@@ -21,9 +22,15 @@ export default class WebSocketConnection implements ConnectionInterface {
   }
 
   public open = (openConnectionRequest: OpenConnectionRequest): Promise<void> => {
-    const { envKey, endpoint } = openConnectionRequest;
-    const connection = this.connections[envKey] || undefined;
     return new Promise((resolve, reject) => {
+      const { envKey, endpoint } = openConnectionRequest;
+      const connection = this.connections[envKey] || undefined;
+
+      console.info('@@@@@', !isOpenReqValid(openConnectionRequest));
+      if (!isOpenReqValid(openConnectionRequest)) {
+        reject(new Error(messages.invalidRequest));
+      }
+
       if (connection && connection.readyState === eventTypes.connectionStarted) {
         reject(new Error(messages.pendingConnection(envKey)));
       }
@@ -108,6 +115,7 @@ export default class WebSocketConnection implements ConnectionInterface {
             data: event,
             type: eventTypes.error as Partial<EventType>,
           });
+          this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
         };
 
         ws.onclose = () => {
