@@ -56,7 +56,7 @@ describe.each(providers)('ConnectionService (%s) open method test suite', (provi
     );
   });
 
-  it.only('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
+  it.skip('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
     expect.assertions(3);
     let count = 0;
     connection.events$({}).subscribe((event: ConnectionEvent) => {
