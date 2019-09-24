@@ -24,7 +24,7 @@ export default (workspace: API.Workspace, serviceConfig: ConnectionConfig) => {
     }
 
     workspace.registerService({
-      serviceName: 'ConnectionService',
+      serviceName: serviceConfig.serviceName,
       reference: connectionService,
     });
 
