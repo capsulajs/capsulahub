@@ -1,4 +1,5 @@
 import { Subject } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
 import {
   CloseConnectionRequest,
   Connection as ConnectionInterface,
@@ -13,7 +14,9 @@ import { eventTypes, messages } from '../consts';
 import { isOpenReqValid } from '../helpers/validators';
 
 export default class WebSocketConnection implements ConnectionInterface {
-  private connections: { [envKey: string]: { ws?: WebSocket; readyState: any } };
+  private connections: {
+    [envKey: string]: { connectedWs: Promise<WebSocket>; wsDisconnected: Promise<void>; readyState: any };
+  };
   private readonly receivedEvents$: Subject<ConnectionEvent>;
 
   constructor() {
@@ -26,20 +29,19 @@ export default class WebSocketConnection implements ConnectionInterface {
       const { envKey, endpoint } = openConnectionRequest;
       const connection = this.connections[envKey] || undefined;
 
-      console.info('@@@@@', !isOpenReqValid(openConnectionRequest));
       if (!isOpenReqValid(openConnectionRequest)) {
-        reject(new Error(messages.invalidRequest));
+        return reject(new Error(messages.invalidRequest));
       }
-
       if (connection && connection.readyState === eventTypes.connectionStarted) {
-        reject(new Error(messages.pendingConnection(envKey)));
+        return reject(new Error(messages.pendingConnection(envKey)));
       }
       if (connection && connection.readyState === eventTypes.connectionCompleted) {
-        reject(new Error(messages.alreadyConnected(envKey)));
+        return reject(new Error(messages.alreadyConnected(envKey)));
       }
-      this.createNewConnection({ envKey, endpoint })
-        .then(() => resolve())
-        .catch((error) => reject(error));
+
+      return this.createNewConnection({ envKey, endpoint })
+        .then(resolve)
+        .catch(reject);
     });
   };
 
@@ -48,13 +50,19 @@ export default class WebSocketConnection implements ConnectionInterface {
     const connection = this.connections[envKey] || undefined;
     return new Promise((resolve, reject) => {
       if (connection && connection.readyState === eventTypes.disconnectionStarted) {
-        reject(new Error(messages.pendingDisconnection(envKey)));
+        return reject(new Error(messages.pendingDisconnection(envKey)));
       }
       if (!connection || connection.readyState === eventTypes.disconnectionCompleted) {
-        reject(new Error(messages.noConnection(envKey)));
+        return reject(new Error(messages.noConnection(envKey)));
       }
-      !!this.connections[envKey].ws && this.connections[envKey].ws!.close();
-      resolve();
+
+      return connection.connectedWs
+        .then((ws) => {
+          ws.close();
+          this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionStarted as Partial<EventType> });
+        })
+        .then(() => connection.wsDisconnected)
+        .then(resolve);
     });
   };
 
@@ -67,20 +75,19 @@ export default class WebSocketConnection implements ConnectionInterface {
         !connection ||
         connection.readyState === eventTypes.disconnectionCompleted
       ) {
-        reject(new Error(messages.noConnection(envKey)));
+        return reject(new Error(messages.noConnection(envKey)));
       }
-      // if (connection && connection.readyState === wsReadyStates.connecting) {
-      //   this.send(sendMessageRequest).catch(() => reject(new Error(messages.failedToSend)));
-      // }
-      !!this.connections[envKey].ws &&
-        this.connections[envKey].ws!.send(typeof data === 'string' ? data : JSON.stringify(data));
-      this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
-      resolve();
+
+      return this.connections[envKey].connectedWs.then((ws) => {
+        ws.send(typeof data === 'string' ? data : JSON.stringify(data));
+        this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
+        resolve();
+      });
     });
   };
 
   public events$ = (_: Events$Request) => {
-    return this.receivedEvents$;
+    return this.receivedEvents$.asObservable();
   };
 
   public isConnectionOpened = (isConnectedRequest: IsConnectedRequest) => {
@@ -88,11 +95,50 @@ export default class WebSocketConnection implements ConnectionInterface {
     return !!this.connections[envKey] && this.connections[envKey].readyState === eventTypes.connectionCompleted;
   };
 
-  private createNewConnection = ({ envKey, endpoint }: OpenConnectionRequest) => {
+  private createNewConnection = ({ envKey, endpoint }: OpenConnectionRequest): Promise<void> => {
     return new Promise((resolve, reject) => {
       try {
         const ws = new WebSocket(endpoint);
-        this.connections = { ...this.connections, [envKey]: { ws, readyState: eventTypes.connectionStarted } };
+        const receivedEventsForCurrentConnection$ = this.receivedEvents$.pipe(
+          filter((event: ConnectionEvent) => event.envKey === envKey)
+        );
+        const connectedWs = new Promise<WebSocket>((resolveWithWs, rejectConnection) => {
+          receivedEventsForCurrentConnection$
+            .pipe(
+              filter(
+                (event: ConnectionEvent) =>
+                  event.type === eventTypes.connectionCompleted || event.type === eventTypes.error
+              ),
+              first()
+            )
+            .subscribe((event) => {
+              switch (event.type) {
+                case eventTypes.connectionCompleted: {
+                  resolveWithWs(ws);
+                  break;
+                }
+                case eventTypes.error: {
+                  rejectConnection(event.data);
+                  break;
+                }
+              }
+            });
+        });
+        const wsDisconnected = new Promise<void>((resolveWhenDisconnected) => {
+          receivedEventsForCurrentConnection$
+            .pipe(
+              filter((event: ConnectionEvent) => event.type === eventTypes.disconnectionCompleted),
+              first()
+            )
+            .subscribe(() => {
+              resolveWhenDisconnected();
+            });
+        });
+
+        this.connections = {
+          ...this.connections,
+          [envKey]: { connectedWs, wsDisconnected, readyState: eventTypes.connectionStarted },
+        };
         this.receivedEvents$.next({ envKey, type: eventTypes.connectionStarted as Partial<EventType> });
 
         ws.onopen = () => {
@@ -119,11 +165,16 @@ export default class WebSocketConnection implements ConnectionInterface {
         };
 
         ws.onclose = () => {
-          this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionStarted as Partial<EventType> });
-          this.connections[envKey] = { ws: undefined, readyState: eventTypes.disconnectionCompleted };
+          this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
           this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionCompleted as Partial<EventType> });
         };
       } catch (error) {
+        // console.log('error in try catch', error);
+        // this.receivedEvents$.next({
+        //   envKey,
+        //   data: error.message,
+        //   type: eventTypes.error as Partial<EventType>,
+        // });
         this.connections[envKey].readyState = eventTypes.disconnectionCompleted;
         reject(error);
       }
