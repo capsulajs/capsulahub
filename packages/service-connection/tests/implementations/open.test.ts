@@ -1,7 +1,7 @@
-import { defaultRequests, eventTypes, providers } from '../consts';
+import { defaultRequests, providers } from '../consts';
 import { Connection as ConnectionInterface, ConnectionEvent } from '../../src/api';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
-import { messages } from '../../src/consts';
+import { eventTypes, messages } from '../../src/consts';
 
 describe.each(providers)('ConnectionService (%s) open method test suite', (provider) => {
   let connection: ConnectionInterface;

@@ -1,6 +1,6 @@
 import { Connection as ConnectionInterface, ConnectionEvent } from '../../src/api';
-import { defaultRequests, eventTypes, providers } from '../consts';
-import { messages } from '../../src/consts';
+import { defaultRequests, providers } from '../consts';
+import { eventTypes, messages } from '../../src/consts';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
 
 describe.each(providers)('ConnectionService (%s) close method test suite', (provider) => {
