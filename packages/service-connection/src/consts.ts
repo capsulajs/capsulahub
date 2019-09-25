@@ -1,4 +1,14 @@
-export const providers = ['websocket', 'rsocket'];
+import { AsyncModel, Provider } from './api';
+
+export const providers = {
+  websocket: 'websocket' as Provider,
+  rsocket: 'rsocket' as Provider,
+};
+
+export const asyncModels = {
+  requestResponse: 'requestResponse' as AsyncModel,
+  requestStream: 'requestResponse' as AsyncModel,
+};
 
 export const messages = {
   noProvider: 'The provider has not been specified.',

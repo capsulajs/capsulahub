@@ -60,10 +60,12 @@ export interface CloseConnectionRequest {
   envKey: string;
 }
 
+export type AsyncModel = 'requestResponse' | 'requestStream';
+
 export interface SendMessageRequest {
   envKey: string;
   data: any;
-  model?: 'request/response' | 'request/stream';
+  model?: AsyncModel;
 }
 
 export interface Events$Request {}

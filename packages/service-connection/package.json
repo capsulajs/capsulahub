@@ -29,5 +29,9 @@
     "rsocket-core": "^0.0.10",
     "rsocket-websocket-client": "^0.0.10",
     "rxjs": "6.5.2"
+  },
+  "devDependencies": {
+    "rsocket-flowable": "^0.0.10",
+    "rsocket-websocket-server": "^0.0.10"
   }
 }

@@ -1,6 +1,6 @@
-import Provider from './Provider';
+import { Provider } from '.';
 
-export default interface ConnectionConfig {
+export interface ConnectionConfig {
   provider: Provider;
   serviceName: string;
 }

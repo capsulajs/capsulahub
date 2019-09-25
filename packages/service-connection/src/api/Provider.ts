@@ -1,3 +1,1 @@
-type Provider = 'websocket' | 'rsocket';
-
-export default Provider;
+export type Provider = 'websocket' | 'rsocket';

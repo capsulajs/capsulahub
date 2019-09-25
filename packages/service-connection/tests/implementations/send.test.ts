@@ -1,24 +1,27 @@
-import { defaultRequests, providers, rsocketModels } from '../consts';
-import { Connection as ConnectionInterface, ConnectionEvent, SendMessageRequest } from '../../src/api';
-import WebSocketConnection from '../../src/providers/WebSocketConnection';
-import RSocketConnection from '../../src/providers/RSocketConnection';
-import { eventTypes, messages } from '../../src/consts';
+import { defaultRequests } from '../helpers/consts';
+import { Connection as ConnectionInterface, ConnectionEvent, Provider, SendMessageRequest } from '../../src/api';
+import { asyncModels, eventTypes, messages, providers } from '../../src/consts';
+import { startServer, stopServer } from '../helpers/rSocketServer';
+import { getConnectionProvider } from '../helpers/utils';
 
-describe.each(providers)('ConnectionService (%s) send method test suite', (provider) => {
+describe.each(Object.values(providers))('ConnectionService (%s) send method test suite', (provider) => {
   let connection: ConnectionInterface;
   const { envKey, endpoint, data } = defaultRequests[provider];
 
-  beforeEach(() => {
-    switch (provider) {
-      case 'websocket':
-        connection = new WebSocketConnection();
-        break;
-      case 'rsocket':
-        connection = new RSocketConnection();
-        break;
-      default:
-        return new Error(messages.noProvider);
+  beforeAll(() => {
+    if (provider === providers.rsocket) {
+      return startServer();
     }
+  });
+
+  afterAll(() => {
+    if (provider === providers.rsocket) {
+      return stopServer();
+    }
+  });
+
+  beforeEach(() => {
+    connection = getConnectionProvider(provider as Provider)!;
   });
 
   it(`Calling send with a valid request (${provider})`, async (done) => {
@@ -44,8 +47,8 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
     });
     await connection.open({ envKey, endpoint });
     let request = { envKey, data };
-    if (provider === 'rsocket') {
-      request = { ...request, model: rsocketModels.response } as SendMessageRequest;
+    if (provider === providers.rsocket) {
+      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
     }
 
     return expect(connection.send(request)).resolves.toEqual(undefined);
@@ -66,8 +69,8 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
     let request = { envKey, data };
     let count = 0;
 
-    if (provider === 'rsocket') {
-      request = { ...request, model: rsocketModels.response } as SendMessageRequest;
+    if (provider === providers.rsocket) {
+      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
     }
 
     connection.events$({}).subscribe((event: ConnectionEvent) => {
@@ -97,8 +100,8 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
   it.each(invalidValues)('Calling send with a invalid envKey', (invalidEnvKey) => {
     expect.assertions(1);
     let invalidRequest = { envKey: invalidEnvKey, data };
-    if (provider === 'rsocket') {
-      invalidRequest = { ...invalidRequest, model: rsocketModels.response } as SendMessageRequest;
+    if (provider === providers.rsocket) {
+      invalidRequest = { ...invalidRequest, model: asyncModels.requestResponse } as SendMessageRequest;
     }
     // @ts-ignore
     return expect(connection.send(invalidRequest)).rejects.toEqual(new Error(messages.invalidRequest));
@@ -119,8 +122,8 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
   it('Calling send when there is no open connection and "pending" state of connection', () => {
     expect.assertions(1);
     let request = { envKey, data };
-    if (provider === 'rsocket') {
-      request = { ...request, model: rsocketModels.response } as SendMessageRequest;
+    if (provider === providers.rsocket) {
+      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
     }
     return expect(connection.send(request)).rejects.toEqual(new Error(messages.noConnection(envKey)));
   });
@@ -130,8 +133,8 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
     expect.assertions(3);
     let count = 0;
     let request = { envKey, data };
-    if (provider === 'rsocket') {
-      request = { ...request, model: rsocketModels.response } as SendMessageRequest;
+    if (provider === providers.rsocket) {
+      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
     }
 
     connection.events$({}).subscribe((event: ConnectionEvent) => {
@@ -151,8 +154,8 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
   it('Calling send when "pending closing of connection" exists', async (done) => {
     expect.assertions(1);
     let request = { envKey, data };
-    if (provider === 'rsocket') {
-      request = { ...request, model: rsocketModels.response } as SendMessageRequest;
+    if (provider === providers.rsocket) {
+      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
     }
 
     await connection.open({ envKey, endpoint });

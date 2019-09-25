@@ -1,24 +1,14 @@
-import { defaultRequests, providers } from '../consts';
-import { Connection as ConnectionInterface, ConnectionEvent } from '../../src/api';
-import WebSocketConnection from '../../src/providers/WebSocketConnection';
-import RSocketConnection from '../../src/providers/RSocketConnection';
-import { eventTypes, messages } from '../../src/consts';
+import { defaultRequests } from '../helpers/consts';
+import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
+import { eventTypes, messages, providers } from '../../src/consts';
+import { getConnectionProvider } from '../helpers/utils';
 
-describe.each(providers)('ConnectionService (%s) open method test suite', (provider) => {
+describe.each(Object.values(providers))('ConnectionService (%s) open method test suite', (provider) => {
   let connection: ConnectionInterface;
   const { envKey, endpoint } = defaultRequests[provider];
 
   beforeEach(() => {
-    switch (provider) {
-      case 'websocket':
-        connection = new WebSocketConnection();
-        break;
-      case 'rsocket':
-        connection = new RSocketConnection();
-        break;
-      default:
-        return new Error(messages.noProvider);
-    }
+    connection = getConnectionProvider(provider as Provider)!;
   });
 
   it('Calling open with a valid request', (done) => {

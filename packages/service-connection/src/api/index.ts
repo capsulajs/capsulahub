@@ -1,17 +1,3 @@
-import {
-  EventType,
-  Connection,
-  OpenConnectionRequest,
-  CloseConnectionRequest,
-  SendMessageRequest,
-  Events$Request,
-  ConnectionEvent,
-} from './Connection';
-
-import ConnectionConfig from './ConnectionConfig';
-
-import Provider from './Provider';
-
 export {
   EventType,
   Connection,
@@ -20,6 +6,9 @@ export {
   SendMessageRequest,
   Events$Request,
   ConnectionEvent,
-  ConnectionConfig,
-  Provider,
-};
+  AsyncModel,
+} from './Connection';
+
+export { ConnectionConfig } from './ConnectionConfig';
+
+export { Provider } from './Provider';
