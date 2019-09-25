@@ -92,9 +92,9 @@ export default class RSocketConnection implements ConnectionInterface {
       }
 
       this.connections[envKey].connectedRs.then((socket) => {
-        const formattedData = typeof data === 'string' ? data : JSON.stringify(data);
+        const { d, ...metadata } = data;
         if (model === 'request/response') {
-          socket.requestResponse({ data: formattedData }).subscribe({
+          socket.requestResponse({ data: d, metadata }).subscribe({
             onComplete: (response: any) => {
               this.receivedEvents$.next({
                 envKey,
@@ -102,7 +102,9 @@ export default class RSocketConnection implements ConnectionInterface {
                 type: eventTypes.messageReceived as Partial<EventType>,
               });
             },
-            onError: (error: Error) => {
+            onError: (error: any) => {
+              console.log('onError send', error.source);
+
               this.receivedEvents$.next({
                 envKey,
                 data: error.message,
@@ -113,32 +115,28 @@ export default class RSocketConnection implements ConnectionInterface {
           this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
           resolve();
         } else if (model === 'request/stream') {
-          socket
-            .requestStream({
-              data: formattedData,
-            })
-            .subscribe({
-              onSubscribe(subscription: any) {
-                subscription.request(2147483647);
-              },
-              onNext: (response: any) => {
-                this.receivedEvents$.next({
-                  envKey,
-                  data: response || '',
-                  type: eventTypes.messageReceived as Partial<EventType>,
-                });
-              },
-              onComplete: () => {
-                console.log('request/stream has been completed');
-              },
-              onError: (error: Error) => {
-                this.receivedEvents$.next({
-                  envKey,
-                  data: error.message,
-                  type: eventTypes.error as Partial<EventType>,
-                });
-              },
-            });
+          socket.requestStream({ data: d, metadata }).subscribe({
+            onSubscribe(subscription: any) {
+              subscription.request(2147483647);
+            },
+            onNext: (response: any) => {
+              this.receivedEvents$.next({
+                envKey,
+                data: response || '',
+                type: eventTypes.messageReceived as Partial<EventType>,
+              });
+            },
+            onComplete: () => {
+              console.log('request/stream has been completed');
+            },
+            onError: (error: Error) => {
+              this.receivedEvents$.next({
+                envKey,
+                data: error.message,
+                type: eventTypes.error as Partial<EventType>,
+              });
+            },
+          });
         }
       });
     });

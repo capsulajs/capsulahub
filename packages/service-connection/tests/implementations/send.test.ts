@@ -1,6 +1,7 @@
 import { defaultRequests, providers, rsocketModels } from '../consts';
 import { Connection as ConnectionInterface, ConnectionEvent, SendMessageRequest } from '../../src/api';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
+import RSocketConnection from '../../src/providers/RSocketConnection';
 import { eventTypes, messages } from '../../src/consts';
 
 describe.each(providers)('ConnectionService (%s) send method test suite', (provider) => {
@@ -13,17 +14,19 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
         connection = new WebSocketConnection();
         break;
       case 'rsocket':
-        // connection = new RSocketConnection();
+        connection = new RSocketConnection();
         break;
       default:
         return new Error(messages.noProvider);
     }
   });
 
-  it(`Calling send with a valid request (${provider})`, async (done) => {
+  it.only(`Calling send with a valid request (${provider})`, async (done) => {
     expect.assertions(5);
     let count = 0;
     connection.events$({}).subscribe((event: ConnectionEvent) => {
+      console.log('event', event);
+
       count++;
       switch (count) {
         case 1:
@@ -44,7 +47,7 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
     await connection.open({ envKey, endpoint });
     let request = { envKey, data };
     if (provider === 'rsocket') {
-      request = { ...request, model: rsocketModels.response } as SendMessageRequest;
+      request = { ...request, model: rsocketModels.stream } as SendMessageRequest;
     }
 
     return expect(connection.send(request)).resolves.toEqual(undefined);
