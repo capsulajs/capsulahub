@@ -101,14 +101,14 @@ export default class RSocketConnection implements ConnectionInterface {
             onComplete: (response: any) => {
               this.receivedEvents$.next({
                 envKey,
-                data: response || '',
+                data: response.data || '',
                 type: eventTypes.messageReceived as Partial<EventType>,
               });
             },
             onError: (error: any) => {
               this.receivedEvents$.next({
                 envKey,
-                data: error.message,
+                data: error.source,
                 type: eventTypes.error as Partial<EventType>,
               });
             },
@@ -123,14 +123,14 @@ export default class RSocketConnection implements ConnectionInterface {
             onNext: (response: any) => {
               this.receivedEvents$.next({
                 envKey,
-                data: response || '',
+                data: response.data || '',
                 type: eventTypes.messageReceived as Partial<EventType>,
               });
             },
-            onError: (error: Error) => {
+            onError: (error: any) => {
               this.receivedEvents$.next({
                 envKey,
-                data: error.message,
+                data: error.source,
                 type: eventTypes.error as Partial<EventType>,
               });
             },
