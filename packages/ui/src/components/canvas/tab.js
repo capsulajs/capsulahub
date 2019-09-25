@@ -48,7 +48,7 @@ const Input = styled.input`
   }
 `;
 
-export default class Tab extends React.Component {
+export default class Tab extends React.PureComponent {
   static propTypes = {
     tab: PropTypes.object.isRequired,
     isActive: PropTypes.bool.isRequired,
@@ -79,7 +79,7 @@ export default class Tab extends React.Component {
   onDoubleClick = () => this.setState({ isEdit: true });
 
   renderContent() {
-    const { isHover, isEdit, value } = this.state;
+    const { isEdit, value } = this.state;
     const { tab, isActive } = this.props;
 
     if (isEdit) {
@@ -113,6 +113,7 @@ export default class Tab extends React.Component {
     return (
       <Container
         data-cy={`canvas-tab-${tab.id}`}
+        className="canvas-tab"
         isActive={isActive}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}

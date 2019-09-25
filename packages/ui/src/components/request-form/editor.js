@@ -20,6 +20,7 @@ export default class Editor extends React.Component {
   static propTypes = {
     index: PropTypes.number.isRequired,
     height: PropTypes.string.isRequired,
+    width: PropTypes.string.isRequired,
     mode: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onValid: PropTypes.func.isRequired,
@@ -48,8 +49,7 @@ export default class Editor extends React.Component {
   onLoad = (editor) => (this.editor = editor);
 
   render() {
-    const { height, mode, value, index, isLineVisible } = this.props;
-
+    const { height, width, mode, value, index, isLineVisible, isLineNumberVisible } = this.props;
     return (
       <EditorWrapper data-cy={`request-form-editor-${index}`}>
         <AceEditor
@@ -58,14 +58,16 @@ export default class Editor extends React.Component {
           value={value}
           onLoad={this.onLoad}
           onChange={this.onChange}
+          onPaste={this.props.onPaste}
           onValidate={this.onValid}
           fontSize={12}
           setOptions={{
+            showLineNumbers: isLineNumberVisible,
             tabSize: 2,
           }}
           editorProps={{ $blockScrolling: true }}
           height={height}
-          width="100%"
+          width={width}
           className="request-form-editor"
         />
         {isLineVisible && <Line />}

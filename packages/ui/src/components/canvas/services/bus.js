@@ -1,5 +1,5 @@
 import { map, mapTo, filter, switchMap, bufferCount } from 'rxjs/operators';
-import { Subject, fromEvent, merge, of, empty } from 'rxjs';
+import { Subject, fromEvent, merge, of } from 'rxjs';
 import dragover from './events/dragover';
 import drop from './events/drop';
 import { subjectToObservable } from './utils';

@@ -44,11 +44,11 @@ export default class Tabs extends React.Component {
   onRemove = (tabId) => bus.emit('remove', { tabId, nodeId: this.props.nodeId });
 
   renderDraggable(tab, index) {
-    const { nodeId, activeTabIndex } = this.props;
+    const { activeTabIndex } = this.props;
 
     return (
       <Draggable key={tab.id} draggableId={tab.id} index={index}>
-        {(provided, snapshot) => (
+        {(provided) => (
           <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
             <Tab
               tab={tab}
@@ -67,10 +67,15 @@ export default class Tabs extends React.Component {
     const { nodeId, tabs } = this.props;
 
     return (
-      <Container data-cy="canvas-tabs">
+      <Container className="canvas-tabs-container" data-cy="canvas-tabs">
         <Droppable droppableId={nodeId} direction="horizontal">
           {(provided) => (
-            <div ref={provided.innerRef} style={getListStyle()} {...provided.droppableProps}>
+            <div
+              ref={provided.innerRef}
+              className="canvas-tab-wrapper"
+              style={getListStyle()}
+              {...provided.droppableProps}
+            >
               {tabs.map((tab, index) => this.renderDraggable(tab, index))}
               {provided.placeholder}
             </div>

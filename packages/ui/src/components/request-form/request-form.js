@@ -92,7 +92,10 @@ export default class RequestForm extends PureComponent {
     isChangeLanguageVisible: PropTypes.bool,
     isChangeArgsCountVisible: PropTypes.bool,
     isSelectedMethodPathVisible: PropTypes.bool,
+    isLineNumberVisible: PropTypes.bool,
     title: PropTypes.string,
+    width: PropTypes.string,
+    height: PropTypes.string,
   };
 
   static defaultProps = {
@@ -107,7 +110,10 @@ export default class RequestForm extends PureComponent {
     isChangeLanguageVisible: true,
     isChangeArgsCountVisible: true,
     isSelectedMethodPathVisible: true,
+    isLineNumberVisible: true,
     title: 'Request Form',
+    width: '100%',
+    height: '100%',
   };
 
   state = {
@@ -119,6 +125,10 @@ export default class RequestForm extends PureComponent {
     argsCount: 1,
     editorsIsValid: [true],
     executionError: '',
+    // When a new content has been pasted, Editor does not recalculate the width in order to show the correct scrollbar
+    // So that we want to generate unique ID each time when "paste" event happens and use it as a key
+    // It will trigger the component to remount completely and recalculate the scrollbar
+    lastPastedContentTimestamp: `${Date.now()}`,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -182,11 +192,28 @@ export default class RequestForm extends PureComponent {
   };
 
   onChangeArgument = (index, newArgument) => {
-    this.setState((prevState) => {
-      const newArgs = [...prevState.requestArgs];
-      newArgs[index] = newArgument;
-      return { requestArgs: newArgs, executionError: '' };
-    });
+    this.setState(
+      (prevState) => {
+        const newArgs = [...prevState.requestArgs];
+        newArgs[index] = newArgument;
+        return { requestArgs: newArgs, executionError: '' };
+      },
+      () => {
+        const triggerRemountAfterPasting = () => {
+          this.contentHasBeenPasted = false;
+          // We need to simulate some delay after "paste" event occurs to give Editor some time to complete its
+          // inner formatting logic
+          setTimeout(() => {
+            this.setState({ lastPastedContentTimestamp: `${Date.now()}` });
+          }, 0);
+        };
+        this.contentHasBeenPasted && triggerRemountAfterPasting();
+      }
+    );
+  };
+
+  onPaste = () => {
+    this.contentHasBeenPasted = true;
   };
 
   onValid = ({ isValid, index }) =>
@@ -231,10 +258,12 @@ export default class RequestForm extends PureComponent {
       title,
       selectedMethodPath,
       isSelectedMethodPathVisible,
+      width,
+      isLineNumberVisible,
     } = this.props;
 
     return (
-      <Container theme={theme} data-cy="request-form-container">
+      <Container key={this.state.lastPastedContentTimestamp} theme={theme} data-cy="request-form-container">
         <Column>
           <Header data-cy="request-form-header">
             <Wrapper>
@@ -267,7 +296,7 @@ export default class RequestForm extends PureComponent {
             </Wrapper>
           </Header>
           {requestArgs.map((value, index) => {
-            let height = '100%';
+            let height = this.props.height;
             if (isChangeArgsCountVisible) {
               height = `${(defaultHeight - (65 + 2 * requestArgs.length)) / requestArgs.length}px`;
             }
@@ -278,9 +307,12 @@ export default class RequestForm extends PureComponent {
                 mode={language}
                 value={value}
                 onChange={this.onChangeArgument}
+                onPaste={this.onPaste}
                 onValid={this.onValid}
                 height={height}
+                width={width}
                 isLineVisible={index + 1 !== argsCount}
+                isLineNumberVisible={isLineNumberVisible}
               />
             );
           })}

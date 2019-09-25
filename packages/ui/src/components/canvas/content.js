@@ -16,7 +16,7 @@ const getListStyle = (isDraggingOver) => ({
   height: '100%',
 });
 
-export default class Content extends React.Component {
+export default class Content extends React.PureComponent {
   static propTypes = {
     nodeId: PropTypes.string.isRequired,
     tabs: PropTypes.array.isRequired,
@@ -44,9 +44,20 @@ export default class Content extends React.Component {
         }
 
         return (
-          <Container data-cy={`canvas-node-${nodeId}`}>
+          <Container className="canvas-node" data-cy={`canvas-node-${nodeId}`}>
             <Tabs nodeId={nodeId} tabs={tabs} activeTabIndex={activeTabIndex} />
-            <div data-cy="canvas-content" dangerouslySetInnerHTML={{ __html: tab.content }} />
+            {typeof tab.content === 'string' && (
+              <div
+                className="canvas-node-content"
+                data-cy="canvas-content"
+                dangerouslySetInnerHTML={{ __html: tab.content }}
+              />
+            )}
+            {typeof tab.content === 'function' && (
+              <div className={`canvas-node-content ${tab.id}`} data-cy="canvas-content">
+                {tab.content()}
+              </div>
+            )}
           </Container>
         );
       }
