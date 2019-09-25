@@ -2,6 +2,7 @@ import { Connection as ConnectionInterface, ConnectionEvent } from '../../src/ap
 import { defaultRequests, providers } from '../consts';
 import { eventTypes, messages } from '../../src/consts';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
+import RSocketConnection from '../../src/providers/RSocketConnection';
 
 describe.each(providers)('ConnectionService (%s) close method test suite', (provider) => {
   let connection: ConnectionInterface;
@@ -13,7 +14,7 @@ describe.each(providers)('ConnectionService (%s) close method test suite', (prov
         connection = new WebSocketConnection();
         break;
       case 'rsocket':
-        // connection = new RSocketConnection();
+        connection = new RSocketConnection();
         break;
       default:
         return new Error(messages.noProvider);

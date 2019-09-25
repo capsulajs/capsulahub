@@ -21,12 +21,10 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
     }
   });
 
-  it.only(`Calling send with a valid request (${provider})`, async (done) => {
+  it(`Calling send with a valid request (${provider})`, async (done) => {
     expect.assertions(5);
     let count = 0;
     connection.events$({}).subscribe((event: ConnectionEvent) => {
-      console.log('event', event);
-
       count++;
       switch (count) {
         case 1:
@@ -47,19 +45,20 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
     await connection.open({ envKey, endpoint });
     let request = { envKey, data };
     if (provider === 'rsocket') {
-      request = { ...request, model: rsocketModels.stream } as SendMessageRequest;
+      request = { ...request, model: rsocketModels.response } as SendMessageRequest;
     }
 
     return expect(connection.send(request)).resolves.toEqual(undefined);
   });
 
-  it(`Calling send without providing model (${provider})`, async () => {
+  it(`Calling send without providing model (${provider})`, () => {
     if (provider !== 'rsocket') {
-      return true;
+      return Promise.resolve(true);
     }
     expect.assertions(1);
-    await connection.open({ envKey, endpoint });
-    return expect(connection.send({ envKey, data })).rejects.toBe(new Error(messages.modelRequired));
+    return connection
+      .open({ envKey, endpoint })
+      .then(() => expect(connection.send({ envKey, data })).rejects.toEqual(new Error(messages.invalidModel)));
   });
 
   it('Calling send when the connection is in "pending" state', (done) => {
@@ -113,7 +112,7 @@ describe.each(providers)('ConnectionService (%s) send method test suite', (provi
     await connection.open({ envKey, endpoint });
     // @ts-ignore
     return expect(connection.send({ envKey, model: invalidModel, data })).rejects.toEqual(
-      new Error(messages.invalidRequest)
+      new Error(messages.invalidModel)
     );
   });
 

@@ -14,7 +14,7 @@ import {
   SendMessageRequest,
 } from '../api';
 import { eventTypes, messages } from '../consts';
-import { isCloseReqValid, isOpenReqValid, isSendReqValid } from '../helpers/validators';
+import { isCloseReqValid, isOpenReqValid, isSendReqValid, isRSocketModelValid } from '../helpers/validators';
 
 export default class RSocketConnection implements ConnectionInterface {
   private connections: {
@@ -81,8 +81,12 @@ export default class RSocketConnection implements ConnectionInterface {
       }
 
       const { envKey, model, data } = sendMessageRequest;
-      const connection = this.connections[envKey] || undefined;
 
+      if (!isRSocketModelValid(model)) {
+        return reject(new Error(messages.invalidModel));
+      }
+
+      const connection = this.connections[envKey] || undefined;
       if (
         (connection && connection.readyState === eventTypes.disconnectionStarted) ||
         !connection ||
@@ -92,9 +96,8 @@ export default class RSocketConnection implements ConnectionInterface {
       }
 
       this.connections[envKey].connectedRs.then((socket) => {
-        const { d, ...metadata } = data;
         if (model === 'request/response') {
-          socket.requestResponse({ data: d, metadata }).subscribe({
+          socket.requestResponse({ data }).subscribe({
             onComplete: (response: any) => {
               this.receivedEvents$.next({
                 envKey,
@@ -103,8 +106,6 @@ export default class RSocketConnection implements ConnectionInterface {
               });
             },
             onError: (error: any) => {
-              console.log('onError send', error.source);
-
               this.receivedEvents$.next({
                 envKey,
                 data: error.message,
@@ -115,7 +116,7 @@ export default class RSocketConnection implements ConnectionInterface {
           this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
           resolve();
         } else if (model === 'request/stream') {
-          socket.requestStream({ data: d, metadata }).subscribe({
+          socket.requestStream({ data }).subscribe({
             onSubscribe(subscription: any) {
               subscription.request(2147483647);
             },
@@ -125,9 +126,6 @@ export default class RSocketConnection implements ConnectionInterface {
                 data: response || '',
                 type: eventTypes.messageReceived as Partial<EventType>,
               });
-            },
-            onComplete: () => {
-              console.log('request/stream has been completed');
             },
             onError: (error: Error) => {
               this.receivedEvents$.next({
@@ -207,7 +205,6 @@ export default class RSocketConnection implements ConnectionInterface {
               type: eventTypes.error as Partial<EventType>,
             });
             this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
-            console.log('Connection to rsocket has failed', error);
             reject(new Error(`RSocket Connection error: ${error.message}`));
           },
         });

@@ -21,7 +21,7 @@ describe.each(providers)('ConnectionService (%s) open method test suite', (provi
     }
   });
 
-  it.only('Calling open with a valid request', (done) => {
+  it('Calling open with a valid request', (done) => {
     expect.assertions(3);
     let count = 0;
     connection.events$({}).subscribe((event: ConnectionEvent) => {
