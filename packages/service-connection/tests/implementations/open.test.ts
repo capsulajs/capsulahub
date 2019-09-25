@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { defaultRequests } from '../helpers/consts';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
 import { eventTypes, messages, providers } from '../../src/consts';
@@ -5,16 +6,27 @@ import { getConnectionProvider } from '../helpers/utils';
 
 describe.each(Object.values(providers))('ConnectionService (%s) open method test suite', (provider) => {
   let connection: ConnectionInterface;
+  let subscription: Subscription;
+  let shouldCloseConnection = false;
   const { envKey, endpoint } = defaultRequests[provider];
 
   beforeEach(() => {
     connection = getConnectionProvider(provider as Provider)!;
   });
 
+  afterEach(() => {
+    subscription && subscription.unsubscribe();
+    if (shouldCloseConnection) {
+      shouldCloseConnection = false;
+      return connection.close({ envKey });
+    }
+  });
+
   it('Calling open with a valid request', (done) => {
     expect.assertions(3);
     let count = 0;
-    connection.events$({}).subscribe((event: ConnectionEvent) => {
+    shouldCloseConnection = true;
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
       switch (count) {
         case 1:
@@ -51,7 +63,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it.skip('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
     expect.assertions(3);
     let count = 0;
-    connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
       switch (count) {
         case 1:
@@ -70,8 +82,9 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
 
   it('Calling open when there is a "pending connection"', (done) => {
     expect.assertions(4);
+    shouldCloseConnection = true;
     let count = 0;
-    connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
       switch (count) {
         case 1:

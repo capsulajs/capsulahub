@@ -90,11 +90,13 @@ export default class WebSocketConnection implements ConnectionInterface {
         return reject(new Error(messages.noConnection(envKey)));
       }
 
-      return this.connections[envKey].connectedWs.then((ws) => {
-        ws.send(typeof data === 'string' ? data : JSON.stringify(data));
-        this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
-        resolve();
-      });
+      return this.connections[envKey].connectedWs
+        .then((ws) => {
+          ws.send(typeof data === 'string' ? data : JSON.stringify(data));
+          this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
+          resolve();
+        })
+        .catch((err) => reject(new Error(err)));
     });
   };
 
@@ -169,6 +171,7 @@ export default class WebSocketConnection implements ConnectionInterface {
             type: eventTypes.error as Partial<EventType>,
           });
           this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
+          reject(new Error(messages.connectionError));
         };
 
         ws.onclose = () => {
