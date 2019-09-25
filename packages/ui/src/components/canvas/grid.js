@@ -1,11 +1,8 @@
-import 'react-reflex/styles.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Container from './node/container';
-import Element from './node/element';
 import Dropzone from './dropzone';
 import Content from './content';
-import bus from './services';
 
 export default class Grid extends React.Component {
   static propTypes = {
