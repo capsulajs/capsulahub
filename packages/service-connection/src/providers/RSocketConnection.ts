@@ -101,7 +101,7 @@ export default class RSocketConnection implements ConnectionInterface {
             onComplete: (response: any) => {
               this.receivedEvents$.next({
                 envKey,
-                data: response.data || '',
+                data: JSON.stringify(response.data || ''),
                 type: eventTypes.messageReceived as Partial<EventType>,
               });
             },
@@ -123,7 +123,7 @@ export default class RSocketConnection implements ConnectionInterface {
             onNext: (response: any) => {
               this.receivedEvents$.next({
                 envKey,
-                data: response.data || '',
+                data: JSON.stringify(response.data || ''),
                 type: eventTypes.messageReceived as Partial<EventType>,
               });
             },
