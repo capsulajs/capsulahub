@@ -46,7 +46,9 @@ export default class WebSocketConnection implements ConnectionInterface {
 
       return this.createNewConnection({ envKey, endpoint })
         .then(resolve)
-        .catch(reject);
+        .catch((error) => {
+          reject(error);
+        });
     });
   };
 
@@ -102,10 +104,10 @@ export default class WebSocketConnection implements ConnectionInterface {
         if (ws) {
           ws.send(typeof data === 'string' ? data : JSON.stringify(data));
           this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
-          resolve();
+          return resolve();
         }
         if (error) {
-          throw new Error(error);
+          return reject(new Error(error));
         }
       });
     });

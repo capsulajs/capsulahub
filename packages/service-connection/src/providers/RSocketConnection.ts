@@ -72,9 +72,11 @@ export default class RSocketConnection implements ConnectionInterface {
       this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionStarted };
       this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionStarted as Partial<EventType> });
       this.connections[envKey].client.close();
-      this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
-      this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionCompleted as Partial<EventType> });
-      resolve();
+      return Promise.resolve().then(() => {
+        this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
+        this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionCompleted as Partial<EventType> });
+        resolve();
+      });
     });
   };
 
@@ -217,10 +219,10 @@ export default class RSocketConnection implements ConnectionInterface {
           this.receivedEvents$.next({ envKey, type: eventTypes.connectionCompleted as Partial<EventType> });
           resolve();
         },
-        onError: (error: Error) => {
+        onError: () => {
           this.receivedEvents$.next({
             envKey,
-            data: error.message,
+            data: messages.connectionError,
             type: eventTypes.error as Partial<EventType>,
           });
           this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };

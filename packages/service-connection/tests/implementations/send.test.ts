@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { defaultRequests } from '../helpers/consts';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider, SendMessageRequest } from '../../src/api';
 import { asyncModels, eventTypes, messages, providers } from '../../src/consts';
@@ -7,6 +8,8 @@ import { getConnectionProvider } from '../helpers/utils';
 describe.each(Object.values(providers))('ConnectionService (%s) send method test suite', (provider) => {
   let connection: ConnectionInterface;
   let rsServer: IRSocketServer;
+  let subscription: Subscription;
+  let shouldCloseConnection = false;
   const { envKey, endpoint, data } = defaultRequests[provider];
 
   beforeAll(() => {
@@ -26,10 +29,19 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     connection = getConnectionProvider(provider as Provider)!;
   });
 
+  afterEach(() => {
+    subscription && subscription.unsubscribe();
+    if (shouldCloseConnection) {
+      shouldCloseConnection = false;
+      return connection.close({ envKey });
+    }
+  });
+
   it(`Calling send with a valid request (${provider})`, async (done) => {
+    shouldCloseConnection = true;
     expect.assertions(5);
     let count = 0;
-    connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
       switch (count) {
         case 1:
@@ -60,6 +72,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     if (provider !== 'rsocket') {
       return Promise.resolve(true);
     }
+    shouldCloseConnection = true;
     expect.assertions(1);
     return connection
       .open({ envKey, endpoint })
@@ -67,6 +80,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it('Calling send when the connection is in "pending" state', (done) => {
+    shouldCloseConnection = true;
     expect.assertions(6);
     let request = { envKey, data };
     let count = 0;
@@ -75,7 +89,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
       request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
     }
 
-    connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
       switch (count) {
         case 1:
@@ -113,6 +127,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     if (provider !== 'rsocket') {
       return true;
     }
+    shouldCloseConnection = true;
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
     // @ts-ignore
@@ -130,16 +145,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     return expect(connection.send(request)).rejects.toEqual(new Error(messages.noConnection(envKey)));
   });
 
-  // TODO don't skip this test
-  it.skip('Calling send when "pending" state of connection failed', async () => {
-    expect.assertions(3);
+  // TODO Remove timeout
+  it('Calling send when "pending" state of connection failed', async (done) => {
+    expect.assertions(4);
     let count = 0;
     let request = { envKey, data };
     if (provider === providers.rsocket) {
       request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
     }
 
-    connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
       switch (count) {
         case 1:
@@ -150,7 +165,14 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
           break;
       }
     });
-    await connection.open({ envKey, endpoint });
+    connection.open({ envKey, endpoint: 'wss://echo.websocket.orgggg/' }).catch((error) => {
+      expect(error).toEqual(new Error(messages.connectionError));
+    });
+    connection.send(request).catch((error) => {
+      expect(error).toEqual(new Error(messages.connectionError));
+    });
+
+    setTimeout(done, 2000);
   });
 
   it('Calling send when "pending closing of connection" exists', async (done) => {

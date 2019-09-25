@@ -77,7 +77,7 @@ export default class RSServer implements IRSocketServer {
     });
   }
 
-  start() {
+  public start() {
     return new Promise<void>((resolve) => {
       this.server.start();
       setTimeout(() => {
@@ -86,12 +86,12 @@ export default class RSServer implements IRSocketServer {
     });
   }
 
-  stop() {
+  public stop() {
     return new Promise<void>((resolve) => {
       setTimeout(() => {
         this.server.stop();
         resolve();
-      }, 1000);
+      }, 500);
     });
   }
 }

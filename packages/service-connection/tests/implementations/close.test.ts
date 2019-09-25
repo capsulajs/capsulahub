@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
 import { defaultRequests } from '../helpers/consts';
 import { eventTypes, messages, providers } from '../../src/consts';
@@ -7,6 +8,8 @@ import RSocketServer, { IRSocketServer } from '../helpers/rSocketServer';
 describe.each(Object.values(providers))('ConnectionService (%s) close method test suite', (provider) => {
   let connection: ConnectionInterface;
   let rsServer: IRSocketServer;
+  let subscription: Subscription;
+  let shouldCloseConnection = false;
   const { envKey, endpoint } = defaultRequests[provider];
 
   beforeAll(() => {
@@ -26,10 +29,18 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
     connection = getConnectionProvider(provider as Provider)!;
   });
 
+  afterEach(() => {
+    subscription && subscription.unsubscribe();
+    if (shouldCloseConnection) {
+      shouldCloseConnection = false;
+      return connection.close({ envKey });
+    }
+  });
+
   it('Calling close with a valid request', async (done) => {
     expect.assertions(5);
     let count = 0;
-    connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
       switch (count) {
         case 1:
@@ -54,6 +65,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   const invalidRequests = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
 
   it.each(invalidRequests)('Calling close with an invalid request: %s', async (invalidRequest) => {
+    shouldCloseConnection = true;
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
     // @ts-ignore
@@ -68,7 +80,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   it('Calling close when there is a "pending closing of connection"', async (done) => {
     expect.assertions(6);
     let count = 0;
-    connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
       switch (count) {
         case 1:
