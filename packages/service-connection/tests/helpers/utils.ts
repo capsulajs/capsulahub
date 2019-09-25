@@ -1,7 +1,7 @@
 import { providers } from '../../src/consts';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
 import RSocketConnection from '../../src/providers/RSocketConnection';
-import Provider from '../../src/api/Provider';
+import { Provider } from '../../src/api';
 
 export const getConnectionProvider = (provider: Provider) => {
   switch (provider) {

@@ -77,8 +77,8 @@ export const startServer = () =>
 
 export const stopServer = () =>
   new Promise((resolve) => {
-    server.stop();
     setTimeout(() => {
+      server.stop();
       resolve();
     }, 1000);
   });

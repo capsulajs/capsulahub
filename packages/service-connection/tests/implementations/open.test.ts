@@ -3,12 +3,25 @@ import { defaultRequests } from '../helpers/consts';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
+import { startServer, stopServer } from '../helpers/rSocketServer';
 
 describe.each(Object.values(providers))('ConnectionService (%s) open method test suite', (provider) => {
   let connection: ConnectionInterface;
   let subscription: Subscription;
   let shouldCloseConnection = false;
   const { envKey, endpoint } = defaultRequests[provider];
+
+  beforeAll(() => {
+    if (provider === providers.rsocket) {
+      return startServer();
+    }
+  });
+
+  afterAll(() => {
+    if (provider === providers.rsocket) {
+      return stopServer();
+    }
+  });
 
   beforeEach(() => {
     connection = getConnectionProvider(provider as Provider)!;
@@ -59,9 +72,8 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     );
   });
 
-  // TODO don't skip this test
-  it.skip('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
-    expect.assertions(3);
+  it('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
+    expect.assertions(4);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       count++;
@@ -71,6 +83,9 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
           break;
         case 2:
           expect(event.type).toBe(eventTypes.error);
+          break;
+        case 3:
+          expect(event.type).toBe(eventTypes.disconnectionCompleted);
           done();
           break;
       }
@@ -78,6 +93,31 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     return expect(connection.open({ envKey, endpoint: 'wss://echo.websocket.orgggg/' })).rejects.toEqual(
       new Error(messages.connectionError)
     );
+  });
+
+  // TODO Add feature
+  it('Calling open with a valid request and an error while the creation of Client', (done) => {
+    expect.assertions(4);
+    let count = 0;
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+      count++;
+      switch (count) {
+        case 1:
+          expect(event.type).toBe(eventTypes.connectionStarted);
+          break;
+        case 2:
+          expect(event.type).toBe(eventTypes.error);
+          break;
+        case 3:
+          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          done();
+          break;
+      }
+    });
+
+    return connection.open({ envKey, endpoint: 'w' }).catch((error: Error) => {
+      expect(error.message).toBe(messages.connectionError);
+    });
   });
 
   it('Calling open when there is a "pending connection"', (done) => {

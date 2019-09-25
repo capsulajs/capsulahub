@@ -13,12 +13,17 @@ import {
   OpenConnectionRequest,
   SendMessageRequest,
 } from '../api';
-import { eventTypes, messages } from '../consts';
+import { asyncModels, eventTypes, messages } from '../consts';
 import { isCloseReqValid, isOpenReqValid, isSendReqValid, isRSocketModelValid } from '../helpers/validators';
+
+type RsConnection = Promise<{
+  socket?: any;
+  error?: string;
+}>;
 
 export default class RSocketConnection implements ConnectionInterface {
   private connections: {
-    [envKey: string]: { connectedRs: Promise<any>; client: RSocketClient; readyState: any };
+    [envKey: string]: { rsConnection: RsConnection; client: RSocketClient; readyState: any };
   };
   private readonly receivedEvents$: Subject<ConnectionEvent>;
 
@@ -35,7 +40,6 @@ export default class RSocketConnection implements ConnectionInterface {
 
       const { envKey, endpoint } = openConnectionRequest;
       const connection = this.connections[envKey] || undefined;
-
       if (connection && connection.readyState === eventTypes.connectionStarted) {
         return reject(new Error(messages.pendingConnection(envKey)));
       }
@@ -95,46 +99,52 @@ export default class RSocketConnection implements ConnectionInterface {
         return reject(new Error(messages.noConnection(envKey)));
       }
 
-      this.connections[envKey].connectedRs.then((socket) => {
-        if (model === 'request/response') {
-          socket.requestResponse({ data }).subscribe({
-            onComplete: (response: any) => {
-              this.receivedEvents$.next({
-                envKey,
-                data: JSON.stringify(response.data || ''),
-                type: eventTypes.messageReceived as Partial<EventType>,
-              });
-            },
-            onError: (error: any) => {
-              this.receivedEvents$.next({
-                envKey,
-                data: error.source,
-                type: eventTypes.error as Partial<EventType>,
-              });
-            },
-          });
-          this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
-          resolve();
-        } else if (model === 'request/stream') {
-          socket.requestStream({ data }).subscribe({
-            onSubscribe(subscription: any) {
-              subscription.request(2147483647);
-            },
-            onNext: (response: any) => {
-              this.receivedEvents$.next({
-                envKey,
-                data: JSON.stringify(response.data || ''),
-                type: eventTypes.messageReceived as Partial<EventType>,
-              });
-            },
-            onError: (error: any) => {
-              this.receivedEvents$.next({
-                envKey,
-                data: error.source,
-                type: eventTypes.error as Partial<EventType>,
-              });
-            },
-          });
+      return this.connections[envKey].rsConnection.then(({ socket, error }) => {
+        if (socket) {
+          if (model === asyncModels.requestResponse) {
+            socket.requestResponse({ data }).subscribe({
+              onComplete: (response: any) => {
+                this.receivedEvents$.next({
+                  envKey,
+                  data: JSON.stringify(response.data || ''),
+                  type: eventTypes.messageReceived as Partial<EventType>,
+                });
+              },
+              onError: (requestResponseError: any) => {
+                this.receivedEvents$.next({
+                  envKey,
+                  data: requestResponseError.source,
+                  type: eventTypes.error as Partial<EventType>,
+                });
+              },
+            });
+            this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
+            resolve();
+          } else if (model === asyncModels.requestStream) {
+            socket.requestStream({ data }).subscribe({
+              onSubscribe(subscription: any) {
+                subscription.request(2147483647);
+              },
+              onNext: (response: any) => {
+                this.receivedEvents$.next({
+                  envKey,
+                  data: JSON.stringify(response.data || ''),
+                  type: eventTypes.messageReceived as Partial<EventType>,
+                });
+              },
+              onError: (requestStreamError: any) => {
+                this.receivedEvents$.next({
+                  envKey,
+                  data: requestStreamError.source,
+                  type: eventTypes.error as Partial<EventType>,
+                });
+              },
+            });
+            this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
+            resolve();
+          }
+        } else if (error) {
+          reject(new Error(error));
         }
       });
     });
@@ -146,9 +156,11 @@ export default class RSocketConnection implements ConnectionInterface {
 
   private createNewConnection = ({ envKey, endpoint }: OpenConnectionRequest): Promise<void> => {
     return new Promise((resolve, reject) => {
+      this.receivedEvents$.next({ envKey, type: eventTypes.connectionStarted as Partial<EventType> });
+      let socket: any;
+      let client: RSocketClient;
       try {
-        let socket: any;
-        const client = new RSocketClient({
+        client = new RSocketClient({
           serializers: JsonSerializers,
           setup: {
             dataMimeType: 'application/json',
@@ -158,60 +170,65 @@ export default class RSocketConnection implements ConnectionInterface {
           },
           transport: new RSocketWebSocketClient({ url: endpoint }),
         });
-
-        const receivedEventsForCurrentConnection$ = this.receivedEvents$.pipe(
-          filter((event: ConnectionEvent) => event.envKey === envKey)
-        );
-        const connectedRs = new Promise<any>((resolveWithRs, rejectConnection) => {
-          receivedEventsForCurrentConnection$
-            .pipe(
-              filter(
-                (event: ConnectionEvent) =>
-                  event.type === eventTypes.connectionCompleted || event.type === eventTypes.error
-              ),
-              first()
-            )
-            .subscribe((event) => {
-              switch (event.type) {
-                case eventTypes.connectionCompleted: {
-                  resolveWithRs(socket);
-                  break;
-                }
-                case eventTypes.error: {
-                  rejectConnection(event.data);
-                  break;
-                }
-              }
-            });
-        });
-
-        this.connections = {
-          ...this.connections,
-          [envKey]: { connectedRs, client, readyState: eventTypes.connectionStarted },
-        };
-        this.receivedEvents$.next({ envKey, type: eventTypes.connectionStarted as Partial<EventType> });
-
-        client.connect().subscribe({
-          onComplete: (rsSocket: any) => {
-            socket = rsSocket;
-            this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.connectionCompleted };
-            this.receivedEvents$.next({ envKey, type: eventTypes.connectionCompleted as Partial<EventType> });
-            resolve();
-          },
-          onError: (error: Error) => {
-            this.receivedEvents$.next({
-              envKey,
-              data: error.message,
-              type: eventTypes.error as Partial<EventType>,
-            });
-            this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
-            reject(new Error(`RSocket Connection error: ${error.message}`));
-          },
-        });
       } catch (error) {
-        this.connections[envKey].readyState = eventTypes.disconnectionCompleted;
-        reject(messages.connectionError);
+        this.receivedEvents$.next({
+          envKey,
+          data: error.message,
+          type: eventTypes.error as Partial<EventType>,
+        });
+        this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionCompleted as Partial<EventType> });
       }
+
+      const receivedEventsForCurrentConnection$ = this.receivedEvents$.pipe(
+        filter((event: ConnectionEvent) => event.envKey === envKey)
+      );
+      const rsConnection: RsConnection = new Promise((resolveRs) => {
+        receivedEventsForCurrentConnection$
+          .pipe(
+            filter(
+              (event: ConnectionEvent) =>
+                event.type === eventTypes.connectionCompleted || event.type === eventTypes.error
+            ),
+            first()
+          )
+          .subscribe((event) => {
+            switch (event.type) {
+              case eventTypes.connectionCompleted: {
+                resolveRs({ socket });
+                break;
+              }
+              case eventTypes.error: {
+                resolveRs({ error: event.data });
+                break;
+              }
+            }
+          });
+      });
+
+      this.connections = {
+        ...this.connections,
+        [envKey]: { rsConnection, client, readyState: eventTypes.connectionStarted },
+      };
+
+      client.connect().subscribe({
+        onComplete: (rsSocket: any) => {
+          socket = rsSocket;
+          this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.connectionCompleted };
+          this.receivedEvents$.next({ envKey, type: eventTypes.connectionCompleted as Partial<EventType> });
+          resolve();
+        },
+        onError: (error: Error) => {
+          this.receivedEvents$.next({
+            envKey,
+            data: error.message,
+            type: eventTypes.error as Partial<EventType>,
+          });
+          this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
+          // TODO Where to emit disconnection completed?
+          this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionCompleted as Partial<EventType> });
+          reject(new Error(messages.connectionError));
+        },
+      });
     });
   };
 }
