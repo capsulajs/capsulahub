@@ -3,23 +3,25 @@ import { defaultRequests } from '../helpers/consts';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
-import { startServer, stopServer } from '../helpers/rSocketServer';
+import RSocketServer, { IRSocketServer } from '../helpers/rSocketServer';
 
 describe.each(Object.values(providers))('ConnectionService (%s) open method test suite', (provider) => {
   let connection: ConnectionInterface;
   let subscription: Subscription;
+  let rsServer: IRSocketServer;
   let shouldCloseConnection = false;
   const { envKey, endpoint } = defaultRequests[provider];
 
   beforeAll(() => {
     if (provider === providers.rsocket) {
-      return startServer();
+      rsServer = new RSocketServer();
+      return rsServer.start();
     }
   });
 
   afterAll(() => {
     if (provider === providers.rsocket) {
-      return stopServer();
+      return rsServer.stop();
     }
   });
 

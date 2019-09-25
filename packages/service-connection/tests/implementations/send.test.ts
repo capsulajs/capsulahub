@@ -1,22 +1,24 @@
 import { defaultRequests } from '../helpers/consts';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider, SendMessageRequest } from '../../src/api';
 import { asyncModels, eventTypes, messages, providers } from '../../src/consts';
-import { startServer, stopServer } from '../helpers/rSocketServer';
+import RSocketServer, { IRSocketServer } from '../helpers/rSocketServer';
 import { getConnectionProvider } from '../helpers/utils';
 
 describe.each(Object.values(providers))('ConnectionService (%s) send method test suite', (provider) => {
   let connection: ConnectionInterface;
+  let rsServer: IRSocketServer;
   const { envKey, endpoint, data } = defaultRequests[provider];
 
   beforeAll(() => {
     if (provider === providers.rsocket) {
-      return startServer();
+      rsServer = new RSocketServer();
+      return rsServer.start();
     }
   });
 
   afterAll(() => {
     if (provider === providers.rsocket) {
-      return stopServer();
+      return rsServer.stop();
     }
   });
 

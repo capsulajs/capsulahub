@@ -2,10 +2,25 @@ import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '..
 import { defaultRequests } from '../helpers/consts';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
+import RSocketServer, { IRSocketServer } from '../helpers/rSocketServer';
 
 describe.each(Object.values(providers))('ConnectionService (%s) close method test suite', (provider) => {
   let connection: ConnectionInterface;
+  let rsServer: IRSocketServer;
   const { envKey, endpoint } = defaultRequests[provider];
+
+  beforeAll(() => {
+    if (provider === providers.rsocket) {
+      rsServer = new RSocketServer();
+      return rsServer.start();
+    }
+  });
+
+  afterAll(() => {
+    if (provider === providers.rsocket) {
+      return rsServer.stop();
+    }
+  });
 
   beforeEach(() => {
     connection = getConnectionProvider(provider as Provider)!;
