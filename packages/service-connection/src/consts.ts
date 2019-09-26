@@ -22,6 +22,7 @@ export const messages = {
   connectionError: 'The connection failed to connect.',
   modelRequired: 'The model is required to send this message through RSocket',
   invalidModel: 'The model should be "request/response" or "request/stream"',
+  invalidURL: (url: string) => `The URL '${url}' is invalid.`,
 };
 
 export const eventTypes = {

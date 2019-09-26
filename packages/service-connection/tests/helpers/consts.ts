@@ -4,15 +4,17 @@ const endpoints = {
 };
 
 export const defaultRequests: { [key: string]: any } = {
-  websocket: { envKey: 'develop', endpoint: endpoints.websocket, data: {} },
+  websocket: { envKey: 'develop', endpoint: endpoints.websocket, data: { hello: 'World !' } },
   rsocket: {
     envKey: 'develop',
     endpoint: endpoints.rsocket,
     data: {
       data: {
-        qualifier: '/timer',
+        qualifier: '/greeting',
         data: { name: 'Dmitriy' },
       },
     },
   },
 };
+
+export const defaultEnvKey = 'develop';

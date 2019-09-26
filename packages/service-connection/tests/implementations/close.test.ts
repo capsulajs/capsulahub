@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
-import { defaultRequests } from '../helpers/consts';
+import { defaultEnvKey, defaultRequests } from '../helpers/consts';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
 import RSocketServer, { IRSocketServer } from '../helpers/rSocketServer';
@@ -38,28 +38,37 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   });
 
   it('Calling close with a valid request', async (done) => {
-    expect.assertions(5);
+    expect.assertions(14);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+      expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
           expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.data).toBe(undefined);
           break;
         case 2:
           expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.data).toBe(undefined);
           break;
         case 3:
           expect(event.type).toBe(eventTypes.disconnectionStarted);
+          expect(event.data).toBe(undefined);
           break;
         case 4:
           expect(event.type).toBe(eventTypes.disconnectionCompleted);
-          done();
+          expect(event.data).toBe(undefined);
           break;
       }
     });
     await connection.open({ envKey, endpoint });
-    return expect(connection.close({ envKey })).resolves.toEqual(undefined);
+    expect(connection.close({ envKey })).resolves.toEqual(undefined);
+
+    setTimeout(() => {
+      expect(count).toBe(4);
+      done();
+    }, 2000);
   });
 
   const invalidRequests = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
@@ -78,28 +87,37 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   });
 
   it('Calling close when there is a "pending closing of connection"', async (done) => {
-    expect.assertions(6);
+    expect.assertions(15);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+      expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
           expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.data).toBe(undefined);
           break;
         case 2:
           expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.data).toBe(undefined);
           break;
         case 3:
           expect(event.type).toBe(eventTypes.disconnectionStarted);
+          expect(event.data).toBe(undefined);
           break;
         case 4:
           expect(event.type).toBe(eventTypes.disconnectionCompleted);
-          done();
+          expect(event.data).toBe(undefined);
           break;
       }
     });
     await connection.open({ envKey, endpoint });
     connection.close({ envKey }).then((response) => expect(response).toEqual(undefined));
-    return expect(connection.close({ envKey })).rejects.toEqual(new Error(messages.pendingDisconnection(envKey)));
+    expect(connection.close({ envKey })).rejects.toEqual(new Error(messages.pendingDisconnection(envKey)));
+
+    setTimeout(() => {
+      expect(count).toBe(4);
+      done();
+    }, 2000);
   });
 });
