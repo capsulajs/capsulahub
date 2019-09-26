@@ -38,7 +38,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it(`Calling send with a valid request (${provider})`, async (done) => {
-    shouldCloseConnection = true;
     expect.assertions(5);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
@@ -188,5 +187,72 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
       .send(request)
       .catch((error) => expect(error).toEqual(new Error(messages.noConnection(envKey))))
       .finally(() => done());
+  });
+});
+
+describe('RSocket', () => {
+  let connection: ConnectionInterface;
+  let rsServer: IRSocketServer;
+  let subscription: Subscription;
+  let shouldCloseConnection = false;
+  const { envKey, endpoint, data } = defaultRequests.rsocket;
+
+  beforeAll(() => {
+    rsServer = new RSocketServer();
+    return rsServer.start();
+  });
+
+  afterAll(() => {
+    return rsServer.stop();
+  });
+
+  beforeEach(() => {
+    connection = getConnectionProvider('rsocket')!;
+  });
+
+  afterEach(() => {
+    subscription && subscription.unsubscribe();
+    if (shouldCloseConnection) {
+      shouldCloseConnection = false;
+      return connection.close({ envKey });
+    }
+  });
+
+  it(`Calling send with a valid request (request/stream)`, async (done) => {
+    expect.assertions(8);
+    let count = 0;
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+      count++;
+      switch (count) {
+        case 1:
+          expect(event.type).toBe(eventTypes.connectionStarted);
+          break;
+        case 2:
+          expect(event.type).toBe(eventTypes.connectionCompleted);
+          break;
+        case 3:
+          expect(event.type).toBe(eventTypes.messageSent);
+          break;
+        case 4:
+          expect(event.type).toBe(eventTypes.messageReceived);
+          break;
+        case 5:
+          expect(event.type).toBe(eventTypes.messageReceived);
+          connection.close({ envKey });
+          break;
+        case 6:
+          expect(event.type).toBe(eventTypes.disconnectionStarted);
+          break;
+        case 7:
+          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          break;
+      }
+    });
+    await connection.open({ envKey, endpoint });
+    const request = { envKey, data, model: asyncModels.requestStream };
+
+    expect(connection.send(request)).resolves.toEqual(undefined);
+
+    setTimeout(done, 2000);
   });
 });

@@ -41,26 +41,16 @@ export default class RSServer implements IRSocketServer {
           requestStream({ data }: { data: any }) {
             return new Flowable((subscriber: any) => {
               let index = 0;
-              // let isStreamCanceled = false;
+              let intervalId: any;
               subscriber.onSubscribe({
-                // cancel: () => { isStreamCanceled = true },
-                request: (n: number) => {
-                  while (n--) {
-                    setTimeout(() => {
-                      // if (isStreamCanceled) {
-                      //   return false;
-                      // }
-                      if (data.qualifier === '/timer') {
-                        subscriber.onNext({ data: { message: `Original name: ${data.data.name}`, count: index++ } });
-                        // if (index < 2) {
-                        //   subscriber.onNext({ data: getTextResponseSingle(data) });
-                        //   index++;
-                        // } else {
-                        //   subscriber.onNext({ data: getFailingManyResponse(data) });
-                        //   subscriber.onComplete();
-                        // }
-                      }
-                    }, 1000);
+                cancel: () => {
+                  clearInterval(intervalId);
+                },
+                request: (_: number) => {
+                  if (data.qualifier === '/timer') {
+                    intervalId = setInterval(() => {
+                      subscriber.onNext({ data: { message: `Original name: ${data.data.name}`, count: index++ } });
+                    }, 500);
                   }
                 },
               });

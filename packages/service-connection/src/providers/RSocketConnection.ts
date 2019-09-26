@@ -134,12 +134,14 @@ export default class RSocketConnection implements ConnectionInterface {
                   type: eventTypes.messageReceived as Partial<EventType>,
                 });
               },
-              onError: (requestStreamError: any) => {
-                this.receivedEvents$.next({
-                  envKey,
-                  data: requestStreamError.source,
-                  type: eventTypes.error as Partial<EventType>,
-                });
+              onError: (requestStreamError: Error) => {
+                if (!requestStreamError.message.includes('The connection was closed.')) {
+                  this.receivedEvents$.next({
+                    envKey,
+                    data: requestStreamError.message,
+                    type: eventTypes.error as Partial<EventType>,
+                  });
+                }
               },
             });
             this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
