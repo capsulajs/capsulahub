@@ -1,6 +1,6 @@
 import { CloseConnectionRequest, OpenConnectionRequest, SendMessageRequest } from '../api';
 
-export const isRSocketModelValid = (model: any) => model === 'requestResponse' || model === 'requestStream';
+export const isRSocketModelValid = (model: any) => model === 'request/response' || model === 'request/stream';
 
 const isNonEmptyString = (value: any) => typeof value === 'string' && !!value.replace(/\s/g, '').length;
 

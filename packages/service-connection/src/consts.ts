@@ -6,8 +6,8 @@ export const providers = {
 };
 
 export const asyncModels: Record<AsyncModel, AsyncModel> = {
-  requestResponse: 'requestResponse',
-  requestStream: 'requestResponse',
+  requestResponse: 'request/response',
+  requestStream: 'request/response',
 };
 
 export const messages = {
