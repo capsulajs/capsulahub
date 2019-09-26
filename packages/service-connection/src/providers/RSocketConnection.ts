@@ -104,7 +104,7 @@ export default class RSocketConnection implements ConnectionInterface {
       return this.connections[envKey].rsConnection.then(({ socket, error }) => {
         if (socket) {
           if (model === asyncModels.requestResponse) {
-            socket.requestResponse({ data }).subscribe({
+            socket.requestResponse({ data: (data || {}).data, metadata: (data || {}).metadata }).subscribe({
               onComplete: (response: any) => {
                 this.receivedEvents$.next({
                   envKey,
@@ -123,7 +123,7 @@ export default class RSocketConnection implements ConnectionInterface {
             this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
             resolve();
           } else if (model === asyncModels.requestStream) {
-            socket.requestStream({ data }).subscribe({
+            socket.requestStream({ data: (data || {}).data, metadata: (data || {}).metadata }).subscribe({
               onSubscribe(subscription: any) {
                 subscription.request(2147483647);
               },

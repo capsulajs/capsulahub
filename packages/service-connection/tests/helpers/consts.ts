@@ -9,8 +9,10 @@ export const defaultRequests: { [key: string]: any } = {
     envKey: 'develop',
     endpoint: endpoints.rsocket,
     data: {
-      qualifier: '/timer',
-      data: { name: 'Dmitriy' },
+      data: {
+        qualifier: '/timer',
+        data: { name: 'Dmitriy' },
+      },
     },
   },
 };
