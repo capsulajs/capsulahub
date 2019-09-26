@@ -229,7 +229,7 @@ export default class RSocketConnection implements ConnectionInterface {
     if (!error.message.includes('The connection was closed.')) {
       this.receivedEvents$.next({
         envKey,
-        data: error.message || (error.source || {}).message,
+        data: error.source ? error.source.message : error.message,
         type: eventTypes.error as Partial<EventType>,
       });
     }
