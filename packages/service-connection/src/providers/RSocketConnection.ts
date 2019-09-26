@@ -113,11 +113,7 @@ export default class RSocketConnection implements ConnectionInterface {
                 });
               },
               onError: (requestResponseError: any) => {
-                this.receivedEvents$.next({
-                  envKey,
-                  data: requestResponseError.source,
-                  type: eventTypes.error as Partial<EventType>,
-                });
+                this.handleSubscriptionError({ envKey, error: requestResponseError });
               },
             });
             this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
@@ -134,14 +130,8 @@ export default class RSocketConnection implements ConnectionInterface {
                   type: eventTypes.messageReceived as Partial<EventType>,
                 });
               },
-              onError: (requestStreamError: Error) => {
-                if (!requestStreamError.message.includes('The connection was closed.')) {
-                  this.receivedEvents$.next({
-                    envKey,
-                    data: requestStreamError.message,
-                    type: eventTypes.error as Partial<EventType>,
-                  });
-                }
+              onError: (requestStreamError: any) => {
+                this.handleSubscriptionError({ envKey, error: requestStreamError });
               },
             });
             this.receivedEvents$.next({ envKey, type: eventTypes.messageSent as Partial<EventType>, data });
@@ -228,11 +218,20 @@ export default class RSocketConnection implements ConnectionInterface {
             type: eventTypes.error as Partial<EventType>,
           });
           this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnectionCompleted };
-          // TODO Where to emit disconnection completed?
           this.receivedEvents$.next({ envKey, type: eventTypes.disconnectionCompleted as Partial<EventType> });
           reject(new Error(messages.connectionError));
         },
       });
     });
+  };
+
+  private handleSubscriptionError = ({ envKey, error }: { envKey: string; error: any }) => {
+    if (!error.message.includes('The connection was closed.')) {
+      this.receivedEvents$.next({
+        envKey,
+        data: error.message || (error.source || {}).message,
+        type: eventTypes.error as Partial<EventType>,
+      });
+    }
   };
 }
