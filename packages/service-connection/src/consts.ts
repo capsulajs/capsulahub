@@ -5,9 +5,9 @@ export const providers = {
   rsocket: 'rsocket' as Provider,
 };
 
-export const asyncModels: Record<AsyncModel, AsyncModel> = {
-  requestResponse: 'request/response',
-  requestStream: 'request/response',
+export const asyncModels = {
+  requestResponse: 'request/response' as AsyncModel,
+  requestStream: 'request/stream' as AsyncModel,
 };
 
 export const messages = {
