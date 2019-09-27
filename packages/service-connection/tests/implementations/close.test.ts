@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
-import { defaultEnvKey, defaultRequests } from '../helpers/consts';
+import { baseInvalidValues, defaultEnvKey, defaultRequests } from '../helpers/consts';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
 import RSocketServer, { IRSocketServer } from '../helpers/RSocketServer';
@@ -76,9 +76,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
     }, 2000);
   });
 
-  const invalidRequests = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
-
-  it.each(invalidRequests)('Calling close with an invalid request: %s', async (invalidRequest) => {
+  it.each(baseInvalidValues)('Calling close with an invalid request: %s', async (invalidRequest) => {
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
     // @ts-ignore

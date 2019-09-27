@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { defaultEnvKey, defaultRequests } from '../helpers/consts';
+import { baseInvalidValues, defaultEnvKey, defaultRequests } from '../helpers/consts';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
@@ -66,9 +66,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     }, 2000);
   });
 
-  const invalidValues = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
-
-  it.each(invalidValues)('Calling open with an invalid envKey: %s', (invalidEnvKey) => {
+  it.each(baseInvalidValues)('Calling open with an invalid envKey: %s', (invalidEnvKey) => {
     expect.assertions(1);
     // @ts-ignore
     return expect(connection.open({ envKey: invalidEnvKey, endpoint })).rejects.toEqual(
@@ -76,7 +74,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     );
   });
 
-  it.each(invalidValues)('Calling open with an invalid endpoint: %s', (invalidEndPoint) => {
+  it.each(baseInvalidValues)('Calling open with an invalid endpoint: %s', (invalidEndPoint) => {
     expect.assertions(1);
     // @ts-ignore
     return expect(connection.open({ envKey, endpoint: invalidEndPoint })).rejects.toEqual(

@@ -99,7 +99,7 @@ export default class RSServer implements IRSocketServer {
       this.server.start();
       setTimeout(() => {
         resolve();
-      }, 1000);
+      }, 2000);
     });
   }
 

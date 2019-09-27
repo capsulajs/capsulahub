@@ -2,6 +2,7 @@ import bootstrap from '../../src';
 import { messages, providers } from '../../src/consts';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
 import RSocketConnection from '../../src/providers/RSocketConnection';
+import { baseInvalidValues } from '../helpers/consts';
 
 describe('ConnectionService bootstrap test suite', () => {
   it('ConnectionService extension bootstrap function resolves correctly and triggers the registration of an instance of WebSocketConnectionService in Workspace', async () => {
@@ -28,25 +29,32 @@ describe('ConnectionService bootstrap test suite', () => {
     expect(mock.mock.calls[0][0].reference).toBeInstanceOf(RSocketConnection);
   });
 
-  it('ConnectionService extension bootstrap function rejects with an error if "provider" is not in configuration', () => {
-    const mock = jest.fn();
-    const workspace = { registerService: mock };
-    const config = {};
-    mock.mockResolvedValueOnce({});
-    // @ts-ignore
-    return bootstrap(workspace, config).catch((error: Error) => {
-      expect(error).toEqual(new Error(messages.noProvider));
-    });
-  });
+  it.each([...baseInvalidValues, 'wrongProvider'])(
+    'ConnectionService extension bootstrap function rejects with an' +
+      ' error if "provider" is not in configuration: %s',
+    (invalidProvider) => {
+      const mock = jest.fn();
+      const workspace = { registerService: mock };
+      const config = { provider: invalidProvider, serviceName: 'ConnectionService' };
+      mock.mockResolvedValueOnce({});
+      // @ts-ignore
+      return bootstrap(workspace, config).catch((error: Error) => {
+        expect(error).toEqual(new Error(!invalidProvider ? messages.noProvider : messages.wrongProvider));
+      });
+    }
+  );
 
-  it('ConnectionService extension bootstrap function rejects with an error if "serviceName" is not in configuration', () => {
-    const mock = jest.fn();
-    const workspace = { registerService: mock };
-    const config = { provider: 'rsocket' };
-    mock.mockResolvedValueOnce({});
-    // @ts-ignore
-    return bootstrap(workspace, config).catch((error: Error) => {
-      expect(error).toEqual(new Error(messages.noServiceName));
-    });
-  });
+  it.each(baseInvalidValues)(
+    'ConnectionService extension bootstrap function rejects with an error if "serviceName" is not in configuration: %s',
+    (invalidServiceName) => {
+      const mock = jest.fn();
+      const workspace = { registerService: mock };
+      const config = { provider: 'rsocket', serviceName: invalidServiceName };
+      mock.mockResolvedValueOnce({});
+      // @ts-ignore
+      return bootstrap(workspace, config).catch((error: Error) => {
+        expect(error).toEqual(new Error(messages.noServiceName));
+      });
+    }
+  );
 });

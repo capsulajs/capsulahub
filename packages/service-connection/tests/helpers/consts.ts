@@ -1,5 +1,7 @@
 import { Provider } from '../../src/api';
 
+export const baseInvalidValues = [null, undefined, 123, ' ', '', true, false, [], ['test'], {}, { test: 'test' }];
+
 const endpoints = {
   websocket: (_: number) => 'wss://echo.websocket.org',
   rsocket: (port: number) => `ws://localhost:${port}`,

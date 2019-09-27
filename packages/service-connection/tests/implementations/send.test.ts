@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { defaultEnvKey, defaultRequests } from '../helpers/consts';
+import { baseInvalidValues, defaultEnvKey, defaultRequests } from '../helpers/consts';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider, SendMessageRequest } from '../../src/api';
 import { asyncModels, eventTypes, messages, providers } from '../../src/consts';
 import RSocketServer, { IRSocketServer } from '../helpers/RSocketServer';
@@ -143,9 +143,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     }, 2000);
   });
 
-  const invalidValues = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
-
-  it.each(invalidValues)('Calling send with a invalid envKey', async (invalidEnvKey) => {
+  it.each(baseInvalidValues)('Calling send with a invalid envKey', async (invalidEnvKey) => {
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
     let invalidRequest = { envKey: invalidEnvKey, data };
@@ -156,7 +154,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     return expect(connection.send(invalidRequest)).rejects.toEqual(new Error(messages.invalidRequest));
   });
 
-  it.each(invalidValues)(`Calling send with a invalid model (${provider})`, async (invalidModel) => {
+  it.each(baseInvalidValues)(`Calling send with a invalid model (${provider})`, async (invalidModel) => {
     if (provider !== providers.rsocket) {
       return true;
     }
