@@ -1,13 +1,13 @@
 import { Subscription } from 'rxjs';
 import { baseInvalidValues, defaultEnvKey, defaultRequests } from '../helpers/consts';
-import { Connection as ConnectionInterface, ConnectionEvent, Provider, SendMessageRequest } from '../../src/api';
+import { API } from '../../src';
 import { asyncModels, eventTypes, messages, providers } from '../../src/consts';
 import RSocketServer, { IRSocketServer } from '../helpers/RSocketServer';
 import { getConnectionProvider } from '../helpers/utils';
 
 describe.each(Object.values(providers))('ConnectionService (%s) send method test suite', (provider) => {
   const port = 8080;
-  let connection: ConnectionInterface;
+  let connection: API.Connection;
   let rsServer: IRSocketServer;
   let subscription: Subscription;
   const { envKey, getEndpoint, data } = defaultRequests[provider];
@@ -31,7 +31,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   beforeEach(() => {
-    connection = getConnectionProvider(provider as Provider)!;
+    connection = getConnectionProvider(provider as API.Provider)!;
   });
 
   afterEach((done) => {
@@ -49,16 +49,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   it(`Calling send with a valid request (${provider})`, async (done) => {
     expect.assertions(14);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
         case 3:
@@ -74,7 +74,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     await connection.open({ envKey, endpoint });
     let request = { envKey, data };
     if (provider === providers.rsocket) {
-      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
+      request = { ...request, model: asyncModels.requestResponse } as API.SendMessageRequest;
     }
 
     expect(connection.send(request)).resolves.toEqual(undefined);
@@ -100,19 +100,19 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     let count = 0;
 
     if (provider === providers.rsocket) {
-      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
+      request = { ...request, model: asyncModels.requestResponse } as API.SendMessageRequest;
     }
 
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
         case 3:
@@ -138,7 +138,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     await connection.open({ envKey, endpoint });
     let invalidRequest = { envKey: invalidEnvKey, data };
     if (provider === providers.rsocket) {
-      invalidRequest = { ...invalidRequest, model: asyncModels.requestResponse } as SendMessageRequest;
+      invalidRequest = { ...invalidRequest, model: asyncModels.requestResponse } as API.SendMessageRequest;
     }
     // @ts-ignore
     return expect(connection.send(invalidRequest)).rejects.toEqual(new Error(messages.invalidRequest));
@@ -160,7 +160,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     expect.assertions(1);
     let request = { envKey, data };
     if (provider === providers.rsocket) {
-      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
+      request = { ...request, model: asyncModels.requestResponse } as API.SendMessageRequest;
     }
     return expect(connection.send(request)).rejects.toEqual(new Error(messages.noConnection(envKey)));
   });
@@ -170,15 +170,15 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     let count = 0;
     let request = { envKey, data };
     if (provider === providers.rsocket) {
-      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
+      request = { ...request, model: asyncModels.requestResponse } as API.SendMessageRequest;
     }
 
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
@@ -186,7 +186,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
           expect(event.data).toBe(messages.connectionError);
           break;
         case 3:
-          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          expect(event.type).toBe(eventTypes.disconnected);
           expect(event.data).toBe(undefined);
           break;
       }
@@ -208,7 +208,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     expect.assertions(1);
     let request = { envKey, data };
     if (provider === providers.rsocket) {
-      request = { ...request, model: asyncModels.requestResponse } as SendMessageRequest;
+      request = { ...request, model: asyncModels.requestResponse } as API.SendMessageRequest;
     }
 
     await connection.open({ envKey, endpoint });
@@ -227,16 +227,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     expect.assertions(23);
     const streamData = { data: { qualifier: '/timer', data: { count: 100 } } };
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
         case 3:
@@ -253,11 +253,11 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
           connection.close({ envKey });
           break;
         case 6:
-          expect(event.type).toBe(eventTypes.disconnectionStarted);
+          expect(event.type).toBe(eventTypes.disconnecting);
           expect(event.data).toBe(undefined);
           break;
         case 7:
-          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          expect(event.type).toBe(eventTypes.disconnected);
           expect(event.data).toBe(undefined);
           break;
       }
@@ -285,16 +285,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     expect.assertions(14);
     const requestData = { data: { qualifier: '/greeting', data: {} } };
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
         case 3:
@@ -330,16 +330,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     expect.assertions(14);
     const streamData = { data: { qualifier: '/timer', data: {} } };
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
         case 3:

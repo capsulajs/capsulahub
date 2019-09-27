@@ -1,13 +1,13 @@
-import { AsyncModel, Provider } from './api';
+import { API } from '.';
 
 export const providers = {
-  websocket: 'websocket' as Provider,
-  rsocket: 'rsocket' as Provider,
+  websocket: 'websocket' as API.Provider,
+  rsocket: 'rsocket' as API.Provider,
 };
 
 export const asyncModels = {
-  requestResponse: 'request/response' as AsyncModel,
-  requestStream: 'request/stream' as AsyncModel,
+  requestResponse: 'request/response' as API.AsyncModel,
+  requestStream: 'request/stream' as API.AsyncModel,
 };
 
 export const messages = {
@@ -27,11 +27,11 @@ export const messages = {
 };
 
 export const eventTypes = {
-  connectionStarted: 'connecting',
-  connectionCompleted: 'connected',
-  disconnectionStarted: 'disconnecting',
-  disconnectionCompleted: 'disconnected',
-  error: 'error',
-  messageSent: 'messageSent',
-  messageReceived: 'messageReceived',
+  connecting: 'connecting' as API.ConnectingEvent,
+  connected: 'connected' as API.ConnectedEvent,
+  disconnecting: 'disconnecting' as API.DisconnectingEvent,
+  disconnected: 'disconnected' as API.DisconnectedEvent,
+  error: 'error' as API.ErrorEvent,
+  messageSent: 'messageSent' as API.MessageSentEvent,
+  messageReceived: 'messageReceived' as API.MessageReceivedEvent,
 };

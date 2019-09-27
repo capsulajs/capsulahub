@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
+import { API } from '../../src';
 import { baseInvalidValues, defaultEnvKey, defaultRequests } from '../helpers/consts';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
@@ -7,7 +7,7 @@ import RSocketServer, { IRSocketServer } from '../helpers/RSocketServer';
 
 describe.each(Object.values(providers))('ConnectionService (%s) close method test suite', (provider) => {
   const port = 3030;
-  let connection: ConnectionInterface;
+  let connection: API.Connection;
   let rsServer: IRSocketServer;
   let subscription: Subscription;
   const { envKey, getEndpoint } = defaultRequests[provider];
@@ -27,7 +27,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   });
 
   beforeEach(() => {
-    connection = getConnectionProvider(provider as Provider)!;
+    connection = getConnectionProvider(provider as API.Provider)!;
   });
 
   afterEach((done) => {
@@ -45,24 +45,24 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   it('Calling close with a valid request', async (done) => {
     expect.assertions(14);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
         case 3:
-          expect(event.type).toBe(eventTypes.disconnectionStarted);
+          expect(event.type).toBe(eventTypes.disconnecting);
           expect(event.data).toBe(undefined);
           break;
         case 4:
-          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          expect(event.type).toBe(eventTypes.disconnected);
           expect(event.data).toBe(undefined);
           break;
       }
@@ -91,24 +91,24 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   it('Calling close when there is a "pending closing of connection"', async (done) => {
     expect.assertions(15);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
         case 3:
-          expect(event.type).toBe(eventTypes.disconnectionStarted);
+          expect(event.type).toBe(eventTypes.disconnecting);
           expect(event.data).toBe(undefined);
           break;
         case 4:
-          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          expect(event.type).toBe(eventTypes.disconnected);
           expect(event.data).toBe(undefined);
           break;
       }

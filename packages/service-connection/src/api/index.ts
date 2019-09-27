@@ -1,14 +1,3 @@
-export {
-  EventType,
-  Connection,
-  OpenConnectionRequest,
-  CloseConnectionRequest,
-  SendMessageRequest,
-  Events$Request,
-  ConnectionEvent,
-  AsyncModel,
-} from './Connection';
+import * as API from './Connection';
 
-export { ConnectionConfig } from './ConnectionConfig';
-
-export { Provider } from './Provider';
+export { API };

@@ -1,9 +1,9 @@
 import { providers } from '../../src/consts';
 import WebSocketConnection from '../../src/providers/WebSocketConnection';
 import RSocketConnection from '../../src/providers/RSocketConnection';
-import { Provider } from '../../src/api';
+import { API } from '../../src';
 
-export const getConnectionProvider = (provider: Provider) => {
+export const getConnectionProvider = (provider: API.Provider) => {
   switch (provider) {
     case providers.websocket:
       return new WebSocketConnection();

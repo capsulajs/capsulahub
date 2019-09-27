@@ -1,5 +1,5 @@
 import bootstrap from './ConnectionService';
-import * as API from './api';
+import { API } from './api';
 
 declare let publicExports: object;
 

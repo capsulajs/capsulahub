@@ -1,15 +1,15 @@
-import { API } from '@capsulajs/capsulahub-workspace';
-import { Connection, ConnectionConfig } from './api';
+import { API as WORKSPACE_API } from '@capsulajs/capsulahub-workspace';
+import { API } from '.';
 import { messages, providers } from './consts';
 import WebSocketConnection from './providers/WebSocketConnection';
 import RSocketConnection from './providers/RSocketConnection';
 import { isNonEmptyString } from './helpers/validators';
 
-export default (workspace: API.Workspace, serviceConfig: ConnectionConfig) => {
+export default (workspace: WORKSPACE_API.Workspace, serviceConfig: API.ConnectionConfig) => {
   return new Promise((resolve, reject) => {
     const { provider, serviceName } = serviceConfig;
 
-    let connectionService: Connection | undefined;
+    let connectionService: API.Connection | undefined;
 
     switch (provider) {
       case providers.websocket:

@@ -1,4 +1,4 @@
-import { Provider } from '../../src/api';
+import { API } from '../../src';
 
 export const baseInvalidValues = [null, undefined, 123, ' ', '', true, false, [], ['test'], {}, { test: 'test' }];
 
@@ -15,7 +15,7 @@ interface DefaultRequest {
 
 export const defaultEnvKey = 'develop';
 
-export const defaultRequests: Record<Provider, DefaultRequest> = {
+export const defaultRequests: Record<API.Provider, DefaultRequest> = {
   websocket: { envKey: 'develop', getEndpoint: endpoints.websocket, data: { hello: 'World !' } },
   rsocket: {
     envKey: defaultEnvKey,

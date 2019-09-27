@@ -1,13 +1,13 @@
 import { Subscription } from 'rxjs';
 import { baseInvalidValues, defaultEnvKey, defaultRequests } from '../helpers/consts';
-import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '../../src/api';
+import { API } from '../../src';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
 import RSocketServer, { IRSocketServer } from '../helpers/RSocketServer';
 
 describe.each(Object.values(providers))('ConnectionService (%s) open method test suite', (provider) => {
   const port = 4040;
-  let connection: ConnectionInterface;
+  let connection: API.Connection;
   let subscription: Subscription;
   let rsServer: IRSocketServer;
   const { envKey, getEndpoint } = defaultRequests[provider];
@@ -27,7 +27,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   });
 
   beforeEach(() => {
-    connection = getConnectionProvider(provider as Provider)!;
+    connection = getConnectionProvider(provider as API.Provider)!;
   });
 
   afterEach((done) => {
@@ -45,16 +45,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it('Calling open with a valid request', (done) => {
     expect.assertions(8);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
       }
@@ -85,12 +85,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
     expect.assertions(11);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
@@ -98,7 +98,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
           expect(event.data).toBe(messages.connectionError);
           break;
         case 3:
-          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          expect(event.type).toBe(eventTypes.disconnected);
           expect(event.data).toBe(undefined);
           break;
       }
@@ -117,12 +117,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it('Calling open with a valid request and an error while the creation of Client', (done) => {
     expect.assertions(11);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
@@ -135,7 +135,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
           }
           break;
         case 3:
-          expect(event.type).toBe(eventTypes.disconnectionCompleted);
+          expect(event.type).toBe(eventTypes.disconnected);
           expect(event.data).toBe(undefined);
           break;
       }
@@ -153,16 +153,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it('Calling open when there is a "pending connection"', (done) => {
     expect.assertions(9);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
         case 1:
-          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.type).toBe(eventTypes.connecting);
           expect(event.data).toBe(undefined);
           break;
         case 2:
-          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.type).toBe(eventTypes.connected);
           expect(event.data).toBe(undefined);
           break;
       }

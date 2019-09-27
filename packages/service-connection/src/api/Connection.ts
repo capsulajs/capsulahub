@@ -1,13 +1,34 @@
 import { Observable } from 'rxjs';
 
+export interface ConnectionConfig {
+  provider: Provider;
+  serviceName: string;
+}
+
+export type Provider = 'websocket' | 'rsocket';
+
+export type ConnectingEvent = 'connecting';
+
+export type ConnectedEvent = 'connected';
+
+export type DisconnectingEvent = 'disconnecting';
+
+export type DisconnectedEvent = 'disconnecting';
+
+export type ErrorEvent = 'error';
+
+export type MessageSentEvent = 'messageSent';
+
+export type MessageReceivedEvent = 'messageReceived';
+
 export type EventType =
-  | 'connecting'
-  | 'connected'
-  | 'disconnecting'
-  | 'disconnected'
-  | 'error'
-  | 'messageSent'
-  | 'messageReceived';
+  | ConnectingEvent
+  | ConnectedEvent
+  | DisconnectingEvent
+  | DisconnectedEvent
+  | ErrorEvent
+  | MessageSentEvent
+  | MessageReceivedEvent;
 
 export interface Connection {
   /**
