@@ -63,7 +63,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     setTimeout(() => {
       expect(count).toBe(2);
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it.each(baseInvalidValues)('Calling open with an invalid envKey: %s', (invalidEnvKey) => {
@@ -110,7 +110,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     setTimeout(() => {
       expect(count).toEqual(3);
       done();
-    }, 2000);
+    }, 1000);
   });
 
   // TODO Add feature
@@ -147,7 +147,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     setTimeout(() => {
       expect(count).toEqual(3);
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('Calling open when there is a "pending connection"', (done) => {
@@ -173,7 +173,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     setTimeout(() => {
       expect(count).toEqual(2);
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('Calling open when connection is already established for `envKey`', async () => {

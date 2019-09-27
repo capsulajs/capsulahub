@@ -67,12 +67,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
           break;
         case 4:
           expect(event.type).toBe(eventTypes.messageReceived);
-          if (provider === providers.websocket) {
-            expect(event.data).toBe(defaultWsData);
-          }
-          if (provider === providers.rsocket) {
-            expect(event.data).toBe(rsocketRequestResponseResponse);
-          }
+          expect(event.data).toBe(provider === providers.websocket ? defaultWsData : rsocketRequestResponseResponse);
           break;
       }
     });
@@ -126,12 +121,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
           break;
         case 4:
           expect(event.type).toBe(eventTypes.messageReceived);
-          if (provider === providers.websocket) {
-            expect(event.data).toBe(defaultWsData);
-          }
-          if (provider === providers.rsocket) {
-            expect(event.data).toBe(rsocketRequestResponseResponse);
-          }
+          expect(event.data).toBe(provider === providers.websocket ? defaultWsData : rsocketRequestResponseResponse);
           break;
       }
     });
@@ -226,7 +216,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     return connection
       .send(request)
       .catch((error) => expect(error).toEqual(new Error(messages.noConnection(envKey))))
-      .finally(() => done());
+      .then(done);
   });
 
   it(`Calling send with a valid RSocket request (request/stream)`, async (done) => {

@@ -6,6 +6,7 @@ import { baseInvalidValues } from '../helpers/consts';
 
 describe('ConnectionService bootstrap test suite', () => {
   it('ConnectionService extension bootstrap function resolves correctly and triggers the registration of an instance of WebSocketConnectionService in Workspace', async () => {
+    expect.assertions(2);
     const serviceName = 'WebSocketConnectionService';
     const mock = jest.fn();
     const workspace = { registerService: mock };
@@ -18,6 +19,7 @@ describe('ConnectionService bootstrap test suite', () => {
   });
 
   it('ConnectionService extension bootstrap function resolves correctly and triggers the registration of an instance of RSocketConnectionService in Workspace', async () => {
+    expect.assertions(2);
     const serviceName = 'RSocketConnectionService';
     const mock = jest.fn();
     const workspace = { registerService: mock };
@@ -33,6 +35,7 @@ describe('ConnectionService bootstrap test suite', () => {
     'ConnectionService extension bootstrap function rejects with an' +
       ' error if "provider" is not in configuration: %s',
     (invalidProvider) => {
+      expect.assertions(1);
       const mock = jest.fn();
       const workspace = { registerService: mock };
       const config = { provider: invalidProvider, serviceName: 'ConnectionService' };
@@ -47,6 +50,7 @@ describe('ConnectionService bootstrap test suite', () => {
   it.each(baseInvalidValues)(
     'ConnectionService extension bootstrap function rejects with an error if "serviceName" is not in configuration: %s',
     (invalidServiceName) => {
+      expect.assertions(1);
       const mock = jest.fn();
       const workspace = { registerService: mock };
       const config = { provider: 'rsocket', serviceName: invalidServiceName };

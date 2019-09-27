@@ -73,7 +73,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
     setTimeout(() => {
       expect(count).toBe(4);
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it.each(baseInvalidValues)('Calling close with an invalid request: %s', async (invalidRequest) => {
@@ -120,6 +120,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
     setTimeout(() => {
       expect(count).toBe(4);
       done();
-    }, 2000);
+    }, 1000);
   });
 });
