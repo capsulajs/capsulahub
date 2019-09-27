@@ -1,13 +1,13 @@
 const endpoints = {
-  websocket: 'wss://echo.websocket.org',
-  rsocket: 'ws://localhost:8080',
+  websocket: () => 'wss://echo.websocket.org',
+  rsocket: (port: number) => `ws://localhost:${port}`,
 };
 
 export const defaultRequests: { [key: string]: any } = {
-  websocket: { envKey: 'develop', endpoint: endpoints.websocket, data: { hello: 'World !' } },
+  websocket: { envKey: 'develop', getEndpoint: endpoints.websocket, data: { hello: 'World !' } },
   rsocket: {
     envKey: 'develop',
-    endpoint: endpoints.rsocket,
+    getEndpoint: endpoints.rsocket,
     data: {
       data: {
         qualifier: '/greeting',

@@ -2,22 +2,24 @@ import { Subscription } from 'rxjs';
 import { defaultEnvKey, defaultRequests } from '../helpers/consts';
 import { Connection as ConnectionInterface, ConnectionEvent, Provider, SendMessageRequest } from '../../src/api';
 import { asyncModels, eventTypes, messages, providers } from '../../src/consts';
-import RSocketServer, { IRSocketServer } from '../helpers/rSocketServer';
+import RSocketServer, { IRSocketServer } from '../helpers/RSocketServer';
 import { getConnectionProvider } from '../helpers/utils';
 
 describe.each(Object.values(providers))('ConnectionService (%s) send method test suite', (provider) => {
+  const port = 8080;
   let connection: ConnectionInterface;
   let rsServer: IRSocketServer;
   let subscription: Subscription;
   let shouldCloseConnection = false;
-  const { envKey, endpoint, data } = defaultRequests[provider];
+  const { envKey, getEndpoint, data } = defaultRequests[provider];
+  const endpoint = getEndpoint(port);
   const defaultWsData = '{"hello":"World !"}';
   const defaultRsocketData = '{"data":{"hello":"Greetings to Dmitriy!"}}';
   const streamRsocketData = (count: number) => `{"message":"Original name: Dmitriy","count":${count}}`;
 
   beforeAll(() => {
     if (provider === providers.rsocket) {
-      rsServer = new RSocketServer();
+      rsServer = new RSocketServer({ port });
       return rsServer.start();
     }
   });

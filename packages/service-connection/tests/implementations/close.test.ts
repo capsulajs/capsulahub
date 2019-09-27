@@ -3,18 +3,20 @@ import { Connection as ConnectionInterface, ConnectionEvent, Provider } from '..
 import { defaultEnvKey, defaultRequests } from '../helpers/consts';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
-import RSocketServer, { IRSocketServer } from '../helpers/rSocketServer';
+import RSocketServer, { IRSocketServer } from '../helpers/RSocketServer';
 
 describe.each(Object.values(providers))('ConnectionService (%s) close method test suite', (provider) => {
+  const port = 3030;
   let connection: ConnectionInterface;
   let rsServer: IRSocketServer;
   let subscription: Subscription;
   let shouldCloseConnection = false;
-  const { envKey, endpoint } = defaultRequests[provider];
+  const { envKey, getEndpoint } = defaultRequests[provider];
+  const endpoint = getEndpoint(port);
 
   beforeAll(() => {
     if (provider === providers.rsocket) {
-      rsServer = new RSocketServer();
+      rsServer = new RSocketServer({ port });
       return rsServer.start();
     }
   });

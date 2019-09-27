@@ -28,7 +28,7 @@ const requestResponseHandler = (data: any) => {
 export default class RSServer implements IRSocketServer {
   private server: RSocketServer;
 
-  constructor() {
+  constructor({ port = 8080 }: { port: number }) {
     this.server = new RSocketServer({
       getRequestHandler: () => {
         return {
@@ -62,7 +62,7 @@ export default class RSServer implements IRSocketServer {
       transport: new RSocketWebSocketServer({
         protocol: 'ws',
         host: '0.0.0.0',
-        port: 8080,
+        port,
       }),
     });
   }
@@ -81,7 +81,7 @@ export default class RSServer implements IRSocketServer {
       setTimeout(() => {
         this.server.stop();
         resolve();
-      }, 500);
+      }, 100);
     });
   }
 }
