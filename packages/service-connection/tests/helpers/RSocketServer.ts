@@ -10,7 +10,17 @@ export interface IRSocketServer {
   stop: () => Promise<void>;
 }
 
-const requestResponseHandler = (data: any) => {
+type RequestResponseHandler = (request: { data: any; metadata: any }) => Promise<{ data: any }>;
+
+type RequestStreamHandler = (request: { subscriber: any; data: any; metadata: any }) => any;
+
+export interface IRSocketServerOptions {
+  port?: number;
+  requestResponseHandler?: RequestResponseHandler;
+  requestStreamHandler?: RequestStreamHandler;
+}
+
+const defaultRequestResponseHandler: RequestResponseHandler = ({ data }) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       let responseData;
@@ -25,33 +35,41 @@ const requestResponseHandler = (data: any) => {
   });
 };
 
+const defaultRequestStreamHandler: RequestStreamHandler = ({ data, subscriber }) => {
+  let index = 0;
+  if (data.qualifier === '/timer') {
+    return setInterval(() => {
+      subscriber.onNext({ data: { message: `Original name: ${data.data.name}`, count: index++ } });
+    }, 500);
+  }
+};
+
 export default class RSServer implements IRSocketServer {
   private server: RSocketServer;
 
-  constructor({ port = 8080 }: { port: number }) {
+  constructor({
+    port = 8080,
+    requestResponseHandler = defaultRequestResponseHandler,
+    requestStreamHandler = defaultRequestStreamHandler,
+  }: IRSocketServerOptions) {
     this.server = new RSocketServer({
       getRequestHandler: () => {
         return {
-          requestResponse({ data }: { data: any }) {
+          requestResponse({ data, metadata }: { data: any; metadata: any }) {
             return new Single((subscriber: any) => {
-              requestResponseHandler(data).then((response) => subscriber.onComplete(response));
+              requestResponseHandler({ data, metadata }).then((response) => subscriber.onComplete(response));
               subscriber.onSubscribe();
             });
           },
-          requestStream({ data }: { data: any }) {
+          requestStream({ data, metadata }: { data: any; metadata: any }) {
             return new Flowable((subscriber: any) => {
-              let index = 0;
               let intervalId: any;
               subscriber.onSubscribe({
                 cancel: () => {
-                  clearInterval(intervalId);
+                  intervalId && clearInterval(intervalId);
                 },
                 request: (_: number) => {
-                  if (data.qualifier === '/timer') {
-                    intervalId = setInterval(() => {
-                      subscriber.onNext({ data: { message: `Original name: ${data.data.name}`, count: index++ } });
-                    }, 500);
-                  }
+                  intervalId = requestStreamHandler({ subscriber, data, metadata });
                 },
               });
             });
