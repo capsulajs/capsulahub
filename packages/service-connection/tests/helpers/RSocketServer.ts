@@ -10,7 +10,7 @@ export interface IRSocketServer {
   stop: () => Promise<void>;
 }
 
-type RequestResponseHandler = (request: { data: any; metadata: any }) => Promise<{ data: any }>;
+type RequestResponseHandler = (request: { subscriber: any; data: any; metadata: any }) => void;
 
 type RequestStreamHandler = (request: { subscriber: any; data: any; metadata: any }) => any;
 
@@ -20,27 +20,36 @@ export interface IRSocketServerOptions {
   requestStreamHandler?: RequestStreamHandler;
 }
 
-const defaultRequestResponseHandler: RequestResponseHandler = ({ data }) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      let responseData;
-      switch (data.qualifier) {
-        case '/greeting': {
-          responseData = { data: { hello: `Greetings to ${data.data.name}!` } };
-          break;
+const defaultRequestResponseHandler: RequestResponseHandler = ({ subscriber, data }) => {
+  setTimeout(() => {
+    switch (data.qualifier) {
+      case '/greeting': {
+        if (!data.data.name) {
+          subscriber.onError(new Error('Server error: "name" should be provided for "/greeting"'));
+        } else {
+          subscriber.onComplete({ data: { data: { hello: `Greetings to ${data.data.name}!` } } });
         }
+        break;
       }
-      resolve({ data: responseData });
-    }, 100);
-  });
+    }
+  }, 100);
 };
 
 const defaultRequestStreamHandler: RequestStreamHandler = ({ data, subscriber }) => {
-  let index = 0;
   if (data.qualifier === '/timer') {
-    return setInterval(() => {
-      subscriber.onNext({ data: { message: `Original name: ${data.data.name}`, count: index++ } });
-    }, 500);
+    if (!data.data.count) {
+      return subscriber.onError(new Error('Server error: "count" should be provided for "/timer"'));
+    }
+    let currentCount = 0;
+    let countLeft = data.data.count;
+    const intervalId = setInterval(() => {
+      if (!countLeft) {
+        clearInterval(intervalId);
+      } else {
+        subscriber.onNext({ data: { data: { currentCount: ++currentCount, countLeft: --countLeft } } });
+      }
+    }, 200);
+    return intervalId;
   }
 };
 
@@ -57,7 +66,7 @@ export default class RSServer implements IRSocketServer {
         return {
           requestResponse({ data, metadata }: { data: any; metadata: any }) {
             return new Single((subscriber: any) => {
-              requestResponseHandler({ data, metadata }).then((response) => subscriber.onComplete(response));
+              requestResponseHandler({ subscriber, data, metadata });
               subscriber.onSubscribe();
             });
           },

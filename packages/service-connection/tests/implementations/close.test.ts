@@ -10,7 +10,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   let connection: ConnectionInterface;
   let rsServer: IRSocketServer;
   let subscription: Subscription;
-  let shouldCloseConnection = false;
   const { envKey, getEndpoint } = defaultRequests[provider];
   const endpoint = getEndpoint(port);
 
@@ -31,12 +30,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
     connection = getConnectionProvider(provider as Provider)!;
   });
 
-  afterEach(() => {
+  afterEach((done) => {
     subscription && subscription.unsubscribe();
-    if (shouldCloseConnection) {
-      shouldCloseConnection = false;
-      return connection.close({ envKey });
-    }
+    return connection
+      .close({ envKey })
+      .then(() => {
+        done();
+      })
+      .catch(() => {
+        done();
+      });
   });
 
   it('Calling close with a valid request', async (done) => {
@@ -76,7 +79,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   const invalidRequests = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
 
   it.each(invalidRequests)('Calling close with an invalid request: %s', async (invalidRequest) => {
-    shouldCloseConnection = true;
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
     // @ts-ignore

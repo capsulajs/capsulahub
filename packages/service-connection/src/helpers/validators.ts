@@ -2,7 +2,7 @@ import { CloseConnectionRequest, OpenConnectionRequest, SendMessageRequest } fro
 
 export const isRSocketModelValid = (model: any) => model === 'request/response' || model === 'request/stream';
 
-const isNonEmptyString = (value: any) => typeof value === 'string' && !!value.replace(/\s/g, '').length;
+export const isNonEmptyString = (value: any) => typeof value === 'string' && !!value.trim().length;
 
 export const isOpenReqValid = (request: OpenConnectionRequest) => {
   return request.envKey && isNonEmptyString(request.envKey) && request.endpoint && isNonEmptyString(request.endpoint);

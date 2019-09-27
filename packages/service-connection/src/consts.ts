@@ -12,6 +12,7 @@ export const asyncModels = {
 
 export const messages = {
   noProvider: 'The provider has not been specified.',
+  noServiceName: 'ServiceName is missing or has a wrong format',
   wrongProvider: 'The provider you tried to use is not supported.',
   invalidRequest: 'The request you provided is not correct.',
   noConnection: (envKey: string) => `${envKey} is not connected.`,

@@ -10,7 +10,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   let connection: ConnectionInterface;
   let subscription: Subscription;
   let rsServer: IRSocketServer;
-  let shouldCloseConnection = false;
   const { envKey, getEndpoint } = defaultRequests[provider];
   const endpoint = getEndpoint(port);
 
@@ -31,18 +30,21 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     connection = getConnectionProvider(provider as Provider)!;
   });
 
-  afterEach(() => {
+  afterEach((done) => {
     subscription && subscription.unsubscribe();
-    if (shouldCloseConnection) {
-      shouldCloseConnection = false;
-      return connection.close({ envKey });
-    }
+    return connection
+      .close({ envKey })
+      .then(() => {
+        done();
+      })
+      .catch(() => {
+        done();
+      });
   });
 
   it('Calling open with a valid request', (done) => {
     expect.assertions(8);
     let count = 0;
-    shouldCloseConnection = true;
     subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
@@ -152,7 +154,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
 
   it('Calling open when there is a "pending connection"', (done) => {
     expect.assertions(9);
-    shouldCloseConnection = true;
     let count = 0;
     subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);

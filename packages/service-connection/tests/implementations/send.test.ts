@@ -10,12 +10,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   let connection: ConnectionInterface;
   let rsServer: IRSocketServer;
   let subscription: Subscription;
-  let shouldCloseConnection = false;
   const { envKey, getEndpoint, data } = defaultRequests[provider];
   const endpoint = getEndpoint(port);
   const defaultWsData = '{"hello":"World !"}';
-  const defaultRsocketData = '{"data":{"hello":"Greetings to Dmitriy!"}}';
-  const streamRsocketData = (count: number) => `{"message":"Original name: Dmitriy","count":${count}}`;
+  const rsocketRequestResponseResponse = '{"data":{"hello":"Greetings to Dmitriy!"}}';
+  const getRsocketRequestStreamResponse = (currentCount: number, countLeft: number) =>
+    `{"data":{"currentCount":${currentCount},"countLeft":${countLeft}}}`;
 
   beforeAll(() => {
     if (provider === providers.rsocket) {
@@ -34,12 +34,16 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     connection = getConnectionProvider(provider as Provider)!;
   });
 
-  afterEach(() => {
+  afterEach((done) => {
     subscription && subscription.unsubscribe();
-    if (shouldCloseConnection) {
-      shouldCloseConnection = false;
-      return connection.close({ envKey });
-    }
+    return connection
+      .close({ envKey })
+      .then(() => {
+        done();
+      })
+      .catch(() => {
+        done();
+      });
   });
 
   it(`Calling send with a valid request (${provider})`, async (done) => {
@@ -67,7 +71,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
             expect(event.data).toBe(defaultWsData);
           }
           if (provider === providers.rsocket) {
-            expect(event.data).toBe(defaultRsocketData);
+            expect(event.data).toBe(rsocketRequestResponseResponse);
           }
           break;
       }
@@ -86,10 +90,9 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it(`Calling send without providing model (${provider})`, () => {
-    if (provider !== 'rsocket') {
+    if (provider !== providers.rsocket) {
       return Promise.resolve(true);
     }
-    shouldCloseConnection = true;
     expect.assertions(1);
     return connection
       .open({ envKey, endpoint })
@@ -97,7 +100,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it('Calling send when the connection is in "pending" state', (done) => {
-    shouldCloseConnection = true;
     expect.assertions(15);
     let request = { envKey, data };
     let count = 0;
@@ -128,7 +130,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
             expect(event.data).toBe(defaultWsData);
           }
           if (provider === providers.rsocket) {
-            expect(event.data).toBe(defaultRsocketData);
+            expect(event.data).toBe(rsocketRequestResponseResponse);
           }
           break;
       }
@@ -143,8 +145,9 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
 
   const invalidValues = [null, undefined, 123, ' ', true, [], ['test'], {}, { test: 'test' }];
 
-  it.each(invalidValues)('Calling send with a invalid envKey', (invalidEnvKey) => {
+  it.each(invalidValues)('Calling send with a invalid envKey', async (invalidEnvKey) => {
     expect.assertions(1);
+    await connection.open({ envKey, endpoint });
     let invalidRequest = { envKey: invalidEnvKey, data };
     if (provider === providers.rsocket) {
       invalidRequest = { ...invalidRequest, model: asyncModels.requestResponse } as SendMessageRequest;
@@ -154,10 +157,9 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it.each(invalidValues)(`Calling send with a invalid model (${provider})`, async (invalidModel) => {
-    if (provider !== 'rsocket') {
+    if (provider !== providers.rsocket) {
       return true;
     }
-    shouldCloseConnection = true;
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
     // @ts-ignore
@@ -230,12 +232,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it(`Calling send with a valid RSocket request (request/stream)`, async (done) => {
-    if (provider !== 'rsocket') {
+    if (provider !== providers.rsocket) {
       done();
       return true;
     }
     expect.assertions(23);
-    const streamData = { data: { qualifier: '/timer', data: { name: 'Dmitriy' } } };
+    const streamData = { data: { qualifier: '/timer', data: { count: 100 } } };
     let count = 0;
     subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
       expect(event.envKey).toEqual(defaultEnvKey);
@@ -255,11 +257,11 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
           break;
         case 4:
           expect(event.type).toBe(eventTypes.messageReceived);
-          expect(event.data).toBe(streamRsocketData(0));
+          expect(event.data).toBe(getRsocketRequestStreamResponse(1, 99));
           break;
         case 5:
           expect(event.type).toBe(eventTypes.messageReceived);
-          expect(event.data).toBe(streamRsocketData(1));
+          expect(event.data).toBe(getRsocketRequestStreamResponse(2, 98));
           connection.close({ envKey });
           break;
         case 6:
@@ -283,6 +285,96 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
 
     setTimeout(() => {
       expect(count).toEqual(7);
+      done();
+    }, 2000);
+  });
+
+  it(`Calling send with a valid RSocket request (request/response) - server error has been received`, async (done) => {
+    if (provider !== providers.rsocket) {
+      done();
+      return true;
+    }
+    expect.assertions(14);
+    const requestData = { data: { qualifier: '/greeting', data: {} } };
+    let count = 0;
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+      expect(event.envKey).toEqual(defaultEnvKey);
+      count++;
+      switch (count) {
+        case 1:
+          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.data).toBe(undefined);
+          break;
+        case 2:
+          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.data).toBe(undefined);
+          break;
+        case 3:
+          expect(event.type).toBe(eventTypes.messageSent);
+          expect(event.data).toBe(requestData);
+          break;
+        case 4:
+          expect(event.type).toBe(eventTypes.error);
+          expect(event.data).toBe('Server error: "name" should be provided for "/greeting"');
+          break;
+      }
+    });
+    await connection.open({ envKey, endpoint });
+    const request = {
+      envKey,
+      data: requestData,
+      model: asyncModels.requestResponse,
+    };
+
+    expect(connection.send(request)).resolves.toEqual(undefined);
+
+    setTimeout(() => {
+      expect(count).toEqual(4);
+      done();
+    }, 2000);
+  });
+
+  it(`Calling send with a valid RSocket request (request/stream) - server error has been received`, async (done) => {
+    if (provider !== providers.rsocket) {
+      done();
+      return true;
+    }
+    expect.assertions(14);
+    const streamData = { data: { qualifier: '/timer', data: {} } };
+    let count = 0;
+    subscription = connection.events$({}).subscribe((event: ConnectionEvent) => {
+      expect(event.envKey).toEqual(defaultEnvKey);
+      count++;
+      switch (count) {
+        case 1:
+          expect(event.type).toBe(eventTypes.connectionStarted);
+          expect(event.data).toBe(undefined);
+          break;
+        case 2:
+          expect(event.type).toBe(eventTypes.connectionCompleted);
+          expect(event.data).toBe(undefined);
+          break;
+        case 3:
+          expect(event.type).toBe(eventTypes.messageSent);
+          expect(event.data).toBe(streamData);
+          break;
+        case 4:
+          expect(event.type).toBe(eventTypes.error);
+          expect(event.data).toBe('Server error: "count" should be provided for "/timer"');
+          break;
+      }
+    });
+    await connection.open({ envKey, endpoint });
+    const request = {
+      envKey,
+      data: streamData,
+      model: asyncModels.requestStream,
+    };
+
+    expect(connection.send(request)).resolves.toEqual(undefined);
+
+    setTimeout(() => {
+      expect(count).toEqual(4);
       done();
     }, 2000);
   });
