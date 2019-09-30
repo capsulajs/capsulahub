@@ -2,7 +2,14 @@ import { Subject } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { API } from '..';
 import { eventTypes, messages } from '../consts';
-import { isCloseReqValid, isOpenReqValid, isSendReqValid } from '../helpers/validators';
+import {
+  isCloseReqValid,
+  isOpenReqValid,
+  isSendReqValid,
+  validateReadyStateForOpen,
+  validateReadyStateForClose,
+  validateReadyStateForSend,
+} from '../helpers/validators';
 import { ReadyState } from '../helpers/types';
 
 type WsConnection = Promise<{ ws?: WebSocket; error?: string }>;
@@ -11,11 +18,11 @@ export default class WebSocketConnection implements API.Connection {
   private connections: {
     [envKey: string]: { wsConnection: WsConnection; wsDisconnected: Promise<void>; readyState: ReadyState };
   };
-  private readonly receivedEvents$: Subject<API.ConnectionEvent>;
+  private readonly receivedEvents$: Subject<API.ConnectionEventData>;
 
   constructor() {
     this.connections = {};
-    this.receivedEvents$ = new Subject<API.ConnectionEvent>();
+    this.receivedEvents$ = new Subject<API.ConnectionEventData>();
   }
 
   public open = (openConnectionRequest: API.OpenConnectionRequest): Promise<void> => {
@@ -25,13 +32,12 @@ export default class WebSocketConnection implements API.Connection {
       }
 
       const { envKey, endpoint } = openConnectionRequest;
-      const connection = this.connections[envKey] || undefined;
-
-      if (connection && connection.readyState === eventTypes.connecting) {
-        return reject(new Error(messages.pendingConnection(envKey)));
-      }
-      if (connection && connection.readyState === eventTypes.connected) {
-        return reject(new Error(messages.alreadyConnected(envKey)));
+      if (!!this.connections[envKey]) {
+        try {
+          validateReadyStateForOpen({ connection: this.connections[envKey], envKey });
+        } catch (error) {
+          return reject(error);
+        }
       }
 
       return this.createNewConnection({ envKey, endpoint })
@@ -49,13 +55,11 @@ export default class WebSocketConnection implements API.Connection {
       }
 
       const { envKey } = closeConnectionRequest;
-      const connection = this.connections[envKey] || undefined;
-
-      if (connection && connection.readyState === eventTypes.disconnecting) {
-        return reject(new Error(messages.pendingDisconnection(envKey)));
-      }
-      if (!connection || connection.readyState === eventTypes.disconnected) {
-        return reject(new Error(messages.noConnection(envKey)));
+      const connection = this.connections[envKey];
+      try {
+        validateReadyStateForClose({ connection, envKey });
+      } catch (error) {
+        return reject(error);
       }
 
       this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnecting };
@@ -80,14 +84,11 @@ export default class WebSocketConnection implements API.Connection {
       }
 
       const { envKey, data } = sendMessageRequest;
-      const connection = this.connections[envKey] || undefined;
-
-      if (
-        (connection && connection.readyState === eventTypes.disconnecting) ||
-        !connection ||
-        connection.readyState === eventTypes.disconnected
-      ) {
-        return reject(new Error(messages.noConnection(envKey)));
+      const connection = this.connections[envKey];
+      try {
+        validateReadyStateForSend({ connection, envKey });
+      } catch (error) {
+        return reject(error);
       }
 
       return this.connections[envKey].wsConnection.then(({ ws, error }) => {
@@ -124,13 +125,13 @@ export default class WebSocketConnection implements API.Connection {
       }
 
       const receivedEventsForCurrentConnection$ = this.receivedEvents$.pipe(
-        filter((event: API.ConnectionEvent) => event.envKey === envKey)
+        filter((event: API.ConnectionEventData) => event.envKey === envKey)
       );
       const wsConnection: WsConnection = new Promise((resolveWS) => {
         receivedEventsForCurrentConnection$
           .pipe(
             filter(
-              (event: API.ConnectionEvent) => event.type === eventTypes.connected || event.type === eventTypes.error
+              (event: API.ConnectionEventData) => event.type === eventTypes.connected || event.type === eventTypes.error
             ),
             first()
           )
@@ -150,7 +151,7 @@ export default class WebSocketConnection implements API.Connection {
       const wsDisconnected = new Promise<void>((resolveWhenDisconnected) => {
         receivedEventsForCurrentConnection$
           .pipe(
-            filter((event: API.ConnectionEvent) => event.type === eventTypes.disconnected),
+            filter((event: API.ConnectionEventData) => event.type === eventTypes.disconnected),
             first()
           )
           .subscribe(() => {

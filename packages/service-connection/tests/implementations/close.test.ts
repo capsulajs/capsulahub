@@ -45,7 +45,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   it('Calling close with a valid request', async (done) => {
     expect.assertions(14);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -91,7 +91,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) close method tes
   it('Calling close when there is a "pending closing of connection"', async (done) => {
     expect.assertions(15);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {

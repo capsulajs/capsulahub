@@ -49,7 +49,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   it(`Calling send with a valid request (${provider})`, async (done) => {
     expect.assertions(14);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -103,7 +103,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
       request = { ...request, model: asyncModels.requestResponse } as API.SendMessageRequest;
     }
 
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -173,7 +173,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
       request = { ...request, model: asyncModels.requestResponse } as API.SendMessageRequest;
     }
 
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -227,7 +227,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     expect.assertions(23);
     const streamData = { data: { qualifier: '/timer', data: { count: 100 } } };
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -285,7 +285,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     expect.assertions(14);
     const requestData = { data: { qualifier: '/greeting', data: {} } };
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -330,7 +330,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     expect.assertions(14);
     const streamData = { data: { qualifier: '/timer', data: {} } };
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {

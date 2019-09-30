@@ -13,7 +13,7 @@ export type ConnectedEvent = 'connected';
 
 export type DisconnectingEvent = 'disconnecting';
 
-export type DisconnectedEvent = 'disconnecting';
+export type DisconnectedEvent = 'disconnected';
 
 export type ErrorEvent = 'error';
 
@@ -69,7 +69,7 @@ export interface Connection {
    * @returns
    * An Observable, that will emit all the possible events
    */
-  events$(events$Request: Events$Request): Observable<ConnectionEvent>;
+  events$(events$Request: Events$Request): Observable<ConnectionEventData>;
 }
 
 export interface OpenConnectionRequest {
@@ -91,7 +91,7 @@ export interface SendMessageRequest {
 
 export interface Events$Request {}
 
-export interface ConnectionEvent {
+export interface ConnectionEventData {
   type: EventType;
   envKey: string;
   data?: any;

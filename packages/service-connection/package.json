@@ -23,15 +23,13 @@
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3",
-    "@capsulajs/capsulajs-configuration-service": "latest",
-    "@capsulajs/capsulajs-transport-providers": "latest",
     "rsocket-core": "^0.0.10",
     "rsocket-websocket-client": "^0.0.10",
     "rxjs": "6.5.2"
   },
   "devDependencies": {
     "rsocket-flowable": "^0.0.10",
-    "rsocket-websocket-server": "^0.0.10"
+    "rsocket-websocket-server": "^0.0.10",
+    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3"
   }
 }

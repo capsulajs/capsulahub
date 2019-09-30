@@ -45,7 +45,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it('Calling open with a valid request', (done) => {
     expect.assertions(8);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -85,7 +85,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
     expect.assertions(11);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -117,7 +117,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it('Calling open with a valid request and an error while the creation of Client', (done) => {
     expect.assertions(11);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
@@ -153,7 +153,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   it('Calling open when there is a "pending connection"', (done) => {
     expect.assertions(9);
     let count = 0;
-    subscription = connection.events$({}).subscribe((event: API.ConnectionEvent) => {
+    subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
       count++;
       switch (count) {
