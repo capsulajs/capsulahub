@@ -82,6 +82,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     );
   });
 
+  // TODO Add disconnected event to feature
   it('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
     expect.assertions(11);
     let count = 0;

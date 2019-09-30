@@ -31,6 +31,7 @@ describe('ConnectionService bootstrap test suite', () => {
     expect(registerServiceMock.mock.calls[0][0].reference).toBeInstanceOf(RSocketConnection);
   });
 
+  // TODO Add list in feature
   it.each([...baseInvalidValues, 'wrongProvider'])(
     'ConnectionService extension bootstrap function rejects with an' +
       ' error if "provider" is not in configuration: %s',
@@ -45,6 +46,7 @@ describe('ConnectionService bootstrap test suite', () => {
     }
   );
 
+  // TODO Add feature
   it.each(baseInvalidValues)(
     'ConnectionService extension bootstrap function rejects with an error if "serviceName" is not in configuration: %s',
     (invalidServiceName) => {
