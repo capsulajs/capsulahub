@@ -82,7 +82,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     );
   });
 
-  // TODO Add disconnected event to feature
   it('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
     expect.assertions(11);
     let count = 0;
@@ -114,8 +113,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     }, 1000);
   });
 
-  // TODO Add feature
-  it('Calling open with a valid request and an error while the creation of Client', (done) => {
+  it('Calling open with a valid request and an error while the creation of socket instance occurs', (done) => {
     expect.assertions(11);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {

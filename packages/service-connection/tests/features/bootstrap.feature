@@ -21,8 +21,34 @@ Feature: Create Connection service extension for CapsulaHub
     And   The returned promise from a call of registration function is resolved (only after the resolve of bootstrap function)
     And   An instance of RSocketConnectionService is available
 
-  Scenario: ConnectionService extension bootstrap function rejects with an error if "provider" is not in configuration
+  Scenario: ConnectionService extension bootstrap function rejects with an error if "provider" is invalid or is not in configuration
     When  ConnectionService extension bootstrap function is called
-    And   The registration of ConnectionService in Workspace is triggered without any provider in config
-    Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "noProvider"
-    And   he registration of the ConnectionService in Workspace was not triggered
+    And   The registration of ConnectionService in Workspace is triggered with the following <provider>
+          |<provider>  |
+          |null        |
+          |undefined   |
+          |123         |
+          |' '         |
+          |true        |
+          |[]          |
+          |['test']    |
+          |{}          |
+          |{ test: [] }|
+    Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "wrongProvider"
+    And   the registration of the ConnectionService in Workspace was not triggered
+
+  Scenario: ConnectionService extension bootstrap function rejects with an error if "serviceName" is invalid or is not in configuration
+    When  ConnectionService extension bootstrap function is called
+    And   The registration of ConnectionService in Workspace is triggered with the following <serviceName>
+          |<serviceName>|
+          |null        |
+          |undefined   |
+          |123         |
+          |' '         |
+          |true        |
+          |[]          |
+          |['test']    |
+          |{}          |
+          |{ test: [] }|
+    Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "noServiceName"
+    And   the registration of the ConnectionService in Workspace was not triggered

@@ -165,7 +165,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     return expect(connection.send(request)).rejects.toEqual(new Error(messages.noConnection(envKey)));
   });
 
-  // TODO Add disconnected
   it('Calling send when "pending" state of connection failed', async (done) => {
     expect.assertions(12);
     let count = 0;
@@ -220,7 +219,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
       .then(done);
   });
 
-  // TODO Add feature
   it(`Calling send with a valid RSocket request (request/stream)`, async (done) => {
     if (provider !== providers.rsocket) {
       done();
@@ -279,7 +277,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     }, 2000);
   });
 
-  // TODO Add feature
   it(`Calling send with a valid RSocket request (request/response) - server error has been received`, async (done) => {
     if (provider !== providers.rsocket) {
       done();
@@ -325,7 +322,6 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
     }, 2000);
   });
 
-  // TODO Add feature
   it(`Calling send with a valid RSocket request (request/stream) - server error has been received`, async (done) => {
     if (provider !== providers.rsocket) {
       done();
