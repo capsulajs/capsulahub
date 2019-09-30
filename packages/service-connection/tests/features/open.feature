@@ -12,11 +12,11 @@ Background:
 Scenario: Calling open with a valid request
  Given  there is no "pending connection" or socket connection established
   When  user calls open method with a valid openConnectionRequest with envKey 'develop' and endpoint 'wss://develop.com'
-  Then  'connectionStarted' event is emitted
+  Then  'connecting' event is emitted
   And   the connection is in a pending state
   And   a socket connection is established for envKey 'develop'
   And   the promise, that was returned from close method has been resolved with void
-  And   'connectionCompleted' event is emitted
+  And   'connected' event is emitted
 
 Scenario: Calling open with an invalid envKey
  Given  there is no "pending connection" or socket connection established
@@ -49,26 +49,38 @@ Scenario: Calling open with an invalid endpoint
         |{ test: [] }|
   Then  the promise, that is returned from the call of the open method, rejects with an error
   And   socket connection is not established
-  
+
 Scenario: Calling open with a valid request and an error while establishing the connection occurs
  Given  there is no "pending connection" or socket connection established
   When  user calls open method with a valid openConnectionRequest and with envKey 'develop' and endpoint 'wss://develop.com'
   And   the connection is in a pending state
-  And  'connectionStarted' event is emitted
+  And  'connecting' event is emitted
   And   an error occurs while establishing the connection
-  And  'error' event is emitted
+  And   'error' event is emitted
   Then  the promise, that is returned from the call of the open method, rejects with an error
   And   no "pending connection" or socket connection is established
+  And   'disconnected' event is emitted
+
+Scenario: Calling open with a valid request and an error while the creation of socket instance occurs
+ Given  there is no "pending connection" or socket connection established
+  When  user calls open method with a valid openConnectionRequest and with envKey 'develop' and endpoint 'w'
+  And   the connection is in a pending state
+  And   'connectionStarted' event is emitted
+  Then  an error occurs while the creation of Client
+  And   'error' event is emitted
+  And   the promise, that is returned from the call of the open method, rejects with an error
+  And   no "pending connection" or socket connection is established
+  And   'disconnected' event is emitted
 
 Scenario: Calling open when there is a "pending connection"
   Given user calls open method with a valid openConnectionRequest with envKey 'develop' and endpoint 'wss://develop.com'
   And   the connection is in a pending state
-  And   'connectionStarted' event is emitted
+  And   'connecting' event is emitted
   When  user calls open method with a valid openConnectionRequest with envKey 'develop' and endpoint 'wss://develop.com'
   Then  the promise, that is returned from the second call of the open method, rejects with an error
-  And   'connectionStarted' event is emitted
+  And   'connecting' event is emitted
   And   the promise, that was returned from the first call of open method has been resolved with void
-  And   'connectionCompleted' event is emitted
+  And   'connected' event is emitted
   And   socket connection is established for 'develop' envKey
 
 Scenario: Calling open when connection is already established for `envKey`

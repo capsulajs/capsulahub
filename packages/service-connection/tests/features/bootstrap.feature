@@ -7,7 +7,7 @@ Feature: Create Connection service extension for CapsulaHub
 
   Scenario: ConnectionService extension bootstrap function resolves correctly and triggers the registration of an instance of WebSocketConnectionService in Workspace
     When  ConnectionService extension bootstrap function is called
-    And   serviceConfig is { provider: 'websocket' }
+    And   serviceConfig is { provider: 'websocket', serviceName: 'WebSocketConnectionService' }
     And   The registration of ConnectionService in Workspace is triggered with the correct arguments
     Then  The promise, that is returned from the call of the bootstrap function, resolves with no args
     And   The returned promise from a call of registration function is resolved (only after the resolve of bootstrap function)
@@ -15,20 +15,40 @@ Feature: Create Connection service extension for CapsulaHub
 
   Scenario: ConnectionService extension bootstrap function resolves correctly and triggers the registration of an instance of RSocketConnectionService in Workspace
     When  ConnectionService extension bootstrap function is called
-    And   serviceConfig is { provider: 'rsocket' }
+    And   serviceConfig is { provider: 'rsocket', serviceName: 'RSocketConnectionService' }
     And   The registration of ConnectionService in Workspace is triggered with the correct arguments
     Then  The promise, that is returned from the call of the bootstrap function, resolves with no args
     And   The returned promise from a call of registration function is resolved (only after the resolve of bootstrap function)
     And   An instance of RSocketConnectionService is available
 
-  Scenario: ConnectionService extension bootstrap function rejects with an error if the creation of an instance of ConnectionService throws an error
+  Scenario: ConnectionService extension bootstrap function rejects with an error if "provider" is invalid or is not in configuration
     When  ConnectionService extension bootstrap function is called
-    And   The creation of ConnectionService instance fails with an error "Error1"
-    Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "Error1"
-    And   The registration of the ConnectionService in Workspace was not triggered
-    
-  Scenario: ConnectionService extension bootstrap function rejects with an error if "provider" is not in configuration
+    And   The registration of ConnectionService in Workspace is triggered with the following <provider>
+          |<provider>  |
+          |null        |
+          |undefined   |
+          |123         |
+          |' '         |
+          |true        |
+          |[]          |
+          |['test']    |
+          |{}          |
+          |{ test: [] }|
+    Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "wrongProvider"
+    And   the registration of the ConnectionService in Workspace was not triggered
+
+  Scenario: ConnectionService extension bootstrap function rejects with an error if "serviceName" is invalid or is not in configuration
     When  ConnectionService extension bootstrap function is called
-    And   The registration of ConnectionService in Workspace is triggered without any provider in config
-    Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "noProvider"
-    And   he registration of the ConnectionService in Workspace was not triggered
+    And   The registration of ConnectionService in Workspace is triggered with the following <serviceName>
+          |<serviceName>|
+          |null        |
+          |undefined   |
+          |123         |
+          |' '         |
+          |true        |
+          |[]          |
+          |['test']    |
+          |{}          |
+          |{ test: [] }|
+    Then  The promise, that is returned from the call of the bootstrap function, rejects with an error "noServiceName"
+    And   the registration of the ConnectionService in Workspace was not triggered
