@@ -50,7 +50,9 @@ export default interface RequestFormUIProps {
    * @default "100%"
    */
   height: string;
-  /** If provided, the dropdown with these options will appear in the form and the selected value will be included in
-   *  SubmittedData */
+  /**
+   * If provided, the dropdown with these options will appear in the form and the selected value will be included in
+   * SubmittedData
+   */
   additionalOptions?: AdditionalOptions;
 }
