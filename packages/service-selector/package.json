@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3",
-    "lodash": "4.17.11",
+    "lodash": "^4.17.15",
     "rxjs": "6.5.2"
   }
 }
