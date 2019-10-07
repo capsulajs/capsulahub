@@ -43,10 +43,11 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   });
 
   it('Calling open with a valid request', (done) => {
-    expect.assertions(8);
+    expect.assertions(10);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(endpoint);
       count++;
       switch (count) {
         case 1:
@@ -83,10 +84,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   });
 
   it('Calling open with a valid request and an error while establishing the connection occurs', (done) => {
-    expect.assertions(11);
+    const wrongEndpoint = 'wss://echo.websocket.orgggg/';
+    expect.assertions(14);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(wrongEndpoint);
       count++;
       switch (count) {
         case 1:
@@ -103,9 +106,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
           break;
       }
     });
-    expect(connection.open({ envKey, endpoint: 'wss://echo.websocket.orgggg/' })).rejects.toEqual(
-      new Error(messages.connectionError)
-    );
+    expect(connection.open({ envKey, endpoint: wrongEndpoint })).rejects.toEqual(new Error(messages.connectionError));
 
     setTimeout(() => {
       expect(count).toEqual(3);
@@ -114,10 +115,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   });
 
   it('Calling open with a valid request and an error while the creation of socket instance occurs', (done) => {
-    expect.assertions(11);
+    expect.assertions(14);
+    const invalidEndpoint = 'w';
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(invalidEndpoint);
       count++;
       switch (count) {
         case 1:
@@ -127,7 +130,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
         case 2:
           expect(event.type).toBe(eventTypes.error);
           if (provider === providers.websocket) {
-            expect(event.data).toBe(messages.invalidURL('w'));
+            expect(event.data).toBe(messages.invalidURL(invalidEndpoint));
           }
           if (provider === providers.rsocket) {
             expect(event.data).toBe(messages.connectionError);
@@ -140,7 +143,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
       }
     });
 
-    connection.open({ envKey, endpoint: 'w' }).catch((error: Error) => {
+    connection.open({ envKey, endpoint: invalidEndpoint }).catch((error: Error) => {
       expect(error.message).toBe(messages.connectionError);
     });
     setTimeout(() => {
@@ -150,10 +153,11 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
   });
 
   it('Calling open when there is a "pending connection"', (done) => {
-    expect.assertions(9);
+    expect.assertions(11);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(endpoint);
       count++;
       switch (count) {
         case 1:

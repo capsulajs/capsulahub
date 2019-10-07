@@ -47,10 +47,11 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it(`Calling send with a valid request (${provider})`, async (done) => {
-    expect.assertions(14);
+    expect.assertions(18);
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(endpoint);
       count++;
       switch (count) {
         case 1:
@@ -95,7 +96,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it('Calling send when the connection is in "pending" state', (done) => {
-    expect.assertions(15);
+    expect.assertions(19);
     let request = { envKey, data };
     let count = 0;
 
@@ -105,6 +106,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
 
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(endpoint);
       count++;
       switch (count) {
         case 1:
@@ -166,7 +168,8 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
   });
 
   it('Calling send when "pending" state of connection failed', async (done) => {
-    expect.assertions(12);
+    const wrongEndpoint = 'wss://echo.websocket.orgggg/';
+    expect.assertions(15);
     let count = 0;
     let request = { envKey, data };
     if (provider === providers.rsocket) {
@@ -175,6 +178,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
 
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(wrongEndpoint);
       count++;
       switch (count) {
         case 1:
@@ -191,7 +195,7 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
           break;
       }
     });
-    connection.open({ envKey, endpoint: 'wss://echo.websocket.orgggg/' }).catch((error) => {
+    connection.open({ envKey, endpoint: wrongEndpoint }).catch((error) => {
       expect(error).toEqual(new Error(messages.connectionError));
     });
     connection.send(request).catch((error) => {
@@ -224,11 +228,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
       done();
       return true;
     }
-    expect.assertions(23);
+    expect.assertions(30);
     const streamData = { data: { qualifier: '/timer', data: { count: 100 } } };
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(endpoint);
       count++;
       switch (count) {
         case 1:
@@ -282,11 +287,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
       done();
       return true;
     }
-    expect.assertions(14);
+    expect.assertions(18);
     const requestData = { data: { qualifier: '/greeting', data: {} } };
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(endpoint);
       count++;
       switch (count) {
         case 1:
@@ -327,11 +333,12 @@ describe.each(Object.values(providers))('ConnectionService (%s) send method test
       done();
       return true;
     }
-    expect.assertions(14);
+    expect.assertions(18);
     const streamData = { data: { qualifier: '/timer', data: {} } };
     let count = 0;
     subscription = connection.events$({}).subscribe((event: API.ConnectionEventData) => {
       expect(event.envKey).toEqual(defaultEnvKey);
+      expect(event.endpoint).toEqual(endpoint);
       count++;
       switch (count) {
         case 1:

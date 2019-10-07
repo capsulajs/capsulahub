@@ -26,6 +26,7 @@ export default class RSocketConnection implements API.Connection {
       client: RSocketClient;
       rsDisconnected: Promise<void>;
       readyState: ReadyState;
+      endpoint: string;
     };
   };
   private readonly receivedEvents$: Subject<API.ConnectionEventData>;
@@ -71,7 +72,11 @@ export default class RSocketConnection implements API.Connection {
       }
 
       this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnecting };
-      this.receivedEvents$.next({ envKey, type: eventTypes.disconnecting });
+      this.receivedEvents$.next({
+        envKey,
+        type: eventTypes.disconnecting,
+        endpoint: this.connections[envKey].endpoint,
+      });
 
       return connection.rsConnection
         .then(({ error }) => {
@@ -103,6 +108,8 @@ export default class RSocketConnection implements API.Connection {
         return reject(error);
       }
 
+      const endpoint = this.connections[envKey].endpoint;
+
       return connection.rsConnection.then(({ socket, error }) => {
         if (socket) {
           if (model === asyncModels.requestResponse) {
@@ -112,13 +119,14 @@ export default class RSocketConnection implements API.Connection {
                   envKey,
                   data: JSON.stringify(response.data || ''),
                   type: eventTypes.messageReceived,
+                  endpoint,
                 });
               },
               onError: (requestResponseError: any) => {
                 this.handleSubscriptionError({ envKey, error: requestResponseError });
               },
             });
-            this.receivedEvents$.next({ envKey, type: eventTypes.messageSent, data });
+            this.receivedEvents$.next({ envKey, type: eventTypes.messageSent, data, endpoint });
             resolve();
           } else if (model === asyncModels.requestStream) {
             socket.requestStream(data).subscribe({
@@ -130,13 +138,14 @@ export default class RSocketConnection implements API.Connection {
                   envKey,
                   data: JSON.stringify(response.data || ''),
                   type: eventTypes.messageReceived,
+                  endpoint,
                 });
               },
               onError: (requestStreamError: any) => {
                 this.handleSubscriptionError({ envKey, error: requestStreamError });
               },
             });
-            this.receivedEvents$.next({ envKey, type: eventTypes.messageSent, data });
+            this.receivedEvents$.next({ envKey, type: eventTypes.messageSent, data, endpoint });
             resolve();
           }
         } else if (error) {
@@ -152,7 +161,7 @@ export default class RSocketConnection implements API.Connection {
 
   private createNewConnection = ({ envKey, endpoint }: API.OpenConnectionRequest): Promise<void> => {
     return new Promise((resolve, reject) => {
-      this.receivedEvents$.next({ envKey, type: eventTypes.connecting });
+      this.receivedEvents$.next({ envKey, type: eventTypes.connecting, endpoint });
       let socket: any;
       let client: RSocketClient;
       try {
@@ -171,8 +180,9 @@ export default class RSocketConnection implements API.Connection {
           envKey,
           data: error.message,
           type: eventTypes.error,
+          endpoint,
         });
-        this.receivedEvents$.next({ envKey, type: eventTypes.disconnected });
+        this.receivedEvents$.next({ envKey, type: eventTypes.disconnected, endpoint });
       }
 
       const receivedEventsForCurrentConnection$ = this.receivedEvents$.pipe(
@@ -212,7 +222,7 @@ export default class RSocketConnection implements API.Connection {
 
       this.connections = {
         ...this.connections,
-        [envKey]: { rsConnection, rsDisconnected, client, readyState: eventTypes.connecting },
+        [envKey]: { rsConnection, rsDisconnected, client, readyState: eventTypes.connecting, endpoint },
       };
 
       client.connect().subscribe({
@@ -225,11 +235,11 @@ export default class RSocketConnection implements API.Connection {
             onNext: (response: any) => {
               if (response.kind === 'CONNECTED' && this.connections[envKey].readyState !== eventTypes.connected) {
                 this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.connected };
-                this.receivedEvents$.next({ envKey, type: eventTypes.connected });
+                this.receivedEvents$.next({ envKey, type: eventTypes.connected, endpoint });
                 resolve();
               } else if (response.kind === 'CLOSED') {
                 this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnected };
-                this.receivedEvents$.next({ envKey, type: eventTypes.disconnected });
+                this.receivedEvents$.next({ envKey, type: eventTypes.disconnected, endpoint });
                 connectionStatusSub.unsubscribe();
               }
             },
@@ -240,9 +250,10 @@ export default class RSocketConnection implements API.Connection {
             envKey,
             data: messages.connectionError,
             type: eventTypes.error,
+            endpoint,
           });
           this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnected };
-          this.receivedEvents$.next({ envKey, type: eventTypes.disconnected });
+          this.receivedEvents$.next({ envKey, type: eventTypes.disconnected, endpoint });
           reject(new Error(messages.connectionError));
         },
       });
@@ -255,6 +266,7 @@ export default class RSocketConnection implements API.Connection {
         envKey,
         data: error.source ? error.source.message : error.message,
         type: eventTypes.error,
+        endpoint: this.connections[envKey].endpoint,
       });
     }
   };
