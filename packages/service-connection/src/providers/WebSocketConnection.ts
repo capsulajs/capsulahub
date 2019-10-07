@@ -16,7 +16,12 @@ type WsConnection = Promise<{ ws?: WebSocket; error?: string }>;
 
 export default class WebSocketConnection implements API.Connection {
   private connections: {
-    [envKey: string]: { wsConnection: WsConnection; wsDisconnected: Promise<void>; readyState: ReadyState };
+    [envKey: string]: {
+      wsConnection: WsConnection;
+      wsDisconnected: Promise<void>;
+      readyState: ReadyState;
+      endpoint: string;
+    };
   };
   private readonly receivedEvents$: Subject<API.ConnectionEventData>;
 
@@ -63,7 +68,11 @@ export default class WebSocketConnection implements API.Connection {
       }
 
       this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnecting };
-      this.receivedEvents$.next({ envKey, type: eventTypes.disconnecting });
+      this.receivedEvents$.next({
+        envKey,
+        type: eventTypes.disconnecting,
+        endpoint: this.connections[envKey].endpoint,
+      });
 
       return connection.wsConnection
         .then(({ ws, error }) => {
@@ -94,7 +103,12 @@ export default class WebSocketConnection implements API.Connection {
       return this.connections[envKey].wsConnection.then(({ ws, error }) => {
         if (ws) {
           ws.send(typeof data === 'string' ? data : JSON.stringify(data));
-          this.receivedEvents$.next({ envKey, type: eventTypes.messageSent, data });
+          this.receivedEvents$.next({
+            envKey,
+            type: eventTypes.messageSent,
+            data,
+            endpoint: this.connections[envKey].endpoint,
+          });
           return resolve();
         }
         if (error) {
@@ -110,7 +124,7 @@ export default class WebSocketConnection implements API.Connection {
 
   private createNewConnection = ({ envKey, endpoint }: API.OpenConnectionRequest): Promise<void> => {
     return new Promise((resolve, reject) => {
-      this.receivedEvents$.next({ envKey, type: eventTypes.connecting });
+      this.receivedEvents$.next({ envKey, type: eventTypes.connecting, endpoint });
       let ws: WebSocket;
       try {
         ws = new WebSocket(endpoint);
@@ -119,8 +133,9 @@ export default class WebSocketConnection implements API.Connection {
           envKey,
           data: error.message,
           type: eventTypes.error,
+          endpoint,
         });
-        this.receivedEvents$.next({ envKey, type: eventTypes.disconnected });
+        this.receivedEvents$.next({ envKey, type: eventTypes.disconnected, endpoint });
         return reject(new Error(messages.connectionError));
       }
 
@@ -161,12 +176,12 @@ export default class WebSocketConnection implements API.Connection {
 
       this.connections = {
         ...this.connections,
-        [envKey]: { wsConnection, wsDisconnected, readyState: eventTypes.connecting },
+        [envKey]: { wsConnection, wsDisconnected, readyState: eventTypes.connecting, endpoint },
       };
 
       ws.onopen = () => {
         this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.connected };
-        this.receivedEvents$.next({ envKey, type: eventTypes.connected });
+        this.receivedEvents$.next({ envKey, type: eventTypes.connected, endpoint });
         resolve();
       };
 
@@ -175,6 +190,7 @@ export default class WebSocketConnection implements API.Connection {
           envKey,
           data: event.data || '',
           type: eventTypes.messageReceived,
+          endpoint,
         });
       };
 
@@ -183,13 +199,14 @@ export default class WebSocketConnection implements API.Connection {
           envKey,
           data: messages.connectionError,
           type: eventTypes.error,
+          endpoint,
         });
         reject(new Error(messages.connectionError));
       };
 
       ws.onclose = () => {
         this.connections[envKey] = { ...this.connections[envKey], readyState: eventTypes.disconnected };
-        this.receivedEvents$.next({ envKey, type: eventTypes.disconnected });
+        this.receivedEvents$.next({ envKey, type: eventTypes.disconnected, endpoint });
       };
     });
   };

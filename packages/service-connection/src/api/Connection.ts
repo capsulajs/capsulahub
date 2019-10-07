@@ -93,6 +93,7 @@ export interface Events$Request {}
 
 export interface ConnectionEventData {
   type: EventType;
+  endpoint: string;
   envKey: string;
   data?: any;
 }
