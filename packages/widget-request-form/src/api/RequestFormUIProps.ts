@@ -14,42 +14,42 @@ export default interface RequestFormUIProps {
     requestArgs: string[] | string;
   };
   /** selectedService/selectedMethodInTheService */
-  selectedMethodPath: string;
+  selectedMethodPath?: string;
   /**
    * The visibility of "Language" dropdown
    * @default true
    */
-  isChangeLanguageVisible: boolean;
+  isChangeLanguageVisible?: boolean;
   /**
    * The visibility of "Args count"" dropdown
    * @default true
    */
-  isChangeArgsCountVisible: boolean;
+  isChangeArgsCountVisible?: boolean;
   /**
    * The visibility of selected methods path
    * @default true
    */
-  isSelectedMethodPathVisible: boolean;
+  isSelectedMethodPathVisible?: boolean;
   /**
    * The visibility of line numbers in the editor
    * @default true
    */
-  isLineNumberVisible: boolean;
+  isLineNumberVisible?: boolean;
   /**
    * The title of the form
    * @default "Request Form"
    */
-  title: string;
+  title?: string;
   /**
    * The width of the editor
    * @default "100%"
    */
-  width: string;
+  width?: string;
   /**
    * The height of the editor
    * @default "100%"
    */
-  height: string;
+  height?: string;
   /**
    * If provided, the dropdown with these options will appear in the form and the selected value will be included in
    * SubmittedData
