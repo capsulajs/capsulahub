@@ -173,3 +173,30 @@ Scenario: If content prop is changed, the form is updated correctly (2 editors r
     And   the content of the argument is updating in correspondence to requestArg value
     And   the input of the argument includes the string from requestArgs's array
     And   the language stays the same
+
+Scenario: If additionalOptions prop is provided, the dropdown with corresponding options will appear
+    Given Request Form web component
+    When  additionalOptions prop passed to the Request Form component with the following <data> and <type>
+          | <data >  | <type>  |
+          | label    | string  |
+          | fieldName| string  |
+          | options  | Option[]|
+    And   Option is an array of 'id' and 'label'
+    And   all other required props are provided
+    Then  the dropdown with options appears in the Request Form
+    And   the selected value in dropdown is first option from the options
+
+Scenario: If additionalOptions prop is not provided, the dropdown with corresponding options will not appear
+    Given Request Form web component
+    When  all other required props are provided
+    And   additionalOptions prop do not passed to the Request Form component
+    Then  the dropdown with options do not appear in the Request Form
+
+Scenario: The field with the name of additionalOptions is included with the id of a selected value when a user submits the form
+    Given Request Form web component
+    And   additionalOptions with several options and all other required props are provided
+    And   the dropdown with options appears in the Request Form
+    And   the selected value in dropdown is first option from the options
+    When  user selects an option from additionalOptions dropdown
+    And   user submits the request form
+    Then  the field with the name of additionalOptions is included with the id of a selected value
