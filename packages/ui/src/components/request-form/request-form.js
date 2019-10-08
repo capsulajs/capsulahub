@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
+import { ThemeProvider } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Editor from './editor';
 import Dropdown from '../form/dropdown';
 import Input from '../form/input';
 import Button from '../form/button';
+import AdditionalOptionsSelect from './additional-options-select';
 import {
   defaultFontStyle,
   defaultFontWeight,
@@ -15,6 +17,7 @@ import {
   codeModes,
 } from '../constants';
 import './styles.css';
+import { darkTheme } from './theme-material-ui';
 
 const Container = styled.div`
   font-style: ${(props) => props.theme.fontStyle};
@@ -96,6 +99,16 @@ export default class RequestForm extends PureComponent {
     title: PropTypes.string,
     width: PropTypes.string,
     height: PropTypes.string,
+    additionalOptions: PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      fieldName: PropTypes.string.isRequired,
+      options: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          label: PropTypes.string.isRequired,
+        })
+      ).isRequired,
+    }),
   };
 
   static defaultProps = {
@@ -125,6 +138,7 @@ export default class RequestForm extends PureComponent {
     argsCount: 1,
     editorsIsValid: [true],
     executionError: '',
+    additionalOptionValue: this.props.additionalOptions ? this.props.additionalOptions.options[0].id : undefined,
     // When a new content has been pasted, Editor does not recalculate the width in order to show the correct scrollbar
     // So that we want to generate unique ID each time when "paste" event happens and use it as a key
     // It will trigger the component to remount completely and recalculate the scrollbar
@@ -228,14 +242,18 @@ export default class RequestForm extends PureComponent {
 
   onSubmit = () => {
     if (this.isFormValid()) {
-      const { language, requestArgs: args } = this.state;
+      const { language, requestArgs: args, additionalOptionValue } = this.state;
+      const { onSubmit, additionalOptions } = this.props;
       try {
         const requestArgs = args.map((arg) =>
           language === codeModes.javascript ? eval(`(function(){${arg}})()`) : JSON.parse(arg)
         );
-        this.props.onSubmit({
+        onSubmit({
           language,
           requestArgs,
+          additionalOption: additionalOptions
+            ? { fieldName: additionalOptions.fieldName, value: additionalOptionValue }
+            : undefined,
         });
       } catch (error) {
         this.setState({ executionError: `${error.name}: ${error.message}` });
@@ -250,7 +268,7 @@ export default class RequestForm extends PureComponent {
     typeof this.state.editorsIsValid.find((isValid) => !isValid) === 'undefined';
 
   render() {
-    const { language, requestArgs, argsCount } = this.state;
+    const { language, requestArgs, argsCount, additionalOptionValue } = this.state;
     const {
       theme,
       isChangeLanguageVisible,
@@ -260,81 +278,94 @@ export default class RequestForm extends PureComponent {
       isSelectedMethodPathVisible,
       width,
       isLineNumberVisible,
+      additionalOptions,
     } = this.props;
 
     return (
-      <Container key={this.state.lastPastedContentTimestamp} theme={theme} data-cy="request-form-container">
-        <Column>
-          <Header data-cy="request-form-header">
-            <Wrapper>
-              <Title data-cy="request-form-title">{title}</Title>
-            </Wrapper>
-            <Wrapper>
-              {isChangeArgsCountVisible && (
-                <ArgumentsCount data-cy="request-form-args-count">
-                  <ArgumentsCountLabel data-cy="request-form-args-count-label">Arguments:</ArgumentsCountLabel>
-                  <Input
-                    data-cy="request-form-args-count-value"
-                    min="1"
-                    onChange={this.onChangeArgumentsCount}
-                    value={argsCount}
-                    type="number"
-                    width="30px"
+      <ThemeProvider theme={darkTheme}>
+        <Container key={this.state.lastPastedContentTimestamp} theme={theme} data-cy="request-form-container">
+          <Column>
+            <Header data-cy="request-form-header">
+              <Wrapper>
+                <Title data-cy="request-form-title">{title}</Title>
+              </Wrapper>
+              <Wrapper>
+                {isChangeArgsCountVisible && (
+                  <ArgumentsCount data-cy="request-form-args-count">
+                    <ArgumentsCountLabel data-cy="request-form-args-count-label">Arguments:</ArgumentsCountLabel>
+                    <Input
+                      data-cy="request-form-args-count-value"
+                      min="1"
+                      onChange={this.onChangeArgumentsCount}
+                      value={argsCount}
+                      type="number"
+                      width="30px"
+                    />
+                  </ArgumentsCount>
+                )}
+                {isChangeLanguageVisible && (
+                  <Dropdown
+                    dataCy="request-form-language-dropdown"
+                    selected={this.state.language}
+                    title="Choose the language"
+                    items={languages}
+                    width={120}
+                    onChange={this.onChangeLanguage}
                   />
-                </ArgumentsCount>
-              )}
-              {isChangeLanguageVisible && (
-                <Dropdown
-                  dataCy="request-form-language-dropdown"
-                  selected={this.state.language}
-                  title="Choose the language"
-                  items={languages}
-                  width={120}
-                  onChange={this.onChangeLanguage}
+                )}
+              </Wrapper>
+            </Header>
+            {requestArgs.map((value, index) => {
+              let height = this.props.height;
+              if (isChangeArgsCountVisible) {
+                height = `${(defaultHeight - (65 + 2 * requestArgs.length)) / requestArgs.length}px`;
+              }
+              return (
+                <Editor
+                  key={index}
+                  index={index}
+                  mode={language}
+                  value={value}
+                  onChange={this.onChangeArgument}
+                  onPaste={this.onPaste}
+                  onValid={this.onValid}
+                  height={height}
+                  width={width}
+                  isLineVisible={index + 1 !== argsCount}
+                  isLineNumberVisible={isLineNumberVisible}
+                />
+              );
+            })}
+            <Footer>
+              {additionalOptions && (
+                <AdditionalOptionsSelect
+                  label={additionalOptions.label}
+                  value={additionalOptionValue}
+                  options={additionalOptions.options}
+                  onChange={(additionalOptionValue) => {
+                    this.setState({ additionalOptionValue });
+                  }}
                 />
               )}
-            </Wrapper>
-          </Header>
-          {requestArgs.map((value, index) => {
-            let height = this.props.height;
-            if (isChangeArgsCountVisible) {
-              height = `${(defaultHeight - (65 + 2 * requestArgs.length)) / requestArgs.length}px`;
-            }
-            return (
-              <Editor
-                key={index}
-                index={index}
-                mode={language}
-                value={value}
-                onChange={this.onChangeArgument}
-                onPaste={this.onPaste}
-                onValid={this.onValid}
-                height={height}
-                width={width}
-                isLineVisible={index + 1 !== argsCount}
-                isLineNumberVisible={isLineNumberVisible}
+              <Button
+                dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
+                text="Send"
+                theme={this.isFormValid() ? 'active' : 'disabled'}
+                css="padding: 5px 45px; margin-right: 16px; font-size: 13px;"
+                onClick={this.onSubmit}
               />
-            );
-          })}
-          <Footer>
-            <Button
-              dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
-              text="Send"
-              theme={this.isFormValid() ? 'active' : 'disabled'}
-              css="padding: 5px 45px; margin-right: 16px; font-size: 13px;"
-              onClick={this.onSubmit}
-            />
-            {this.state.executionError && (
-              <ErrorMessage data-cy="request-form-error-message">{this.state.executionError}</ErrorMessage>
-            )}
-            {isSelectedMethodPathVisible && (
-              <Title data-cy="request-form-selected-method-path" color="#f8f7f7">
-                {selectedMethodPath}
-              </Title>
-            )}
-          </Footer>
-        </Column>
-      </Container>
+              {this.state.executionError && (
+                <ErrorMessage data-cy="request-form-error-message">{this.state.executionError}</ErrorMessage>
+              )}
+              {isSelectedMethodPathVisible && (
+                <Title data-cy="request-form-selected-method-path" color="#f8f7f7">
+                  {selectedMethodPath}
+                </Title>
+              )}
+            </Footer>
+          </Column>
+        </Container>
+      </ThemeProvider>
     );
   }
 }

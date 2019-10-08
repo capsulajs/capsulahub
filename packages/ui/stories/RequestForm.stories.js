@@ -28,6 +28,11 @@ export const props = {
   isChangeArgsCountVisible: false,
   width: '100%',
   title: 'Message',
+  additionalOptions: {
+    label: 'asyncModel',
+    fieldName: 'asyncModel',
+    options: [{ id: 'request/response', label: 'request/response' }, { id: 'request/stream', label: 'request/stream' }],
+  },
 };
 
 storiesOf('RequestForm', module).add('default', () => <RequestForm {...props} />);
