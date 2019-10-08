@@ -37,7 +37,7 @@ Scenario: Submit with a valid request (check different data types in request and
           |<property> |
           |language   |
           |requestArgs|
-          
+
 Scenario: Submit with a valid request (check different data types in request and the model of data received) (json mode)
     Given Request Form web component
     And   a valid input with the following <data type>
@@ -53,7 +53,7 @@ Scenario: Submit with a valid request (check different data types in request and
           |<property> |
           |language   |
           |requestArgs|
-          
+
 Scenario: Submit button should be disabled when there is no service/method name displayed
     Given Request Form web component
     When  there is no service/method name displayed on the bottom corner
@@ -110,7 +110,7 @@ Scenario: Submit button should be enabled while the number of arguments changes 
     When  user changes the number of arguments
     And   all the arguments have a valid input
     Then  Submit button is enabled
-    
+
 Scenario: Error message should appear, if there is an error in running JS code from the editor after submitting
     Given Request Form web component
     And   one of the existing languages and a number of arguments is selected
@@ -124,36 +124,36 @@ Scenario: Error message should appear, if there is an error in running JS code f
 
 Scenario: If content prop is changed, the form is updated correctly (1 editor - requestArgs: string)
     Given Request Form web component
-    And   one of the existing languages 
+    And   one of the existing languages
     And   number of selected arguments is one
     And   the argument includes a valid input
-    When  user changes requestArgs to another valid string 
+    When  user changes requestArgs to another valid string
     Then  the content of the argument is updating in correspondence to requestArg value
     And   the language and number of arguments stays the same
 
 Scenario: If content prop is changed, the form is updated correctly (2 editors - requestArgs: string)
     Given Request Form web component
-    And   one of the existing languages 
+    And   one of the existing languages
     And   number of selected arguments is two
     And   the arguments include the same valid input
-    When  user changes requestArgs to another valid string 
+    When  user changes requestArgs to another valid string
     Then  the content of both arguments is updating in correspondence to requestArg value
     And   the input of both arguments are the same
-    And   the language and number of arguments stays the same    
-    
-Scenario: If content prop is changed, the form is updated correctly (2 editors - requestArgs: array) 
+    And   the language and number of arguments stays the same
+
+Scenario: If content prop is changed, the form is updated correctly (2 editors - requestArgs: array)
     Given Request Form web component
-    And   one of the existing languages 
+    And   one of the existing languages
     And   number of selected arguments is two
     And   the arguments include the same valid input
     When  user changes requestArgs to a valid array of two different strings
     Then  the content of both arguments is updating in correspondence to requestArg value
     And   the input of first argument includes first string from requestArgs's array, the last one - second string
-    And   the language and number of arguments stays the same    
-    
-Scenario: If content prop is changed, the form is updated correctly (change the language) 
+    And   the language and number of arguments stays the same
+
+Scenario: If content prop is changed, the form is updated correctly (change the language)
     Given Request Form web component
-    And   one of the existing languages 
+    And   one of the existing languages
     And   number of selected arguments is two
     And   the arguments include two different valid inputs
     When  user changes the language to another existing one
@@ -161,42 +161,15 @@ Scenario: If content prop is changed, the form is updated correctly (change the 
     Then  the content of both arguments is updating in correspondence to requestArg value
     And   the input of first argument includes first string from requestArgs's array, the last one - second string
     And   the language is updating accordingly
-    And   number of arguments stays the same 
-    
+    And   number of arguments stays the same
+
 Scenario: If content prop is changed, the form is updated correctly (2 editors requestArgs: array (will result in one editor))
     Given Request Form web component
-    And   one of the existing languages 
+    And   one of the existing languages
     And   number of selected arguments is two
     And   the arguments include the same valid input
     When  user changes requestArgs to a valid array that contains one strings
-    Then  the number of arguments changes to one 
+    Then  the number of arguments changes to one
     And   the content of the argument is updating in correspondence to requestArg value
     And   the input of the argument includes the string from requestArgs's array
     And   the language stays the same
-
-Scenario: If additionalOptions prop is provided, the dropdown with corresponding options will appear
-    Given Request Form web component
-    When  additionalOptions prop passed to the Request Form component with the following <data> and <type>
-          | <data >  | <type>  |
-          | label    | string  |
-          | fieldName| string  |
-          | options  | Option[]|
-    And   Option is an array of 'id' and 'label'
-    And   all other required props are provided
-    Then  the dropdown with options appears in the Request Form
-    And   the selected value in dropdown is first option from the options
-
-Scenario: If additionalOptions prop is not provided, the dropdown with corresponding options will not appear
-    Given Request Form web component
-    When  all other required props are provided
-    And   additionalOptions prop do not passed to the Request Form component
-    Then  the dropdown with options do not appear in the Request Form
-
-Scenario: The field with the name of additionalOptions is included with the id of a selected value when a user submits the form
-    Given Request Form web component
-    And   additionalOptions with several options and all other required props are provided
-    And   the dropdown with options appears in the Request Form
-    And   the selected value in dropdown is first option from the options
-    When  user selects an option from additionalOptions dropdown
-    And   user submits the request form
-    Then  the field with the name of additionalOptions is included with the id of a selected value

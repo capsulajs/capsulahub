@@ -6,7 +6,10 @@ import RequestForm from '../../src/components/request-form/request-form';
 import { additionalOptions, generateBaseProps } from '../helpers/consts';
 
 describe('Request Form tests', () => {
-  it('additionalOptions added', () => {
+  it(`
+    If additionalOptions prop is provided, the dropdown with corresponding options will appear,
+    The field with the name of additionalOptions is included with the id of a selected value when a user submits the form
+  `, () => {
     expect.assertions(8);
     const onSubmitMock = jest.fn();
     const props = generateBaseProps({ onSubmit: onSubmitMock });
@@ -39,7 +42,7 @@ describe('Request Form tests', () => {
     });
   });
 
-  it('additionalOptions are not provided', () => {
+  it('If additionalOptions prop is not provided, the dropdown with corresponding options will not appear', () => {
     expect.assertions(2);
     const onSubmitMock = jest.fn();
     const props = generateBaseProps({ onSubmit: onSubmitMock });

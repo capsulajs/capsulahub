@@ -10,7 +10,4 @@ module.exports = {
   moduleDirectories: ['src', 'node_modules'],
   testMatch: ['**/tests/**/*.test.[jt]s?(x)'],
   testPathIgnorePatterns: ['<rootDir>/lib/'],
-  moduleNameMapper: {
-    '\\.(css|less|scss|sss|styl)$': '<rootDir>/../../node_modules/jest-css-modules',
-  },
 };
