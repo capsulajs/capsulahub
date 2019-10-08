@@ -7,5 +7,5 @@ export default interface SubmittedData {
   /** An array of the stringified values for each argument of the selected method */
   requestArgs: string[];
   /** The selected value of additionOptions. Included only if additionalOptions were provided in RequestFormUIProps */
-  additionalOption?: { name: string; value: Option };
+  additionalOption?: { fieldName: string; value: Option };
 }

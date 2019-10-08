@@ -4,6 +4,7 @@ export interface Option {
 }
 
 export default interface AdditionalOptions {
-  name: string;
+  label: string;
+  fieldName: string;
   options: Option[];
 }
