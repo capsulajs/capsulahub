@@ -29,21 +29,14 @@ class AdditionalOptionsSelect extends PureComponent {
     value: PropTypes.string.isRequired,
   };
 
+  onChange = (data) => this.props.onChange(data.target.value);
+
   render() {
-    const { classes, options, onChange, value, label } = this.props;
-
-    console.log('options', options);
-
+    const { classes, options, value, label } = this.props;
     return (
       <FormControl className={classes.wrapper} margin="dense">
         <InputLabel>{label}</InputLabel>
-        <Select
-          className={classes.select}
-          value={value}
-          onChange={(data) => {
-            onChange(data.target.value);
-          }}
-        >
+        <Select className={classes.select} value={value} onChange={this.onChange}>
           {options.map(({ id, label }) => (
             <MenuItem dense={true} key={id} value={id}>
               {label}

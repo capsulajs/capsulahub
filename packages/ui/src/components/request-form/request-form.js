@@ -241,6 +241,10 @@ export default class RequestForm extends PureComponent {
       };
     });
 
+  onAdditionalValueChange = (additionalOptionValue) => {
+    this.setState({ additionalOptionValue });
+  };
+
   onSubmit = () => {
     if (this.isFormValid()) {
       const { language, requestArgs: args, additionalOptionValue } = this.state;
@@ -343,9 +347,7 @@ export default class RequestForm extends PureComponent {
                   label={additionalOptions.label}
                   value={additionalOptionValue}
                   options={additionalOptions.options}
-                  onChange={(additionalOptionValue) => {
-                    this.setState({ additionalOptionValue });
-                  }}
+                  onChange={this.onAdditionalValueChange}
                 />
               )}
               <Button
