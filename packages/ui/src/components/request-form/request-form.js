@@ -80,7 +80,7 @@ const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
 export default class RequestForm extends PureComponent {
   static propTypes = {
-    selectedMethodPath: PropTypes.string.isRequired,
+    selectedMethodPath: PropTypes.string,
     content: PropTypes.shape({
       language: PropTypes.string.isRequired,
       requestArgs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
@@ -107,6 +107,7 @@ export default class RequestForm extends PureComponent {
       bgColor: defaultRequestFormBgColor,
       color: defaultColor,
     },
+    selectedMethodPath: '',
     isChangeLanguageVisible: true,
     isChangeArgsCountVisible: true,
     isSelectedMethodPathVisible: true,
