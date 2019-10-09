@@ -48,7 +48,8 @@ const Footer = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  margin: 5px 0 30px 0;
+  margin: 5px 0 15px 0;
+  height: 55px;
 `;
 const ErrorMessage = styled.div`
   color: red;
@@ -139,7 +140,7 @@ export default class RequestForm extends PureComponent {
     argsCount: 1,
     editorsIsValid: [true],
     executionError: '',
-    additionalOptionValue: this.props.additionalOptions ? this.props.additionalOptions.options[0].id : undefined,
+    additionalOptionValue: this.getAdditionalOptionValueFromOptions(this.props.additionalOptions),
     // When a new content has been pasted, Editor does not recalculate the width in order to show the correct scrollbar
     // So that we want to generate unique ID each time when "paste" event happens and use it as a key
     // It will trigger the component to remount completely and recalculate the scrollbar
@@ -176,6 +177,15 @@ export default class RequestForm extends PureComponent {
         editorsIsValid: prevState.editorsIsValid.slice(0, this.state.argsCount),
       });
     }
+    if (this.props.additionalOptions !== prevProps.additionalOptions) {
+      this.setState({
+        additionalOptionValue: this.getAdditionalOptionValueFromOptions(this.props.additionalOptions),
+      });
+    }
+  }
+
+  getAdditionalOptionValueFromOptions(additionalOptions) {
+    return additionalOptions ? additionalOptions.initialValue || additionalOptions.options[0].id : undefined;
   }
 
   onChangeLanguage = ({ label: newLanguage }) => {
@@ -340,7 +350,7 @@ export default class RequestForm extends PureComponent {
               );
             })}
             <Footer>
-              {additionalOptions && (
+              {additionalOptions && additionalOptionValue && (
                 <AdditionalOptionsSelect
                   label={additionalOptions.label}
                   value={additionalOptionValue}

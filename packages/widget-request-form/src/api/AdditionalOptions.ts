@@ -7,4 +7,5 @@ export default interface AdditionalOptions {
   label: string;
   fieldName: string;
   options: Option[];
+  initialValue?: string;
 }

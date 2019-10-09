@@ -25,3 +25,17 @@ Scenario: The field with the name of additionalOptions is included with the id o
     When  user selects an option from additionalOptions dropdown
     And   user submits the request form
     Then  the field with the name of additionalOption is included in submitted data and includes the selected option and correct fieldName
+
+Scenario: If "initialValue" is provided in "additionalOptions" prop - this value is initially applied in the dropdown
+    Given Request Form component
+    When  additionalOptions prop passed to the Request Form component with the following <data> and <type>
+          | <data >      | <type>  |
+          | label        | string  |
+          | fieldName    | string  |
+          | options      | Option[]|
+          | initialValue | string  |
+    And   Option is an array of 'id' and 'label'
+    And   'initialValue' is one of the available options
+    And   all other required props are provided
+    Then  the dropdown with options appears in the Request Form
+    And   the selected value in dropdown is 'initialValue' that was provided in props
