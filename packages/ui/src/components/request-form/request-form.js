@@ -48,7 +48,8 @@ const Footer = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  margin: 5px 0 30px 0;
+  margin: 5px 0 15px 0;
+  height: 55px;
 `;
 const ErrorMessage = styled.div`
   color: red;
@@ -174,6 +175,11 @@ export default class RequestForm extends PureComponent {
     if (this.state.argsCount < prevState.argsCount && this.state.argsCount) {
       this.setState({
         editorsIsValid: prevState.editorsIsValid.slice(0, this.state.argsCount),
+      });
+    }
+    if (this.props.additionalOptions !== prevProps.additionalOptions) {
+      this.setState({
+        additionalOptionValue: this.props.additionalOptions ? this.props.additionalOptions.options[0].id : undefined,
       });
     }
   }
@@ -340,7 +346,7 @@ export default class RequestForm extends PureComponent {
               );
             })}
             <Footer>
-              {additionalOptions && (
+              {additionalOptions && additionalOptionValue && (
                 <AdditionalOptionsSelect
                   label={additionalOptions.label}
                   value={additionalOptionValue}
