@@ -12,6 +12,7 @@ const styles = () => {
   return createStyles({
     wrapper: {
       marginRight: '16px',
+      marginBottom: '25px',
     },
   });
 };
