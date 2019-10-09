@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { ThemeProvider } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Editor from './editor';
@@ -17,7 +16,6 @@ import {
   codeModes,
 } from '../constants';
 import './styles.css';
-import { darkTheme } from './theme-material-ui';
 
 const Container = styled.div`
   font-style: ${(props) => props.theme.fontStyle};
@@ -285,88 +283,86 @@ export default class RequestForm extends PureComponent {
     } = this.props;
 
     return (
-      <ThemeProvider theme={darkTheme}>
-        <Container key={this.state.lastPastedContentTimestamp} theme={theme} data-cy="request-form-container">
-          <Column>
-            <Header data-cy="request-form-header">
-              <Wrapper>
-                <Title data-cy="request-form-title">{title}</Title>
-              </Wrapper>
-              <Wrapper>
-                {isChangeArgsCountVisible && (
-                  <ArgumentsCount data-cy="request-form-args-count">
-                    <ArgumentsCountLabel data-cy="request-form-args-count-label">Arguments:</ArgumentsCountLabel>
-                    <Input
-                      data-cy="request-form-args-count-value"
-                      min="1"
-                      onChange={this.onChangeArgumentsCount}
-                      value={argsCount}
-                      type="number"
-                      width="30px"
-                    />
-                  </ArgumentsCount>
-                )}
-                {isChangeLanguageVisible && (
-                  <Dropdown
-                    dataCy="request-form-language-dropdown"
-                    selected={this.state.language}
-                    title="Choose the language"
-                    items={languages}
-                    width={120}
-                    onChange={this.onChangeLanguage}
+      <Container key={this.state.lastPastedContentTimestamp} theme={theme} data-cy="request-form-container">
+        <Column>
+          <Header data-cy="request-form-header">
+            <Wrapper>
+              <Title data-cy="request-form-title">{title}</Title>
+            </Wrapper>
+            <Wrapper>
+              {isChangeArgsCountVisible && (
+                <ArgumentsCount data-cy="request-form-args-count">
+                  <ArgumentsCountLabel data-cy="request-form-args-count-label">Arguments:</ArgumentsCountLabel>
+                  <Input
+                    data-cy="request-form-args-count-value"
+                    min="1"
+                    onChange={this.onChangeArgumentsCount}
+                    value={argsCount}
+                    type="number"
+                    width="30px"
                   />
-                )}
-              </Wrapper>
-            </Header>
-            {requestArgs.map((value, index) => {
-              let height = this.props.height;
-              if (isChangeArgsCountVisible) {
-                height = `${(defaultHeight - (65 + 2 * requestArgs.length)) / requestArgs.length}px`;
-              }
-              return (
-                <Editor
-                  key={index}
-                  index={index}
-                  mode={language}
-                  value={value}
-                  onChange={this.onChangeArgument}
-                  onPaste={this.onPaste}
-                  onValid={this.onValid}
-                  height={height}
-                  width={width}
-                  isLineVisible={index + 1 !== argsCount}
-                  isLineNumberVisible={isLineNumberVisible}
-                />
-              );
-            })}
-            <Footer>
-              {additionalOptions && (
-                <AdditionalOptionsSelect
-                  label={additionalOptions.label}
-                  value={additionalOptionValue}
-                  options={additionalOptions.options}
-                  onChange={this.onAdditionalValueChange}
+                </ArgumentsCount>
+              )}
+              {isChangeLanguageVisible && (
+                <Dropdown
+                  dataCy="request-form-language-dropdown"
+                  selected={this.state.language}
+                  title="Choose the language"
+                  items={languages}
+                  width={120}
+                  onChange={this.onChangeLanguage}
                 />
               )}
-              <Button
-                dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
-                text="Send"
-                theme={this.isFormValid() ? 'active' : 'disabled'}
-                css="padding: 5px 45px; margin-right: 16px; font-size: 13px;"
-                onClick={this.onSubmit}
+            </Wrapper>
+          </Header>
+          {requestArgs.map((value, index) => {
+            let height = this.props.height;
+            if (isChangeArgsCountVisible) {
+              height = `${(defaultHeight - (65 + 2 * requestArgs.length)) / requestArgs.length}px`;
+            }
+            return (
+              <Editor
+                key={index}
+                index={index}
+                mode={language}
+                value={value}
+                onChange={this.onChangeArgument}
+                onPaste={this.onPaste}
+                onValid={this.onValid}
+                height={height}
+                width={width}
+                isLineVisible={index + 1 !== argsCount}
+                isLineNumberVisible={isLineNumberVisible}
               />
-              {this.state.executionError && (
-                <ErrorMessage data-cy="request-form-error-message">{this.state.executionError}</ErrorMessage>
-              )}
-              {isSelectedMethodPathVisible && (
-                <Title data-cy="request-form-selected-method-path" color="#f8f7f7">
-                  {selectedMethodPath}
-                </Title>
-              )}
-            </Footer>
-          </Column>
-        </Container>
-      </ThemeProvider>
+            );
+          })}
+          <Footer>
+            {additionalOptions && (
+              <AdditionalOptionsSelect
+                label={additionalOptions.label}
+                value={additionalOptionValue}
+                options={additionalOptions.options}
+                onChange={this.onAdditionalValueChange}
+              />
+            )}
+            <Button
+              dataCy={`request-form-submit-btn-${this.isFormValid() ? 'active' : 'disabled'}`}
+              text="Send"
+              theme={this.isFormValid() ? 'active' : 'disabled'}
+              css="padding: 5px 45px; margin-right: 16px; font-size: 13px;"
+              onClick={this.onSubmit}
+            />
+            {this.state.executionError && (
+              <ErrorMessage data-cy="request-form-error-message">{this.state.executionError}</ErrorMessage>
+            )}
+            {isSelectedMethodPathVisible && (
+              <Title data-cy="request-form-selected-method-path" color="#f8f7f7">
+                {selectedMethodPath}
+              </Title>
+            )}
+          </Footer>
+        </Column>
+      </Container>
     );
   }
 }
