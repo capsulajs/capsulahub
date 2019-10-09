@@ -55,4 +55,19 @@ describe('Request Form tests', () => {
     fireEvent.click(getByText('Send'));
     expect(onSubmitMock.mock.calls[0][0].additionalOption).toBeUndefined();
   });
+
+  it('If "initialValue" is provided in "additionalOptions" prop - this value is initially applied in the dropdown', () => {
+    expect.assertions(1);
+    const additionalOptionsWithInitialValue = {
+      ...additionalOptions,
+      initialValue: 'request/stream',
+    };
+    const onSubmitMock = jest.fn();
+    const props = generateBaseProps({ onSubmit: onSubmitMock });
+    const { getByTestId: getByTestIdInRequestForm } = render(
+      <RequestForm {...props} additionalOptions={additionalOptionsWithInitialValue} />
+    );
+
+    expect(getByTestIdInRequestForm('additional-options-select')).toHaveTextContent('requestStream');
+  });
 });
