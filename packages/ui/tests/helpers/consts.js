@@ -1,7 +1,7 @@
 export const additionalOptions = {
-  label: 'asyncModel',
+  label: 'Async Model',
   fieldName: 'asyncModel',
-  options: [{ id: 'request/response', label: 'request/response' }, { id: 'request/stream', label: 'request/stream' }],
+  options: [{ id: 'request/response', label: 'requestResponse' }, { id: 'request/stream', label: 'requestStream' }],
 };
 
 export const data = {

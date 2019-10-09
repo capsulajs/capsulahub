@@ -34,17 +34,17 @@ class AdditionalOptionsSelect extends PureComponent {
   render() {
     const { classes, options, value, label } = this.props;
     return (
-      <FormControl className={classes.wrapper} margin="dense" data-testid="additional-options-wrapper">
-        <InputLabel data-testid="additional-options-label">{label}</InputLabel>
+      <FormControl className={classes.wrapper} margin="dense" data-cy="additional-options-wrapper">
+        <InputLabel data-cy="additional-options-label">{label}</InputLabel>
         <Select
           id="request-form-additional-options"
-          data-testid="additional-options-select"
+          data-cy="additional-options-select"
           className={classes.select}
           value={value}
           onChange={this.onChange}
         >
           {options.map(({ id, label }) => (
-            <MenuItem data-testid="additional-options-option" dense={true} key={id} value={id}>
+            <MenuItem data-cy="additional-options-option" dense={true} key={id} value={id}>
               {label}
             </MenuItem>
           ))}
