@@ -253,13 +253,11 @@ export default class RequestForm extends PureComponent {
         const requestArgs = args.map((arg) =>
           language === codeModes.javascript ? eval(`(function(){${arg}})()`) : JSON.parse(arg)
         );
-        onSubmit({
-          language,
-          requestArgs,
-          additionalOption: additionalOptions
-            ? { fieldName: additionalOptions.fieldName, value: additionalOptionValue }
-            : undefined,
-        });
+        const submittedData = { language, requestArgs };
+        if (additionalOptions) {
+          submittedData.additionalOption = { fieldName: additionalOptions.fieldName, value: additionalOptionValue };
+        }
+        onSubmit(submittedData);
       } catch (error) {
         this.setState({ executionError: `${error.name}: ${error.message}` });
       }
