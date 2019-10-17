@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, first } from 'rxjs/operators';
-import isMatch from 'lodash/isMatch';
+import isEqual from 'lodash/isEqual';
 import {
   ItemsRequest,
   SelectedItemRequest,
@@ -50,7 +50,7 @@ export default class Selector<Item extends Key, Key extends object> implements S
         return reject(new Error(validationMessages.invalidSelectItemRequest));
       }
       // Reject case: Item is already selected
-      if (this.selected$.getValue() && isMatch(this.selected$.getValue() as Item, selectItemRequest.key)) {
+      if (this.selected$.getValue() && isEqual(this.selected$.getValue() as Item, selectItemRequest.key)) {
         return reject(new Error(errorMessages.itemAlreadySelected));
       }
 
@@ -59,7 +59,7 @@ export default class Selector<Item extends Key, Key extends object> implements S
           first(),
           map((items) =>
             items.find((item: Item) => {
-              return isMatch(item, selectItemRequest.key);
+              return isEqual(item, selectItemRequest.key);
             })
           )
         )
@@ -84,7 +84,7 @@ export default class Selector<Item extends Key, Key extends object> implements S
   private resetSelected(items: Item[]): void {
     const selected = this.selected$.getValue();
     if (selected) {
-      const shouldKeepSelection = items.some((item) => isMatch(item, selected));
+      const shouldKeepSelection = items.some((item) => isEqual(item, selected));
       if (!shouldKeepSelection) {
         this.selected$.next(undefined);
       }
