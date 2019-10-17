@@ -84,7 +84,14 @@ export default class Selector<Item extends Key, Key extends object> implements S
   private resetSelected(items: Item[]): void {
     const selected = this.selected$.getValue();
     if (selected) {
-      const shouldKeepSelection = items.some((item) => isMatch(item, selected));
+      console.log('resetSelected items', items);
+      console.log('resetSelected selected', selected);
+      const shouldKeepSelection = items.some((item) => {
+        console.log('is match item', item);
+        console.log('isMatch res', isMatch(item, selected));
+        return isMatch(item, selected);
+      });
+      console.log('resetSelected shouldKeepSelection', shouldKeepSelection);
       if (!shouldKeepSelection) {
         this.selected$.next(undefined);
       }
