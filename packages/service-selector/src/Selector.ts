@@ -1,5 +1,6 @@
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, first } from 'rxjs/operators';
+import isEqual from 'lodash/isEqual';
 import isMatch from 'lodash/isMatch';
 import {
   ItemsRequest,
@@ -84,7 +85,7 @@ export default class Selector<Item extends Key, Key extends object> implements S
   private resetSelected(items: Item[]): void {
     const selected = this.selected$.getValue();
     if (selected) {
-      const shouldKeepSelection = items.some((item) => isMatch(item, selected));
+      const shouldKeepSelection = items.some((item) => isEqual(item, selected));
       if (!shouldKeepSelection) {
         this.selected$.next(undefined);
       }
