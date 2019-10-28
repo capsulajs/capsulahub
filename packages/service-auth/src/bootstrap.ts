@@ -1,9 +1,10 @@
 import { API as WORKSPACE_API } from '@capsulajs/capsulahub-workspace';
 import { API } from '.';
+import { Auth } from './AuthService';
 
 export default (workspace: WORKSPACE_API.Workspace, serviceConfig: API.AuthServiceConfig) => {
   return new Promise((resolve) => {
-    const authService = {};
+    const authService = new Auth({ domain: serviceConfig.domain, clientId: serviceConfig.clientId });
 
     workspace.registerService({
       serviceName: serviceConfig.serviceName,
