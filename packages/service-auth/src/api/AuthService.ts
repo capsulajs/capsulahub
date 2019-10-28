@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { User, AuthStatus, LoginOptions } from '.';
+import { User, AuthStatus } from '.';
 
 /**
  * AuthService is responsible for:
@@ -17,7 +17,7 @@ export interface AuthService {
    * The method, that is responsible for triggering the signUp/signIn logic of "auth0"
    * @returns A promise, that resolves with user data, when a user is successfully authorized
    */
-  login(loginOptions: LoginOptions): Promise<User>;
+  login(loginOptions: {}): Promise<User>;
   /**
    * The method, that is responsible for triggering the logout logic of "auth0"
    * @returns A promise, that resolves with void, when a user is successfully logged out
