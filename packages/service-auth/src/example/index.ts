@@ -5,10 +5,9 @@ const auth = new Auth({
   clientId: 'RS6FSurmbVq9B31sJ57Px4NZpcdyCnHQ',
 });
 
+// @ts-ignore
+window.auth = auth;
+
 auth.authStatus$({}).subscribe((authStatus) => {
   console.log('authStatus', authStatus);
-});
-
-auth.login({}).then((loginRes) => {
-  console.log('loginRes', loginRes);
 });
