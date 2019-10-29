@@ -6,7 +6,7 @@ export interface User {
    * auth0 token
    */
   token: string;
-  name?: string;
+  name: string;
   givenName?: string;
   familyName?: string;
   middleName?: string;

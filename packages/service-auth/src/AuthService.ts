@@ -1,83 +1,142 @@
-import { ReplaySubject, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
-import createAuth0Client from '@auth0/auth0-spa-js';
-import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
-import { API } from '.';
+import { ReplaySubject, Subject, Observable } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Auth0Error } from 'auth0-js';
+import { API } from './index';
+import { createLock } from './helpers/utils';
+
+interface PromiseWithFinallyStreamCallbackData {
+  resolve: (...args: any[]) => void;
+  reject: (err: any) => void;
+  isPromiseFinally$: Observable<boolean>;
+}
+
+const modalTabs = {
+  signIn: 'signIn' as 'signIn',
+  signUp: 'signUp' as 'signUp',
+};
 
 export class Auth implements API.AuthService {
-  private auth0: Promise<Auth0Client>;
+  private lock: Auth0LockStatic;
+  private modalVisibilitySubject$: Subject<boolean>;
   private authStatusSubject$: ReplaySubject<API.AuthStatus> = new ReplaySubject(1);
-  private lastLoginCallSubject$: Subject<number> = new Subject();
+  private unrecoverableErrorSubject$: ReplaySubject<Auth0Error> = new ReplaySubject(1);
+  private errorsSubject$: Subject<Auth0Error> = new Subject();
+  private modalTabLastShown?: 'signIn' | 'signUp';
 
   constructor(options: Pick<API.AuthServiceConfig, 'domain' | 'clientId'>) {
-    this.auth0 = createAuth0Client({
-      domain: options.domain,
-      client_id: options.clientId,
+    this.lock = createLock(options);
+    this.modalVisibilitySubject$ = new Subject();
+    this.lock.on('show', () => {
+      this.modalVisibilitySubject$.next(true);
     });
-  }
-
-  public async init(_: {}) {
-    const auth = await this.auth0;
-    const isAuthenticated = await auth.isAuthenticated();
-    if (isAuthenticated) {
-      return this.authUser({ auth });
-    } else {
-      return {};
-    }
-  }
-
-  // @ts-ignore
-  public login(_: {}) {
-    this.lastLoginCallSubject$.next(Date.now());
-    return new Promise((resolve, reject) => {
-      this.lastLoginCallSubject$.pipe(take(1)).subscribe(() => {
-        reject(new Error('Login has been called again'));
+    this.lock.on('hide', () => {
+      this.modalVisibilitySubject$.next(false);
+    });
+    this.lock.on('authenticated', (authResult) => {
+      this.handleAuthResult(authResult).catch((error) => {
+        this.errorsSubject$.next(error);
       });
-
-      let auth: Auth0Client;
-      return this.auth0
-        .then((auth0) => {
-          auth = auth0;
-          return auth.loginWithPopup(undefined, { timeoutInSeconds: 3600 });
-        })
-        .then(() => this.authUser({ auth }))
-        .then(resolve)
-        .catch((error) => {
-          if (!error.message.includes('Invalid state')) {
-            return reject(error);
-          }
-        });
+    });
+    this.lock.on('unrecoverable_error', (error) => {
+      this.unrecoverableErrorSubject$.next(error);
+      this.authStatusSubject$.error(error);
+    });
+    this.lock.on('signin ready', () => {
+      this.modalTabLastShown = modalTabs.signIn;
+    });
+    this.lock.on('signup ready', () => {
+      this.modalTabLastShown = modalTabs.signUp;
     });
   }
 
-  // @ts-ignore
-  public logout(_: {}) {
-    return new Promise((resolve, reject) => {
-      this.authStatusSubject$.pipe(take(1)).subscribe((authStatus) => {
-        if ('token' in authStatus) {
-          this.auth0
-            .then((auth) => auth.logout())
-            .then(() => this.authStatusSubject$.next({}))
-            .then(resolve)
-            .catch(reject);
+  public init({}) {
+    return this.createPromise<API.AuthStatus>(({ resolve, reject }) => {
+      this.lock.checkSession({}, (error, authResult) => {
+        if (error) {
+          if (error.code === 'login_required') {
+            this.handleAuthResult(undefined).then(resolve);
+          } else {
+            reject(error);
+          }
         } else {
-          reject('A user has not been authorized yet');
+          this.handleAuthResult(authResult).then(resolve);
         }
       });
     });
   }
 
-  public authStatus$(_: {}) {
+  public login({}) {
+    return this.createPromise<API.User>(({ resolve, reject, isPromiseFinally$ }) => {
+      this.errorsSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((error) => reject(error));
+
+      this.modalVisibilitySubject$
+        .pipe(
+          filter((isModalVisible) => !isModalVisible),
+          takeUntil(isPromiseFinally$)
+        )
+        .subscribe(() => reject('Login modal has been closed'));
+
+      let authStatusEmits = 0;
+      this.authStatusSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((authStatus) => {
+        if (++authStatusEmits === 1) {
+          if ('token' in authStatus) {
+            reject('User has been already signed up');
+          } else {
+            this.lock.show();
+          }
+        } else if ('token' in authStatus) {
+          this.closeModal();
+          resolve(authStatus);
+        }
+      });
+    });
+  }
+
+  public logout({}): Promise<void> {
+    return this.createPromise<void>(({ resolve }) => {
+      this.lock.logout({ returnTo: '' });
+      resolve();
+    });
+  }
+
+  public authStatus$({}) {
     return this.authStatusSubject$.asObservable();
   }
 
-  private authUser = async ({ auth }: { auth: Auth0Client }) => {
-    const userData = await auth.getIdTokenClaims();
-    const authStatus = {
-      token: userData.__raw,
-      name: userData.name || userData.nickname || userData.email,
-    };
-    this.authStatusSubject$.next(authStatus);
-    return authStatus;
+  private handleAuthResult(authResult: AuthResult | undefined) {
+    return new Promise((resolve, reject) => {
+      if (authResult) {
+        this.lock.getUserInfo(authResult.accessToken, (error, userInfo) => {
+          if (error) {
+            reject(error);
+          } else {
+            console.log('userInfo', userInfo);
+            const authStatus = {
+              token: authResult.idToken,
+              name: userInfo.name,
+              isNewUser: this.modalTabLastShown === modalTabs.signUp,
+            };
+            this.authStatusSubject$.next(authStatus);
+            resolve(authStatus);
+          }
+        });
+      } else {
+        this.authStatusSubject$.next({});
+        resolve({});
+      }
+    });
+  }
+
+  private createPromise<T>(callback: (data: PromiseWithFinallyStreamCallbackData) => void): Promise<T> {
+    const isPromiseFinally$ = new Subject<boolean>();
+    return new Promise<T>((resolve, reject) => {
+      this.unrecoverableErrorSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((error) => reject(error));
+      callback({ resolve, reject, isPromiseFinally$: isPromiseFinally$.asObservable() });
+    }).finally(() => isPromiseFinally$.next(true));
+  }
+
+  private closeModal = () => {
+    this.modalTabLastShown = undefined;
+    this.lock.hide();
   };
 }

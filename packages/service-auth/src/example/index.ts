@@ -11,3 +11,12 @@ window.auth = auth;
 auth.authStatus$({}).subscribe((authStatus) => {
   console.log('authStatus', authStatus);
 });
+
+auth
+  .init({})
+  .then((data) => {
+    console.log('init data', data);
+  })
+  .catch((error) => {
+    console.log('init error', error);
+  });

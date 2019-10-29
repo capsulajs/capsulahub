@@ -82,6 +82,7 @@ module.exports = (env = {}) => {
     },
     devServer: {
       contentBase: `${packagePath}/public`,
+      disableHostCheck: true,
       compress: false,
       port: devServerPort,
     },
