@@ -5,7 +5,7 @@ Scenario: Calling init method with a valid request when user has previously an a
   And   user has previously an auth session
   And   user subscribes to authStatus method with a valid request
   When  user calls init method with a valid request
-  Then  the promise, that was returned from init method has been resolved with current auth status
+  Then  the promise, that was returned from init method is resolved with current auth status
   And   authStatus emits an update about the current auth status
 
 Scenario: Calling init method with a valid request when user wasn't previously authenticated
@@ -13,7 +13,7 @@ Scenario: Calling init method with a valid request when user wasn't previously a
   And   user wasn't previously authenticated
   And   user subscribes to authStatus method with a valid request
   When  user calls init method with a valid request
-  Then  the promise, that was returned from init method has been resolved with an empty object
+  Then  the promise, that was returned from init method is resolved with an empty object
   And   authStatus emits an empty object
 
 Scenario: Calling login method with a valid request when user is authenticated
@@ -27,7 +27,7 @@ Scenario: Calling login method with a valid request when user is not authenticat
   And   user is not authenticated
   And   user subscribes to authStatus method with a valid request
   When  user calls login method with a valid request
-  Then  the promise, that was returned from login method has been resolved with user data
+  Then  the promise, that was returned from login method is resolved with user data
   And   authStatus emits an update about the current auth status
 
 Scenario: Calling logout method with a valid request when user is authenticated
@@ -35,7 +35,7 @@ Scenario: Calling logout method with a valid request when user is authenticated
   And   user is authenticated
   And   user subscribes to authStatus method with a valid request
   When  user calls logout method with a valid request
-  Then  the promise, that was returned from logout method has been resolved with void
+  Then  the promise, that was returned from logout method is resolved with void
   And   authStatus emits an update about the current auth status
 
 Scenario: Calling logout method with a valid request when user is not authenticated
