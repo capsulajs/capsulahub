@@ -5,8 +5,8 @@ Scenario: Calling init method with a valid request when user has previously an a
   And   user has previously an auth session
   And   user subscribes to authStatus method with a valid request
   When  user calls init method with a valid request
-  Then  the promise that was returned from init method is resolved with data of the user of the previous auth session
-  And   authStatus emits an update about the current auth status
+  Then  the promise that was returned from init method is resolved with user data of the previous auth session
+  And   authStatus emits an update that includes the information about the user from previous auth session
 
 Scenario: Calling init method with a valid request when user hasn't previously an auth session
   Given AuthService with init and authStatus methods
