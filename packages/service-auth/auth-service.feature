@@ -38,7 +38,8 @@ Scenario: Calling login method when user hasn't previously an auth session and i
   And   user calls init method and the init promise is in a pending state
   When  user calls login method with a valid request
   Then  the promise that was returned from init method is resolved with an empty object
-  And   the promise that was returned from login method is resolved with current user data
+  And   auth0 modal is rendered on the screen
+  And   if user sign up in the auth0 modal the promise that was returned from login method is resolved with current user data
   
 Scenario: Calling login method with a valid request when user is authenticated
   Given AuthService with login method
@@ -52,7 +53,7 @@ Scenario: Calling login method with a valid request when user is not authenticat
   And   user calls init method 
   And   user subscribes to authStatus method and authStatus emits an empty object
   When  user calls login method with a valid request
-  And   auth0 modal is being rendered on the screen
+  And   auth0 modal is rendered on the screen
   And   user clicks sign in in the auth0 modal
   Then  the promise that was returned from login method is resolved with user data
   And   authStatus emits an update about the current auth status that will include the information that user is not a new one
@@ -64,7 +65,7 @@ Scenario: Calling login method with a valid request when user is not authenticat
   And   user calls init method
   And   user subscribes to authStatus method with a valid request and authStatus emits an empty object
   When  user calls login method with a valid request
-  And   auth0 modal is being rendered on the screen
+  And   auth0 modal is rendered on the screen
   And   user clicks sign up in the auth0 modal
   Then  the promise that was returned from login method is resolved with user data
   And   authStatus emits an update about the current auth status that will include the information that user is a new one
@@ -76,7 +77,7 @@ Scenario: Calling login method with a valid request and a server error occurs wh
   And   user calls init method
   And   user subscribes to authStatus method with a valid request and authStatus emits an empty object
   When  user calls login method with a valid request
-  And   auth0 modal is being rendered on the screen
+  And   auth0 modal is rendered on the screen
   And   user clicks sign up in the auth0 modal
   And   a server error occurs
   Then  login promise is rejected with an error
@@ -87,7 +88,7 @@ Scenario: Closing auth0 modal when login promise is in a pending state
   And   user is not authenticated
   And   user calls init method
   And   user calls login method and login promise is in a pending state
-  And   auth0 modal is being rendered on the screen
+  And   auth0 modal is rendered on the screen
   When  user closes auth0 modal
   Then  login promise is rejected with an error
   
