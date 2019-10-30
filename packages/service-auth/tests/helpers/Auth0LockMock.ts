@@ -2,23 +2,17 @@ import { Observable, empty } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Auth0Error, Auth0UserProfile } from 'auth0-js';
 import { API } from '../../src';
-
-type EventType = 'show' | 'hide' | 'authenticated' | 'unrecoverable_error' | 'signin ready' | 'signup ready';
-
-interface Event {
-  type: EventType;
-  data: object;
-}
+import { LockEvent, Auth0LockMockOptions, LockEventType } from './types';
 
 export class Auth0LockMock {
-  private events$: Observable<Event>;
+  private events$: Observable<LockEvent>;
   private authData: API.AuthStatus;
-  constructor({ events$ = empty(), authData = {} }: { events$?: Observable<Event>; authData?: API.AuthStatus }) {
+  constructor({ events$ = empty(), authData = {} }: Auth0LockMockOptions) {
     this.events$ = events$;
     this.authData = authData;
   }
 
-  public on(eventType: EventType, callback: (eventData: object) => void) {
+  public on(eventType: LockEventType, callback: (eventData: object) => void) {
     this.events$.pipe(filter((event) => event.type === eventType)).subscribe((event) => {
       callback(event.data);
     });
@@ -51,11 +45,11 @@ export class Auth0LockMock {
 
   public getUserInfo(_: string, callback: (error: Auth0Error | null, profile: Auth0UserProfile) => void) {
     const profile = {
-      name: (this.authData as API.User).name!,
-      nickname: (this.authData as API.User).nickname!,
-      picture: (this.authData as API.User).picture!,
-      user_id: 'user_id',
-      username: 'username',
+      name: (this.authData as API.User).name,
+      nickname: (this.authData as API.User).nickname,
+      picture: (this.authData as API.User).picture,
+      user_id: (this.authData as API.User).userId,
+      username: (this.authData as API.User).userName,
       given_name: (this.authData as API.User).givenName,
       family_name: (this.authData as API.User).familyName,
       email: (this.authData as API.User).email,
@@ -63,10 +57,10 @@ export class Auth0LockMock {
       clientID: 'clientID',
       gender: (this.authData as API.User).gender,
       locale: (this.authData as API.User).locale,
-      identities: [],
-      created_at: new Date().toDateString(),
-      updated_at: (this.authData as API.User).updatedAt!,
-      sub: 'sub',
+      identities: (this.authData as API.User).identities,
+      created_at: (this.authData as API.User).createdAt!,
+      updated_at: (this.authData as API.User).updatedAt,
+      sub: (this.authData as API.User).sub,
     };
     return callback(null, profile);
   }

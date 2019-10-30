@@ -25,9 +25,11 @@
   },
   "dependencies": {
     "auth0-lock": "^11.18.1",
+    "lodash.omitby": "^4.6.0",
     "rxjs": "6.5.2"
   },
   "devDependencies": {
+    "@types/lodash.omitby": "^4.6.6",
     "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3",
     "@types/auth0-lock": "^11.4.12",
     "rsocket-flowable": "^0.0.10",

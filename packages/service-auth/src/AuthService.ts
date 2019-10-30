@@ -2,7 +2,7 @@ import { ReplaySubject, Subject, Observable } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Auth0Error } from 'auth0-js';
 import { API } from './index';
-import { createLock } from './helpers/utils';
+import { createLock, mapUserInfoToAuthData } from './helpers/utils';
 
 interface PromiseWithFinallyStreamCallbackData {
   resolve: (...args: any[]) => void;
@@ -110,14 +110,13 @@ export class Auth implements API.AuthService {
           if (error) {
             reject(error);
           } else {
-            console.log('userInfo', userInfo);
-            const authStatus = {
-              token: authResult.idToken,
-              name: userInfo.name,
-              isNewUser: this.modalTabLastShown === modalTabs.signUp,
-            };
-            this.authStatusSubject$.next(authStatus);
-            resolve(authStatus);
+            const authData = mapUserInfoToAuthData(
+              userInfo,
+              authResult.idToken,
+              this.modalTabLastShown === modalTabs.signUp
+            );
+            this.authStatusSubject$.next(authData);
+            resolve(authData);
           }
         });
       } else {
