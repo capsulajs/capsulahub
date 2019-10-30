@@ -3,13 +3,27 @@ import { filter } from 'rxjs/operators';
 import { Auth0Error, Auth0UserProfile } from 'auth0-js';
 import { API } from '../../src';
 import { LockEvent, Auth0LockMockOptions, LockEventType } from './types';
+import { auth0PopupId } from './consts';
+import { mapAuthDataToLockProfile } from './utils';
 
 export class Auth0LockMock {
   private events$: Observable<LockEvent>;
   private authData: API.AuthStatus;
-  constructor({ events$ = empty(), authData = {} }: Auth0LockMockOptions) {
+  private isNewSession: boolean;
+  private checkSessionError: Auth0Error | null;
+  private getUserInfoError: Auth0Error | null;
+  constructor({
+    events$ = empty(),
+    authData = {},
+    isNewSession = true,
+    checkSessionError = null,
+    getUserInfoError = null,
+  }: Auth0LockMockOptions) {
     this.events$ = events$;
     this.authData = authData;
+    this.isNewSession = isNewSession;
+    this.checkSessionError = checkSessionError;
+    this.getUserInfoError = getUserInfoError;
   }
 
   public on(eventType: LockEventType, callback: (eventData: object) => void) {
@@ -19,11 +33,13 @@ export class Auth0LockMock {
   }
 
   public checkSession(_: object, callback: (error: Auth0Error | null, profile?: AuthResult) => void) {
-    if ('token' in this.authData) {
+    if (this.checkSessionError) {
+      callback(this.checkSessionError);
+    } else if (!this.isNewSession) {
       const authResult = {
         accessToken: 'accessToken',
         expiresIn: Date.now() + 360000,
-        idToken: this.authData.token,
+        idToken: (this.authData as API.User).token,
         idTokenPayload: {
           aud: 'aud',
           exp: Date.now() + 360000,
@@ -44,24 +60,17 @@ export class Auth0LockMock {
   }
 
   public getUserInfo(_: string, callback: (error: Auth0Error | null, profile: Auth0UserProfile) => void) {
-    const profile = {
-      name: (this.authData as API.User).name,
-      nickname: (this.authData as API.User).nickname,
-      picture: (this.authData as API.User).picture,
-      user_id: (this.authData as API.User).userId,
-      username: (this.authData as API.User).userName,
-      given_name: (this.authData as API.User).givenName,
-      family_name: (this.authData as API.User).familyName,
-      email: (this.authData as API.User).email,
-      email_verified: (this.authData as API.User).isEmailVerified,
-      clientID: 'clientID',
-      gender: (this.authData as API.User).gender,
-      locale: (this.authData as API.User).locale,
-      identities: (this.authData as API.User).identities,
-      created_at: (this.authData as API.User).createdAt!,
-      updated_at: (this.authData as API.User).updatedAt,
-      sub: (this.authData as API.User).sub,
-    };
-    return callback(null, profile);
+    return callback(this.getUserInfoError, mapAuthDataToLockProfile(this.authData as API.User));
+  }
+
+  public show() {
+    const popup = document.createElement('div');
+    popup.textContent = 'Auth0 Popup';
+    popup.id = auth0PopupId;
+    document.body.appendChild(popup);
+  }
+
+  public hide() {
+    document.getElementById(auth0PopupId)!.remove();
   }
 }

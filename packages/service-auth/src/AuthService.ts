@@ -3,6 +3,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Auth0Error } from 'auth0-js';
 import { API } from './index';
 import { createLock, mapUserInfoToAuthData } from './helpers/utils';
+import { errors } from './helpers/consts';
 
 interface PromiseWithFinallyStreamCallbackData {
   resolve: (...args: any[]) => void;
@@ -54,12 +55,16 @@ export class Auth implements API.AuthService {
       this.lock.checkSession({}, (error, authResult) => {
         if (error) {
           if (error.code === 'login_required') {
-            this.handleAuthResult(undefined).then(resolve);
+            this.handleAuthResult(undefined)
+              .then(resolve)
+              .catch(reject);
           } else {
             reject(error);
           }
         } else {
-          this.handleAuthResult(authResult).then(resolve);
+          this.handleAuthResult(authResult)
+            .then(resolve)
+            .catch(reject);
         }
       });
     });
@@ -74,13 +79,13 @@ export class Auth implements API.AuthService {
           filter((isModalVisible) => !isModalVisible),
           takeUntil(isPromiseFinally$)
         )
-        .subscribe(() => reject('Login modal has been closed'));
+        .subscribe(() => reject(errors.loginCanceled));
 
       let authStatusEmits = 0;
       this.authStatusSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((authStatus) => {
         if (++authStatusEmits === 1) {
           if ('token' in authStatus) {
-            reject('User has been already signed up');
+            reject(errors.isAlreadyAuth);
           } else {
             this.lock.show();
           }
@@ -94,7 +99,7 @@ export class Auth implements API.AuthService {
 
   public logout({}): Promise<void> {
     return this.createPromise<void>(({ resolve }) => {
-      this.lock.logout({ returnTo: '' });
+      this.lock.logout({});
       resolve();
     });
   }
