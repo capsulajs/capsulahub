@@ -1,5 +1,5 @@
 import { ReplaySubject, Subject, Observable } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil, take } from 'rxjs/operators';
 import { Auth0Error } from 'auth0-js';
 import { API } from './index';
 import { createLock, mapUserInfoToAuthData } from './helpers/utils';
@@ -72,7 +72,10 @@ export class Auth implements API.AuthService {
 
   public login({}) {
     return this.createPromise<API.User>(({ resolve, reject, isPromiseFinally$ }) => {
-      this.errorsSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((error) => reject(error));
+      this.errorsSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((error) => {
+        this.closeModal();
+        reject(error);
+      });
 
       this.modalVisibilitySubject$
         .pipe(
@@ -98,9 +101,16 @@ export class Auth implements API.AuthService {
   }
 
   public logout({}): Promise<void> {
-    return this.createPromise<void>(({ resolve }) => {
-      this.lock.logout({});
-      resolve();
+    return this.createPromise<void>(({ resolve, reject }) => {
+      this.authStatusSubject$.pipe(take(1)).subscribe((authData) => {
+        if ('token' in authData) {
+          this.lock.logout({});
+          this.authStatusSubject$.next({});
+          resolve();
+        } else {
+          reject(errors.isNotAuth);
+        }
+      });
     });
   }
 

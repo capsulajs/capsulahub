@@ -73,4 +73,8 @@ export class Auth0LockMock {
   public hide() {
     document.getElementById(auth0PopupId)!.remove();
   }
+
+  public logout() {
+    return true;
+  }
 }
