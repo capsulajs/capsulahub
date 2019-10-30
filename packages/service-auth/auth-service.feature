@@ -29,8 +29,6 @@ Scenario: Calling login method when user has previously an auth session and init
   And   user has previously an auth session
   And   user calls init method and the init promise is in a pending state
   When  user calls login method with a valid request
-  And   auth0 modal is being rendered on the screen
-  And   user clicks sign in in the auth0 modal
   Then  the promise that was returned from init method is resolved with data of the user of the previous auth session
   And   login promise is rejected with an error
 
@@ -39,8 +37,6 @@ Scenario: Calling login method when user hasn't previously an auth session and i
   And   user hasn't previously an auth session
   And   user calls init method and the init promise is in a pending state
   When  user calls login method with a valid request
-  And   auth0 modal is being rendered on the screen
-  And   user clicks sign up in the auth0 modal
   Then  the promise that was returned from init method is resolved with an empty object
   And   the promise that was returned from login method is resolved with current user data
   
