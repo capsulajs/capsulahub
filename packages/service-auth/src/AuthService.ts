@@ -22,9 +22,9 @@ export class Auth implements API.AuthService {
   private authStatusSubject$: ReplaySubject<API.AuthStatus> = new ReplaySubject(1);
   private unrecoverableErrorSubject$: ReplaySubject<Auth0Error> = new ReplaySubject(1);
   private errorsSubject$: Subject<Auth0Error> = new Subject();
-  private modalTabLastShown?: 'signIn' | 'signUp';
+  private modalTabCurrentlyShown?: 'signIn' | 'signUp';
 
-  constructor(options: Pick<API.AuthServiceConfig, 'domain' | 'clientId'>) {
+  constructor(options: Pick<API.AuthServiceConfig, 'domain' | 'clientId' | 'lockOptions'>) {
     this.lock = createLock(options);
     this.modalVisibilitySubject$ = new Subject();
     this.lock.on('show', () => {
@@ -41,12 +41,15 @@ export class Auth implements API.AuthService {
     this.lock.on('unrecoverable_error', (error) => {
       this.unrecoverableErrorSubject$.next(error);
       this.authStatusSubject$.error(error);
+      if (!!this.modalTabCurrentlyShown) {
+        this.closeModal();
+      }
     });
     this.lock.on('signin ready', () => {
-      this.modalTabLastShown = modalTabs.signIn;
+      this.modalTabCurrentlyShown = modalTabs.signIn;
     });
     this.lock.on('signup ready', () => {
-      this.modalTabLastShown = modalTabs.signUp;
+      this.modalTabCurrentlyShown = modalTabs.signUp;
     });
   }
 
@@ -91,7 +94,11 @@ export class Auth implements API.AuthService {
             if ('token' in authStatus) {
               reject(errors.isAlreadyAuth);
             } else {
-              this.lock.show();
+              if (!this.modalTabCurrentlyShown) {
+                this.lock.show();
+              } else {
+                reject(errors.isAlreadyOpenedLoginPopup);
+              }
             }
           } else if ('token' in authStatus) {
             this.closeModal();
@@ -134,7 +141,7 @@ export class Auth implements API.AuthService {
             const authData = mapUserInfoToAuthData(
               userInfo,
               authResult.idToken,
-              this.modalTabLastShown === modalTabs.signUp
+              this.modalTabCurrentlyShown === modalTabs.signUp
             );
             this.authStatusSubject$.next(authData);
             resolve(authData);
@@ -150,13 +157,17 @@ export class Auth implements API.AuthService {
   private createPromise<T>(callback: (data: PromiseWithFinallyStreamCallbackData) => void): Promise<T> {
     const isPromiseFinally$ = new Subject<boolean>();
     return new Promise<T>((resolve, reject) => {
-      this.unrecoverableErrorSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((error) => reject(error));
+      this.unrecoverableErrorSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((error) => {
+        reject(error);
+      });
       callback({ resolve, reject, isPromiseFinally$: isPromiseFinally$.asObservable() });
-    }).finally(() => isPromiseFinally$.next(true));
+    }).finally(() => {
+      isPromiseFinally$.next(true);
+    });
   }
 
   private closeModal = () => {
-    this.modalTabLastShown = undefined;
+    this.modalTabCurrentlyShown = undefined;
     this.lock.hide();
   };
 }

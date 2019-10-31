@@ -3,15 +3,23 @@ import { Auth0UserProfile } from 'auth0-js';
 import omitBy from 'lodash.omitby';
 import { API } from '../index';
 
-export const createLock = (options: Pick<API.AuthServiceConfig, 'domain' | 'clientId'>) => {
-  return new Auth0Lock(options.clientId, options.domain, {
+export const createLock = (options: Pick<API.AuthServiceConfig, 'domain' | 'clientId' | 'lockOptions'>) => {
+  const additionalOptions = {
     allowAutocomplete: true,
+    allowedConnections: ['google-oauth2', 'github', 'Username-Password-Authentication'],
+    allowShowPassword: true,
+    autoclose: false,
+    autofocus: true,
+    avatar: null,
     auth: {
       redirect: false,
       responseType: 'token id_token',
     },
     loginAfterSignUp: true,
-  });
+    closable: true,
+    ...(options.lockOptions || {}),
+  };
+  return new Auth0Lock(options.clientId, options.domain, additionalOptions);
 };
 
 export const mapUserInfoToAuthData = (userInfo: Auth0UserProfile, idToken: string, isNewUser: boolean) => {

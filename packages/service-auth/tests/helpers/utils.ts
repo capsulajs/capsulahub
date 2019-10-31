@@ -40,3 +40,16 @@ export const mapAuthDataToLockProfile = (authData: API.User) => {
     sub: authData.sub,
   };
 };
+
+export const checkAtTestEnd = (runExpectation: () => any, timeoutToWait: number = 1000) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        runExpectation();
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    }, timeoutToWait);
+  });
+};

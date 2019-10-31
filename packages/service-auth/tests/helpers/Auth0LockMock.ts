@@ -1,4 +1,4 @@
-import { Observable, empty } from 'rxjs';
+import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Auth0Error, Auth0UserProfile } from 'auth0-js';
 import { API } from '../../src';
@@ -7,13 +7,13 @@ import { auth0PopupId } from './consts';
 import { mapAuthDataToLockProfile } from './utils';
 
 export class Auth0LockMock {
-  private events$: Observable<LockEvent>;
+  private events$: Subject<LockEvent>;
   private authData: API.AuthStatus;
   private isNewSession: boolean;
   private checkSessionError: Auth0Error | null;
   private getUserInfoError: Auth0Error | null;
   constructor({
-    events$ = empty(),
+    events$ = new Subject<LockEvent>(),
     authData = {},
     isNewSession = true,
     checkSessionError = null,
@@ -68,6 +68,8 @@ export class Auth0LockMock {
     popup.textContent = 'Auth0 Popup';
     popup.id = auth0PopupId;
     document.body.appendChild(popup);
+    this.events$.next({ type: 'show', data: {} });
+    this.events$.next({ type: 'signin ready', data: {} });
   }
 
   public hide() {

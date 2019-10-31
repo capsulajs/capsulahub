@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Auth0Error } from 'auth0-js';
 import { API } from '../../src';
 
@@ -10,7 +10,7 @@ export interface LockEvent {
 }
 
 export interface Auth0LockMockOptions {
-  events$?: Observable<LockEvent>;
+  events$?: Subject<LockEvent>;
   authData?: API.AuthStatus;
   isNewSession?: boolean;
   checkSessionError?: Auth0Error | null;

@@ -1,10 +1,10 @@
 import { Subject } from 'rxjs';
 import { Auth } from '../../src/AuthService';
-import { mockLock, getLoginPopupVisibility } from '../helpers/utils';
+import { mockLock, getLoginPopupVisibility, checkAtTestEnd } from '../helpers/utils';
 import { errors } from '../../src/helpers/consts';
 import { LockEvent } from '../helpers/types';
 
-describe('Auth', () => {
+describe('AuthService tests', () => {
   const authOptions = { domain: 'domain', clientId: 'clientId' };
   const authData = {
     token: 'idtoken',
@@ -43,7 +43,7 @@ describe('Auth', () => {
   const getUserInfoError = { error: 'get_user_info_error' };
   const criticalError = { error: 'critical_error' };
 
-  it('Calling init method with a valid request when user has previously an auth session', (done) => {
+  it('Calling init method with a valid request when user has previously an auth session', () => {
     expect.assertions(3);
     mockLock({ authData, isNewSession: false });
 
@@ -54,14 +54,10 @@ describe('Auth', () => {
       expect(authStatusData).toEqual(authData);
     });
     expect(auth.init({})).resolves.toEqual(authData);
-
-    setTimeout(() => {
-      expect(updates).toBe(1);
-      done();
-    }, 1000);
+    return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
-  it("Calling init method with a valid request when user wasn't previously authenticated", (done) => {
+  it("Calling init method with a valid request when user wasn't previously authenticated", () => {
     expect.assertions(3);
     mockLock({ authData: {}, isNewSession: true });
 
@@ -72,45 +68,38 @@ describe('Auth', () => {
       expect(authStatusData).toEqual({});
     });
     expect(auth.init({})).resolves.toEqual({});
-
-    setTimeout(() => {
-      expect(updates).toBe(1);
-      done();
-    }, 1000);
+    return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
-  it('Calling init method with a valid request and a server error occurs while getting user data', (done) => {
+  it('Calling init method with a valid request and a server error occurs while getting user data', () => {
     expect.assertions(4);
+    // checkSessionError
     mockLock({ checkSessionError, authData, isNewSession: false });
-
     const auth1 = new Auth(authOptions);
     let updates1 = 0;
     let updates2 = 0;
     auth1.authStatus$({}).subscribe(() => {
       updates1++;
     });
-
     expect(auth1.init({})).rejects.toEqual(checkSessionError);
-
+    // getUserInfoError
     mockLock({ getUserInfoError, authData, isNewSession: false });
     const auth2 = new Auth(authOptions);
     auth2.authStatus$({}).subscribe(() => {
       updates2++;
     });
     expect(auth2.init({})).rejects.toEqual(getUserInfoError);
-
-    setTimeout(() => {
+    return checkAtTestEnd(() => {
       expect(updates1).toBe(0);
       expect(updates2).toBe(0);
-      done();
-    }, 1000);
+    });
   });
 
   // TODO Add feature
   it('Calling init method with a valid request and a critical error occurs while getting user data', () => {
     expect.assertions(2);
     const events$ = new Subject<LockEvent>();
-    mockLock({ authData, isNewSession: true, events$: events$.asObservable() });
+    mockLock({ authData, isNewSession: true, events$ });
     const auth = new Auth(authOptions);
 
     const authStatusErrorReceived = new Promise((resolve) => {
@@ -127,8 +116,8 @@ describe('Auth', () => {
     return Promise.all([authStatusErrorReceived, expect(initRes).rejects.toEqual(criticalError)]);
   });
 
-  it('Calling login method when user has previously an auth session and init promise is in a pending state', (done) => {
-    expect.assertions(4);
+  it('Calling login method when user has previously an auth session and init promise is in a pending state', () => {
+    expect.assertions(5);
     mockLock({ authData, isNewSession: false });
 
     const auth = new Auth(authOptions);
@@ -137,19 +126,18 @@ describe('Auth', () => {
       updates++;
       expect(authStatusData).toEqual(authData);
     });
-    auth.init({}).then((res) => expect(res).toEqual(authData));
+    expect(auth.init({})).resolves.toEqual(authData);
     expect(auth.login({})).rejects.toEqual(errors.isAlreadyAuth);
-
-    setTimeout(() => {
+    return checkAtTestEnd(() => {
+      expect(getLoginPopupVisibility()).toBe(false);
       expect(updates).toBe(1);
-      done();
-    }, 1000);
+    });
   });
 
-  it("Calling login method when user hasn't previously an auth session and init promise is in a pending state", (done) => {
+  it("Calling login method when user hasn't previously an auth session and init promise is in a pending state", () => {
     expect.assertions(7);
     const events$ = new Subject<LockEvent>();
-    mockLock({ authData, isNewSession: true, events$: events$.asObservable() });
+    mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
@@ -170,14 +158,10 @@ describe('Auth', () => {
     });
     expect(getLoginPopupVisibility()).toBe(true);
     events$.next({ type: 'authenticated', data: authResult });
-
-    setTimeout(() => {
-      expect(updates).toBe(2);
-      done();
-    }, 1000);
+    return checkAtTestEnd(() => expect(updates).toBe(2));
   });
 
-  it('Calling login method with a valid request when user is authenticated', (done) => {
+  it('Calling login method with a valid request when user is authenticated', () => {
     expect.assertions(5);
     mockLock({ authData, isNewSession: false });
 
@@ -188,21 +172,19 @@ describe('Auth', () => {
       expect(authStatusData).toEqual(authData);
     });
     expect(auth.init({})).resolves.toEqual(authData);
-
     expect(auth.login({})).rejects.toEqual(errors.isAlreadyAuth);
-    expect(getLoginPopupVisibility()).toBe(false);
 
-    setTimeout(() => {
+    return checkAtTestEnd(() => {
+      expect(getLoginPopupVisibility()).toBe(false);
       expect(updates).toBe(1);
-      done();
-    }, 1000);
+    });
   });
 
-  const runLoginSuccessCase = (isNewUser: boolean, done: () => void) => {
+  const runLoginSuccessCase = (isNewUser: boolean) => {
     expect.assertions(7);
     const authDataForNewlyAuthUser = { ...authData, isNewUser };
     const events$ = new Subject<LockEvent>();
-    mockLock({ authData, isNewSession: true, events$: events$.asObservable() });
+    mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
@@ -224,26 +206,21 @@ describe('Auth', () => {
     expect(getLoginPopupVisibility()).toBe(true);
     events$.next({ type: `sign${isNewUser ? 'up' : 'in'} ready` as 'signup ready' | 'signin ready', data: {} });
     events$.next({ type: 'authenticated', data: authResult });
-
-    setTimeout(() => {
-      expect(updates).toBe(2);
-      done();
-    }, 1000);
+    return checkAtTestEnd(() => expect(updates).toBe(2));
   };
 
-  it('Calling login method with a valid request when user is not authenticated and authorizes through sign in', (done) => {
-    runLoginSuccessCase(false, done);
+  it('Calling login method with a valid request when user is not authenticated and authorizes through sign in', () => {
+    return runLoginSuccessCase(false);
   });
 
-  it('Calling login method with a valid request when user is not authenticated and authorizes through sign up', (done) => {
-    runLoginSuccessCase(true, done);
+  it('Calling login method with a valid request when user is not authenticated and authorizes through sign up', () => {
+    return runLoginSuccessCase(true);
   });
 
-  // TODO Check for critical server error
-  it('Calling login method with a valid request and a server error occurs while getting user data', (done) => {
+  it('Calling login method with a valid request and a server error occurs while getting user data', () => {
     expect.assertions(6);
     const events$ = new Subject<LockEvent>();
-    mockLock({ getUserInfoError, authData, isNewSession: true, events$: events$.asObservable() });
+    mockLock({ getUserInfoError, authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
@@ -253,7 +230,6 @@ describe('Auth', () => {
     });
 
     expect(auth.init({})).resolves.toEqual({});
-
     auth.login({}).catch((error) => {
       expect(error).toEqual(getUserInfoError);
       expect(getLoginPopupVisibility()).toBe(false);
@@ -261,17 +237,14 @@ describe('Auth', () => {
     expect(getLoginPopupVisibility()).toBe(true);
     events$.next({ type: 'authenticated', data: authResult });
 
-    setTimeout(() => {
-      expect(updates).toBe(1);
-      done();
-    }, 1000);
+    return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
   // TODO Add feature
   it('Calling login method with a valid request and a critical error occurs', () => {
-    expect.assertions(5);
+    expect.assertions(7);
     const events$ = new Subject<LockEvent>();
-    mockLock({ authData, isNewSession: true, events$: events$.asObservable() });
+    mockLock({ authData, isNewSession: true, events$ });
     const auth = new Auth(authOptions);
 
     let updates = 0;
@@ -298,16 +271,18 @@ describe('Auth', () => {
         .then((res) => expect(res).toEqual({}))
         .then(() => {
           loginRes = auth.login({});
+          expect(getLoginPopupVisibility()).toBe(true);
           events$.next({ type: 'unrecoverable_error', data: criticalError });
           return expect(loginRes).rejects.toEqual(criticalError);
-        }),
+        })
+        .then(() => expect(getLoginPopupVisibility()).toBe(false)),
     ]);
   });
 
-  it('Closing auth0 modal when login promise is in a pending state', (done) => {
+  it('Closing auth0 modal when login promise is in a pending state', () => {
     expect.assertions(5);
     const events$ = new Subject<LockEvent>();
-    mockLock({ authData, isNewSession: true, events$: events$.asObservable() });
+    mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
@@ -317,20 +292,15 @@ describe('Auth', () => {
     });
 
     expect(auth.init({})).resolves.toEqual({});
-
     auth.login({}).catch((error) => {
       expect(error).toEqual(errors.loginCanceled);
     });
     expect(getLoginPopupVisibility()).toBe(true);
     events$.next({ type: 'hide', data: {} });
-
-    setTimeout(() => {
-      expect(updates).toBe(1);
-      done();
-    }, 1000);
+    return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
-  it('Calling logout method with a valid request when user is authenticated', (done) => {
+  it('Calling logout method with a valid request when user is authenticated', () => {
     expect.assertions(5);
     mockLock({ authData, isNewSession: false });
 
@@ -351,15 +321,11 @@ describe('Auth', () => {
       .then((res) => expect(res).toEqual(authData))
       .then(() => auth.logout({}))
       .then((res) => expect(res).toEqual(undefined));
-
-    setTimeout(() => {
-      expect(updates).toBe(2);
-      done();
-    }, 1000);
+    return checkAtTestEnd(() => expect(updates).toBe(2));
   });
 
   // TODO Add feature
-  it('Calling logout method with a valid request when user is not authenticated', (done) => {
+  it('Calling logout method with a valid request when user is not authenticated', () => {
     expect.assertions(4);
     mockLock({ authData, isNewSession: true });
 
@@ -375,40 +341,13 @@ describe('Auth', () => {
       .then((res) => expect(res).toEqual({}))
       .then(() => auth.logout({}))
       .catch((error) => expect(error).toEqual(errors.isNotAuth));
-
-    setTimeout(() => {
-      expect(updates).toBe(1);
-      done();
-    }, 1000);
-  });
-
-  it('Calling logout method with a valid request when user is not authenticated', (done) => {
-    expect.assertions(4);
-    mockLock({ authData, isNewSession: true });
-
-    const auth = new Auth(authOptions);
-    let updates = 0;
-    auth.authStatus$({}).subscribe((res) => {
-      updates++;
-      expect(res).toEqual({});
-    });
-
-    auth
-      .init({})
-      .then((res) => expect(res).toEqual({}))
-      .then(() => auth.logout({}))
-      .catch((error) => expect(error).toEqual(errors.isNotAuth));
-
-    setTimeout(() => {
-      expect(updates).toBe(1);
-      done();
-    }, 1000);
+    return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
   it('Calling AuthService methods when a critical error from auth0 occurs', () => {
     expect.assertions(4);
     const events$ = new Subject<LockEvent>();
-    mockLock({ authData, isNewSession: true, events$: events$.asObservable() });
+    mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     events$.next({ type: 'unrecoverable_error', data: criticalError });
@@ -427,5 +366,28 @@ describe('Auth', () => {
       expect(auth.login({})).rejects.toEqual(criticalError),
       expect(auth.logout({})).rejects.toEqual(criticalError),
     ]);
+  });
+
+  // TODO Add feature
+  it('Calling login method when login popup is opened', () => {
+    expect.assertions(6);
+    const events$ = new Subject<LockEvent>();
+    mockLock({ authData, isNewSession: true, events$ });
+
+    const auth = new Auth(authOptions);
+
+    let updates = 0;
+    auth.authStatus$({}).subscribe((res) => {
+      updates++;
+      expect(res).toEqual({});
+    });
+
+    expect(auth.init({})).resolves.toEqual({});
+    auth.login({});
+    expect(getLoginPopupVisibility()).toBe(true);
+    expect(auth.login({}))
+      .rejects.toEqual(errors.isAlreadyOpenedLoginPopup)
+      .then(() => expect(getLoginPopupVisibility()).toBe(true));
+    return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 });
