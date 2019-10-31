@@ -8,15 +8,9 @@ const auth = new Auth({
 // @ts-ignore
 window.auth = auth;
 
-auth.authStatus$({}).subscribe((authStatus) => {
-  console.log('authStatus', authStatus);
-});
-
 auth
-  .init({})
-  .then((data) => {
-    console.log('init data', data);
-  })
-  .catch((error) => {
-    console.log('init error', error);
-  });
+  .authStatus$({})
+  .subscribe(
+    (authStatus) => console.info('authStatus$ => ', authStatus),
+    (error) => console.error('authStatus$ error => ', error)
+  );

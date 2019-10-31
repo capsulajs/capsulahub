@@ -15,4 +15,5 @@ export interface Auth0LockMockOptions {
   isNewSession?: boolean;
   checkSessionError?: Auth0Error | null;
   getUserInfoError?: Auth0Error | null;
+  isInitializationError?: boolean;
 }

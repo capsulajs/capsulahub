@@ -18,7 +18,11 @@ export class Auth0LockMock {
     isNewSession = true,
     checkSessionError = null,
     getUserInfoError = null,
+    isInitializationError = false,
   }: Auth0LockMockOptions) {
+    if (isInitializationError) {
+      throw new Error('Error from Auth0Lock');
+    }
     this.events$ = events$;
     this.authData = authData;
     this.isNewSession = isNewSession;

@@ -3,6 +3,7 @@ import { Auth } from '../../src/AuthService';
 import { mockLock, getLoginPopupVisibility, checkAtTestEnd } from '../helpers/utils';
 import { errors } from '../../src/helpers/consts';
 import { LockEvent } from '../helpers/types';
+import { mapUserInfoToAuthData } from '../../src/helpers/utils';
 
 describe('AuthService tests', () => {
   const authOptions = { domain: 'domain', clientId: 'clientId' };
@@ -389,5 +390,60 @@ describe('AuthService tests', () => {
       .rejects.toEqual(errors.isAlreadyOpenedLoginPopup)
       .then(() => expect(getLoginPopupVisibility()).toBe(true));
     return checkAtTestEnd(() => expect(updates).toBe(1));
+  });
+
+  it('userProfile has been mapped correctly to authData (unit test)', () => {
+    expect.assertions(1);
+    const updatedAt = new Date().toDateString();
+    const createdAt = new Date(Date.now() - 3600).toDateString();
+    const userProfile = {
+      name: 'userName',
+      nickname: 'userNickname',
+      picture: 'userPicture',
+      user_id: 'unique_user_id',
+      clientID: 'someClientId',
+      updated_at: updatedAt,
+      identities: [],
+      sub: 'userSub',
+      username: 'userName',
+      given_name: 'givenName',
+      family_name: 'familyName',
+      email: 'someemail@gmail.com',
+      email_verified: true,
+      gender: 'male',
+      locale: 'some locale',
+      created_at: createdAt,
+      user_metadata: {
+        test: 555,
+      },
+      app_metadata: {
+        hello: 'world',
+      },
+    };
+    expect(mapUserInfoToAuthData(userProfile, 'idToken', true)).toEqual({
+      token: 'idToken',
+      name: 'userName',
+      nickname: 'userNickname',
+      picture: 'userPicture',
+      isNewUser: true,
+      userId: 'unique_user_id',
+      updatedAt,
+      identities: [],
+      sub: 'userSub',
+      userName: 'userName',
+      givenName: 'givenName',
+      familyName: 'familyName',
+      email: 'someemail@gmail.com',
+      isEmailVerified: true,
+      gender: 'male',
+      locale: 'some locale',
+      createdAt,
+      userMetadata: {
+        test: 555,
+      },
+      appMetadata: {
+        hello: 'world',
+      },
+    });
   });
 });

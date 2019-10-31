@@ -7,7 +7,7 @@ import { errors } from './helpers/consts';
 
 interface PromiseWithFinallyStreamCallbackData {
   resolve: (...args: any[]) => void;
-  reject: (err: any) => void;
+  reject: (err: Auth0Error) => void;
   isPromiseFinally$: Observable<boolean>;
 }
 
@@ -89,9 +89,9 @@ export class Auth implements API.AuthService {
 
       let authStatusEmits = 0;
       this.authStatusSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe(
-        (authStatus) => {
+        (authData) => {
           if (++authStatusEmits === 1) {
-            if ('token' in authStatus) {
+            if (this.isUserAuth(authData)) {
               reject(errors.isAlreadyAuth);
             } else {
               if (!this.modalTabCurrentlyShown) {
@@ -100,9 +100,9 @@ export class Auth implements API.AuthService {
                 reject(errors.isAlreadyOpenedLoginPopup);
               }
             }
-          } else if ('token' in authStatus) {
+          } else if (this.isUserAuth(authData)) {
             this.closeModal();
-            resolve(authStatus);
+            resolve(authData);
           }
         },
         () => true
@@ -114,7 +114,7 @@ export class Auth implements API.AuthService {
     return this.createPromise<void>(({ resolve, reject }) => {
       this.authStatusSubject$.pipe(take(1)).subscribe(
         (authData) => {
-          if ('token' in authData) {
+          if (this.isUserAuth(authData)) {
             this.lock.logout({});
             this.authStatusSubject$.next({});
             resolve();
@@ -170,4 +170,6 @@ export class Auth implements API.AuthService {
     this.modalTabCurrentlyShown = undefined;
     this.lock.hide();
   };
+
+  private isUserAuth = (authData: API.AuthStatus) => 'token' in authData;
 }
