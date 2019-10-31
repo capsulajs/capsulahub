@@ -85,32 +85,38 @@ export class Auth implements API.AuthService {
         .subscribe(() => reject(errors.loginCanceled));
 
       let authStatusEmits = 0;
-      this.authStatusSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe((authStatus) => {
-        if (++authStatusEmits === 1) {
-          if ('token' in authStatus) {
-            reject(errors.isAlreadyAuth);
-          } else {
-            this.lock.show();
+      this.authStatusSubject$.pipe(takeUntil(isPromiseFinally$)).subscribe(
+        (authStatus) => {
+          if (++authStatusEmits === 1) {
+            if ('token' in authStatus) {
+              reject(errors.isAlreadyAuth);
+            } else {
+              this.lock.show();
+            }
+          } else if ('token' in authStatus) {
+            this.closeModal();
+            resolve(authStatus);
           }
-        } else if ('token' in authStatus) {
-          this.closeModal();
-          resolve(authStatus);
-        }
-      });
+        },
+        () => true
+      );
     });
   }
 
   public logout({}): Promise<void> {
     return this.createPromise<void>(({ resolve, reject }) => {
-      this.authStatusSubject$.pipe(take(1)).subscribe((authData) => {
-        if ('token' in authData) {
-          this.lock.logout({});
-          this.authStatusSubject$.next({});
-          resolve();
-        } else {
-          reject(errors.isNotAuth);
-        }
-      });
+      this.authStatusSubject$.pipe(take(1)).subscribe(
+        (authData) => {
+          if ('token' in authData) {
+            this.lock.logout({});
+            this.authStatusSubject$.next({});
+            resolve();
+          } else {
+            reject(errors.isNotAuth);
+          }
+        },
+        () => true
+      );
     });
   }
 
