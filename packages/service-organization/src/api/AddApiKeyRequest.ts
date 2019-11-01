@@ -1,4 +1,4 @@
-import { Role } from './Role';
+import { Claims } from './Claims';
 
 export interface AddApiKeyRequest {
   /**
@@ -16,7 +16,5 @@ export interface AddApiKeyRequest {
   /**
    * Describes given identity on some role
    */
-  claims: {
-    role: Role;
-  };
+  claims: Claims;
 }

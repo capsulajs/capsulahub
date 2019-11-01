@@ -1,4 +1,5 @@
 import { AddApiKeyRequest } from './AddApiKeyRequest';
+import { AddApiKeyResponse } from './AddApiKeyResponse';
 
 export interface OrganizationService {
   /**
@@ -14,12 +15,12 @@ export interface OrganizationService {
    * - "Admin" | "Member" permission levels will be returned only for the related Organization Admin
    * - "Member" permission level will be returned only for the related Organization Member
    * @returns
-   * A Promise that will be resolved when a new connection will be established
+   * A Promise that will be resolved with all the current api keys after a new api key has been added
    * The promise can be rejected if
    * - addApiKeyRequest is not correct
    * - there is a server error (network or server validation)
    */
-  addApiKey(addApiKeyRequest: AddApiKeyRequest): Promise<void>;
+  addApiKey(addApiKeyRequest: AddApiKeyRequest): Promise<AddApiKeyResponse>;
   /**
    * This operation enables only organization managers (Owner | Admin) to delete the API keys (token) from the relevant organization.
    * Thus write or read rights will be revoked from the consumers of the Configuration service who was using the related terminated API key.
