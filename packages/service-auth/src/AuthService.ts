@@ -1,15 +1,10 @@
-import { ReplaySubject, Subject, Observable } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import { filter, takeUntil, take } from 'rxjs/operators';
 import { Auth0Error } from 'auth0-js';
 import { API } from './index';
 import { createLock, mapUserInfoToAuthData } from './helpers/utils';
 import { errors } from './helpers/consts';
-
-interface PromiseWithFinallyStreamCallbackData {
-  resolve: (...args: any[]) => void;
-  reject: (err: Auth0Error) => void;
-  isPromiseFinally$: Observable<boolean>;
-}
+import { PromiseWithFinallyStreamCallbackData } from './helpers/types';
 
 const modalTabs = {
   signIn: 'signIn' as 'signIn',

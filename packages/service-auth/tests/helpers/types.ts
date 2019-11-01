@@ -2,7 +2,14 @@ import { Subject } from 'rxjs';
 import { Auth0Error } from 'auth0-js';
 import { API } from '../../src';
 
-export type LockEventType = 'show' | 'hide' | 'authenticated' | 'unrecoverable_error' | 'signin ready' | 'signup ready';
+export type LockEventType =
+  | 'show'
+  | 'hide'
+  | 'authenticated'
+  | 'unrecoverable_error'
+  | 'signin ready'
+  | 'signup ready'
+  | 'destroy';
 
 export interface LockEvent {
   type: LockEventType;

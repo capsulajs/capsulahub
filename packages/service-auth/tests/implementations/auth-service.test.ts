@@ -1,9 +1,11 @@
 import { Subject } from 'rxjs';
+import { filter, take, takeUntil } from 'rxjs/operators';
 import { Auth } from '../../src/AuthService';
 import { mockLock, getLoginPopupVisibility, checkAtTestEnd } from '../helpers/utils';
 import { errors } from '../../src/helpers/consts';
 import { LockEvent } from '../helpers/types';
 import { mapUserInfoToAuthData } from '../../src/helpers/utils';
+import { API } from '../../src';
 
 describe('AuthService tests', () => {
   const authOptions = { domain: 'domain', clientId: 'clientId' };
@@ -43,14 +45,24 @@ describe('AuthService tests', () => {
   const checkSessionError = { error: 'check_session_error' };
   const getUserInfoError = { error: 'get_user_info_error' };
   const criticalError = { error: 'critical_error' };
+  const events$ = new Subject<LockEvent>();
+  const lockMockIsDestroyed$ = events$.pipe(
+    filter(({ type }) => type === 'destroy'),
+    take(1)
+  );
+  const getAuthStatusStream = (auth: API.AuthService) => auth.authStatus$({}).pipe(takeUntil(lockMockIsDestroyed$));
+
+  afterEach(() => {
+    events$.next({ type: 'destroy', data: {} });
+  });
 
   it('Calling init method with a valid request when user has previously an auth session', () => {
     expect.assertions(3);
-    mockLock({ authData, isNewSession: false });
+    mockLock({ authData, isNewSession: false, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((authStatusData) => {
+    getAuthStatusStream(auth).subscribe((authStatusData) => {
       updates++;
       expect(authStatusData).toEqual(authData);
     });
@@ -64,7 +76,7 @@ describe('AuthService tests', () => {
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((authStatusData) => {
+    getAuthStatusStream(auth).subscribe((authStatusData) => {
       updates++;
       expect(authStatusData).toEqual({});
     });
@@ -79,14 +91,14 @@ describe('AuthService tests', () => {
     const auth1 = new Auth(authOptions);
     let updates1 = 0;
     let updates2 = 0;
-    auth1.authStatus$({}).subscribe(() => {
+    getAuthStatusStream(auth1).subscribe(() => {
       updates1++;
     });
     expect(auth1.init({})).rejects.toEqual(checkSessionError);
     // getUserInfoError
     mockLock({ getUserInfoError, authData, isNewSession: false });
     const auth2 = new Auth(authOptions);
-    auth2.authStatus$({}).subscribe(() => {
+    getAuthStatusStream(auth2).subscribe(() => {
       updates2++;
     });
     expect(auth2.init({})).rejects.toEqual(getUserInfoError);
@@ -98,12 +110,11 @@ describe('AuthService tests', () => {
 
   it('Calling init method with a valid request and a critical error occurs while init is in pending state', () => {
     expect.assertions(2);
-    const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });
     const auth = new Auth(authOptions);
 
     const authStatusErrorReceived = new Promise((resolve) => {
-      auth.authStatus$({}).subscribe({
+      getAuthStatusStream(auth).subscribe({
         error: (error) => {
           expect(error).toEqual(criticalError);
           resolve();
@@ -122,7 +133,7 @@ describe('AuthService tests', () => {
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((authStatusData) => {
+    getAuthStatusStream(auth).subscribe((authStatusData) => {
       updates++;
       expect(authStatusData).toEqual(authData);
     });
@@ -134,16 +145,13 @@ describe('AuthService tests', () => {
     });
   });
 
-  // TODO Start from here
-
   it("Calling login method when user hasn't previously an auth session and init promise is in a pending state", () => {
     expect.assertions(7);
-    const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((authStatusData) => {
+    getAuthStatusStream(auth).subscribe((authStatusData) => {
       updates++;
       if (updates === 1) {
         expect(authStatusData).toEqual({});
@@ -186,12 +194,11 @@ describe('AuthService tests', () => {
   const runLoginSuccessCase = (isNewUser: boolean) => {
     expect.assertions(7);
     const authDataForNewlyAuthUser = { ...authData, isNewUser };
-    const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((authStatusData) => {
+    getAuthStatusStream(auth).subscribe((authStatusData) => {
       updates++;
       if (updates === 1) {
         expect(authStatusData).toEqual({});
@@ -225,12 +232,11 @@ describe('AuthService tests', () => {
 
   it('Calling login method with a valid request and a server error occurs while getting user data', () => {
     expect.assertions(6);
-    const events$ = new Subject<LockEvent>();
     mockLock({ getUserInfoError, authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((res) => {
+    getAuthStatusStream(auth).subscribe((res) => {
       updates++;
       expect(res).toEqual({});
     });
@@ -251,13 +257,12 @@ describe('AuthService tests', () => {
 
   it('Calling login method with a valid request and a critical error occurs', () => {
     expect.assertions(7);
-    const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });
     const auth = new Auth(authOptions);
 
     let updates = 0;
     const authStatusErrorReceived = new Promise((resolve) => {
-      auth.authStatus$({}).subscribe({
+      getAuthStatusStream(auth).subscribe({
         next: (res) => {
           updates++;
           expect(res).toEqual({});
@@ -289,12 +294,11 @@ describe('AuthService tests', () => {
 
   it('Closing auth0 modal when login promise is in a pending state', () => {
     expect.assertions(5);
-    const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((res) => {
+    getAuthStatusStream(auth).subscribe((res) => {
       updates++;
       expect(res).toEqual({});
     });
@@ -318,7 +322,7 @@ describe('AuthService tests', () => {
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((res) => {
+    getAuthStatusStream(auth).subscribe((res) => {
       updates++;
       if (updates === 1) {
         expect(res).toEqual(authData);
@@ -342,7 +346,7 @@ describe('AuthService tests', () => {
 
     const auth = new Auth(authOptions);
     let updates = 0;
-    auth.authStatus$({}).subscribe((res) => {
+    getAuthStatusStream(auth).subscribe((res) => {
       updates++;
       expect(res).toEqual({});
     });
@@ -357,14 +361,13 @@ describe('AuthService tests', () => {
 
   it('Calling AuthService methods when a critical error from auth0 occurs', () => {
     expect.assertions(4);
-    const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
     events$.next({ type: 'unrecoverable_error', data: criticalError });
 
     const authStatusErrorReceived = new Promise((resolve) => {
-      auth.authStatus$({}).subscribe({
+      getAuthStatusStream(auth).subscribe({
         error: (error) => {
           expect(error).toEqual(criticalError);
           resolve();
@@ -381,13 +384,12 @@ describe('AuthService tests', () => {
 
   it('Calling login method when auth0 modal is opened', () => {
     expect.assertions(6);
-    const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
 
     let updates = 0;
-    auth.authStatus$({}).subscribe((res) => {
+    getAuthStatusStream(auth).subscribe((res) => {
       updates++;
       expect(res).toEqual({});
     });
