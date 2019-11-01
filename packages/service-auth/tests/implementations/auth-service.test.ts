@@ -58,7 +58,7 @@ describe('AuthService tests', () => {
     return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
-  it("Calling init method with a valid request when user wasn't previously authenticated", () => {
+  it("Calling init method with a valid request when user hasn't previously an auth session", () => {
     expect.assertions(3);
     mockLock({ authData: {}, isNewSession: true });
 
@@ -72,7 +72,7 @@ describe('AuthService tests', () => {
     return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
-  it('Calling init method with a valid request and a server error occurs while getting user data', () => {
+  it('Calling init method with a valid request and a server error occurs (while checking session and getting user data)', () => {
     expect.assertions(4);
     // checkSessionError
     mockLock({ checkSessionError, authData, isNewSession: false });
@@ -96,7 +96,6 @@ describe('AuthService tests', () => {
     });
   });
 
-  // TODO Add feature
   it('Calling init method with a valid request and a critical error occurs while init is in pending state', () => {
     expect.assertions(2);
     const events$ = new Subject<LockEvent>();
@@ -250,7 +249,6 @@ describe('AuthService tests', () => {
     return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
-  // TODO Add feature
   it('Calling login method with a valid request and a critical error occurs', () => {
     expect.assertions(7);
     const events$ = new Subject<LockEvent>();
@@ -338,7 +336,6 @@ describe('AuthService tests', () => {
     return checkAtTestEnd(() => expect(updates).toBe(2));
   });
 
-  // TODO Add feature
   it('Calling logout method with a valid request when user is not authenticated', () => {
     expect.assertions(4);
     mockLock({ authData, isNewSession: true });
@@ -382,8 +379,7 @@ describe('AuthService tests', () => {
     ]);
   });
 
-  // TODO Add feature
-  it('Calling login method when login popup is opened', () => {
+  it('Calling login method when auth0 modal is opened', () => {
     expect.assertions(6);
     const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });

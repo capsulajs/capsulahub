@@ -23,6 +23,16 @@ Scenario: Calling init method with a valid request and a server error occurs (wh
   And   a server error occurs
   Then  init promise is rejected with an error
 
+Scenario: Calling init method with a valid request and a critical error occurs while init is in pending state
+  Given AuthService with authStatus and init methods
+  And   user is not authenticated
+  And   user has previously an auth session
+  And   user subscribes to authStatus method
+  And   user calls init method and the init promise is in a pending state
+  When  a critical error occurs
+  Then  the promise that was returned from init method is rejected with an error
+  And   authStatus stream receive an error
+
 Scenario: Calling login method when user has previously an auth session and init promise is in a pending state
   Given AuthService with login and init method
   And   user is not authenticated
@@ -87,6 +97,20 @@ Scenario: Calling login method with a valid request and a server error occurs wh
   Then  login promise is rejected with an error
   And   auth0 modal is removed from the screen
 
+Scenario: Calling login method with a valid request and a critical error occurs
+  Given AuthService with login and authStatus methods
+  And   user is not authenticated
+  And   user hasn't previously an auth session
+  And   user calls init method and the promise that was returned from init method is resolved with an empty object
+  And   user subscribes to authStatus method with a valid request and authStatus emits an empty object
+  When  user calls login method with a valid request and login promise
+  And   auth0 modal is rendered on the screen
+  And   user clicks sign up in the auth0 modal
+  And   a critical error occurs
+  Then  login promise is rejected with an error
+  And   auth0 modal is removed from the screen
+  And   authStatus stream receive an error
+
 Scenario: Closing auth0 modal when login promise is in a pending state
   Given AuthService with login and authStatus methods
   And   user is not authenticated
@@ -106,6 +130,15 @@ Scenario: Calling logout method with a valid request when user is authenticated
   And   user is not authenticated
   And   authStatus emits an update about the current auth status
 
+Scenario: Calling logout method with a valid request when user is not authenticated
+  Given AuthService with logout, init and authStatus methods
+  And   user is not authenticated
+  And   user hasn't previously an auth session
+  And   user calls init method and the promise that was returned from init method is resolved with an empty object
+  And   user subscribes to authStatus method with a valid request
+  When  user calls logout method with a valid request
+  Then  the promise that was returned from logout method is rejected with an error
+
 Scenario: Calling AuthService methods when a critical error from auth0 occurs
   Given AuthService with init, login, logout and authStatus methods
   When  a critical error from auth0 occurs
@@ -117,3 +150,15 @@ Scenario: Calling AuthService methods when a critical error from auth0 occurs
   And   user subscribes to authStatus method
   Then  <method> promise is rejected with an error
   And   authStatus stream receive an error
+
+Scenario: Calling login method when auth0 modal is opened
+  Given AuthService with login, init and authStatus methods
+  And   user is not authenticated
+  And   user hasn't previously an auth session
+  And   user calls init method and the promise that was returned from init method is resolved with an empty object
+  And   user subscribes to authStatus method and authStatus emits an empty object
+  And   user calls login method with a valid request
+  And   auth0 modal is rendered on the screen
+  When  user calls login method with a valid request
+  Then  the second promise that was returned from login method is rejected with an error
+  And   auth0 modal is still displayed on the screen
