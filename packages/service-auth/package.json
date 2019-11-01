@@ -31,8 +31,6 @@
   "devDependencies": {
     "@types/lodash.omitby": "^4.6.6",
     "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3",
-    "@types/auth0-lock": "^11.4.12",
-    "rsocket-flowable": "^0.0.10",
-    "rsocket-websocket-server": "^0.0.10"
+    "@types/auth0-lock": "^11.4.12"
   }
 }

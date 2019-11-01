@@ -16,7 +16,7 @@ Scenario: Calling init method with a valid request when user hasn't previously a
   Then  the promise that was returned from init method is resolved with an empty object
   And   authStatus emits an empty object
 
-Scenario: Calling init method with a valid request and a server error occurs while getting user data
+Scenario: Calling init method with a valid request and a server error occurs (while checking session and getting user data)
   Given AuthService with init method
   And   user has previously an auth session
   When  user calls init method with a valid request
@@ -41,14 +41,14 @@ Scenario: Calling login method when user hasn't previously an auth session and i
   Then  the promise that was returned from init method is resolved with an empty object
   And   auth0 modal is rendered on the screen
   And   if user sign up in the auth0 modal the promise that was returned from login method will be resolved with current user data
-  
+
 Scenario: Calling login method with a valid request when user is authenticated
   Given AuthService with login method
   And   user is authenticated
   When  user calls login method with a valid request
   Then  login promise is rejects with an error
 
-Scenario: Calling login method with a valid request when user is not authenticated and authorizes through sign in 
+Scenario: Calling login method with a valid request when user is not authenticated and authorizes through sign in
   Given AuthService with login, init and authStatus methods
   And   user is not authenticated
   And   user hasn't previously an auth session
@@ -86,7 +86,7 @@ Scenario: Calling login method with a valid request and a server error occurs wh
   And   a server error occurs
   Then  login promise is rejected with an error
   And   auth0 modal is removed from the screen
- 
+
 Scenario: Closing auth0 modal when login promise is in a pending state
   Given AuthService with login and authStatus methods
   And   user is not authenticated
@@ -96,7 +96,7 @@ Scenario: Closing auth0 modal when login promise is in a pending state
   And   auth0 modal is rendered on the screen
   When  user closes auth0 modal
   Then  login promise is rejected with an error
-  
+
 Scenario: Calling logout method with a valid request when user is authenticated
   Given AuthService with logout and authStatus methods
   And   user is authenticated
@@ -109,7 +109,7 @@ Scenario: Calling logout method with a valid request when user is authenticated
 Scenario: Calling AuthService methods when a critical error from auth0 occurs
   Given AuthService with init, login, logout and authStatus methods
   When  a critical error from auth0 occurs
-  And   user calls one of the AuthService <method>s 
+  And   user calls one of the AuthService <method>s
         | <method>   |
         | init       |
         | login      |
@@ -117,4 +117,3 @@ Scenario: Calling AuthService methods when a critical error from auth0 occurs
   And   user subscribes to authStatus method
   Then  <method> promise is rejected with an error
   And   authStatus stream receive an error
-  

@@ -2,6 +2,23 @@
 
 The purpose of this service is to provide a utility tool that allows user to implement authentication logic using [auth0](https://auth0.com/) service.
 
+Take a look at **[Lock.js](https://auth0.com/docs/libraries/lock/v11/configuration)** documentation in order to get the whole list of **lockOptions**.
+
+## Usage
+
+```javascript
+// You should call init as soon as possible in order to get the current auth status of a user
+// If you call login method before init, login popup will not be shown until init resolves
+
+authService.init({}).then((authStatusDataAfterInit) => {
+  if (!authStatusDataAfterInit.token) {
+    return authStatusDataAfterInit.login({}).then((authStatusDataAfterLogin) => {
+      console.info(authStatusDataAfterLogin);
+    })
+  }
+});
+```
+
 ## Install
 
 ### NPM

@@ -97,7 +97,7 @@ describe('AuthService tests', () => {
   });
 
   // TODO Add feature
-  it('Calling init method with a valid request and a critical error occurs while getting user data', () => {
+  it('Calling init method with a valid request and a critical error occurs while init is in pending state', () => {
     expect.assertions(2);
     const events$ = new Subject<LockEvent>();
     mockLock({ authData, isNewSession: true, events$ });
@@ -134,6 +134,8 @@ describe('AuthService tests', () => {
       expect(updates).toBe(1);
     });
   });
+
+  // TODO Start from here
 
   it("Calling login method when user hasn't previously an auth session and init promise is in a pending state", () => {
     expect.assertions(7);
@@ -172,8 +174,9 @@ describe('AuthService tests', () => {
       updates++;
       expect(authStatusData).toEqual(authData);
     });
-    expect(auth.init({})).resolves.toEqual(authData);
-    expect(auth.login({})).rejects.toEqual(errors.isAlreadyAuth);
+    expect(auth.init({}))
+      .resolves.toEqual(authData)
+      .then(() => expect(auth.login({})).rejects.toEqual(errors.isAlreadyAuth));
 
     return checkAtTestEnd(() => {
       expect(getLoginPopupVisibility()).toBe(false);
@@ -198,15 +201,18 @@ describe('AuthService tests', () => {
         expect(authStatusData).toEqual(authDataForNewlyAuthUser);
       }
     });
-    expect(auth.init({})).resolves.toEqual({});
+    expect(auth.init({}))
+      .resolves.toEqual({})
+      .then(() => {
+        auth.login({}).then((res) => {
+          expect(res).toEqual(authDataForNewlyAuthUser);
+          expect(getLoginPopupVisibility()).toBe(false);
+        });
+        expect(getLoginPopupVisibility()).toBe(true);
+        events$.next({ type: `sign${isNewUser ? 'up' : 'in'} ready` as 'signup ready' | 'signin ready', data: {} });
+        events$.next({ type: 'authenticated', data: authResult });
+      });
 
-    auth.login({}).then((res) => {
-      expect(res).toEqual(authDataForNewlyAuthUser);
-      expect(getLoginPopupVisibility()).toBe(false);
-    });
-    expect(getLoginPopupVisibility()).toBe(true);
-    events$.next({ type: `sign${isNewUser ? 'up' : 'in'} ready` as 'signup ready' | 'signin ready', data: {} });
-    events$.next({ type: 'authenticated', data: authResult });
     return checkAtTestEnd(() => expect(updates).toBe(2));
   };
 
@@ -230,13 +236,16 @@ describe('AuthService tests', () => {
       expect(res).toEqual({});
     });
 
-    expect(auth.init({})).resolves.toEqual({});
-    auth.login({}).catch((error) => {
-      expect(error).toEqual(getUserInfoError);
-      expect(getLoginPopupVisibility()).toBe(false);
-    });
-    expect(getLoginPopupVisibility()).toBe(true);
-    events$.next({ type: 'authenticated', data: authResult });
+    expect(auth.init({}))
+      .resolves.toEqual({})
+      .then(() => {
+        auth.login({}).catch((error) => {
+          expect(error).toEqual(getUserInfoError);
+          expect(getLoginPopupVisibility()).toBe(false);
+        });
+        expect(getLoginPopupVisibility()).toBe(true);
+        events$.next({ type: 'authenticated', data: authResult });
+      });
 
     return checkAtTestEnd(() => expect(updates).toBe(1));
   });
@@ -292,12 +301,16 @@ describe('AuthService tests', () => {
       expect(res).toEqual({});
     });
 
-    expect(auth.init({})).resolves.toEqual({});
-    auth.login({}).catch((error) => {
-      expect(error).toEqual(errors.loginCanceled);
-    });
-    expect(getLoginPopupVisibility()).toBe(true);
-    events$.next({ type: 'hide', data: {} });
+    expect(auth.init({}))
+      .resolves.toEqual({})
+      .then(() => {
+        auth.login({}).catch((error) => {
+          expect(error).toEqual(errors.loginCanceled);
+        });
+        expect(getLoginPopupVisibility()).toBe(true);
+        events$.next({ type: 'hide', data: {} });
+      });
+
     return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
@@ -383,12 +396,15 @@ describe('AuthService tests', () => {
       expect(res).toEqual({});
     });
 
-    expect(auth.init({})).resolves.toEqual({});
-    auth.login({});
-    expect(getLoginPopupVisibility()).toBe(true);
-    expect(auth.login({}))
-      .rejects.toEqual(errors.isAlreadyOpenedLoginPopup)
-      .then(() => expect(getLoginPopupVisibility()).toBe(true));
+    expect(auth.init({}))
+      .resolves.toEqual({})
+      .then(() => {
+        auth.login({});
+        expect(getLoginPopupVisibility()).toBe(true);
+        expect(auth.login({}))
+          .rejects.toEqual(errors.isAlreadyOpenedLoginPopup)
+          .then(() => expect(getLoginPopupVisibility()).toBe(true));
+      });
     return checkAtTestEnd(() => expect(updates).toBe(1));
   });
 
