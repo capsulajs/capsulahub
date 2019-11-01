@@ -70,6 +70,7 @@ Run
 ```bash
 yarn doc
 ```
+
 And open [doc/index.html](./doc/index.html) in browser.
 
 ## Test
