@@ -1,6 +1,4 @@
-import { TokenRequest } from './TokenRequest';
-
-export interface BaseOrganizationRequest extends TokenRequest {
+export interface BaseOrganizationRequest {
   /**
    * Already stored id for the specific organization
    */
