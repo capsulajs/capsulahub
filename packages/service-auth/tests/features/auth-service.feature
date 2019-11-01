@@ -120,6 +120,7 @@ Scenario: Closing auth0 modal when login promise is in a pending state
   And   auth0 modal is rendered on the screen
   When  user closes auth0 modal
   Then  login promise is rejected with an error
+  And   if user calls login method again the auth0 modal is rendered on the screen
 
 Scenario: Calling logout method with a valid request when user is authenticated
   Given AuthService with logout and authStatus methods
