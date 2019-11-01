@@ -293,7 +293,7 @@ describe('AuthService tests', () => {
   });
 
   it('Closing auth0 modal when login promise is in a pending state', () => {
-    expect.assertions(5);
+    expect.assertions(6);
     mockLock({ authData, isNewSession: true, events$ });
 
     const auth = new Auth(authOptions);
@@ -308,6 +308,8 @@ describe('AuthService tests', () => {
       .then(() => {
         auth.login({}).catch((error) => {
           expect(error).toEqual(errors.loginCanceled);
+          auth.login({});
+          expect(getLoginPopupVisibility()).toBe(true);
         });
         expect(getLoginPopupVisibility()).toBe(true);
         events$.next({ type: 'hide', data: {} });

@@ -26,6 +26,7 @@ export class Auth implements API.AuthService {
       this.modalVisibilitySubject$.next(true);
     });
     this.lock.on('hide', () => {
+      this.modalTabCurrentlyShown = undefined;
       this.modalVisibilitySubject$.next(false);
     });
     this.lock.on('authenticated', (authResult) => {
@@ -162,7 +163,6 @@ export class Auth implements API.AuthService {
   }
 
   private closeModal = () => {
-    this.modalTabCurrentlyShown = undefined;
     this.lock.hide();
   };
 
