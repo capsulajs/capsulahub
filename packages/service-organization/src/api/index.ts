@@ -1,3 +1,12 @@
-import * as API from './Organization';
-
-export { API };
+export { OrganizationService } from './OrganizationService';
+export { AddApiKeyRequest } from './AddApiKeyRequest';
+export { ApiKeysResponse } from './ApiKeysResponse';
+export { DeleteApiKeyRequest } from './DeleteApiKeyRequest';
+export { ApiKeys } from './ApiKeys';
+export { Claims } from './Claims';
+export { Role } from './Role';
+export { TokenRequest } from './TokenRequest';
+export { Organization } from './Organization';
+export { CreateOrganizationRequest } from './CreateOrganizationRequest';
+export { BaseOrganizationRequest } from './BaseOrganizationRequest';
+export { UpdateOrganizationRequest } from './UpdateOrganizationRequest';

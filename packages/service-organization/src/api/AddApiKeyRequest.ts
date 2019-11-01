@@ -1,14 +1,7 @@
 import { Claims } from './Claims';
+import { BaseOrganizationRequest } from './BaseOrganizationRequest';
 
-export interface AddApiKeyRequest {
-  /**
-   * The requested token issued by relevant authority (Auth0)
-   */
-  token: string;
-  /**
-   * Already stored org-id for the specific organization
-   */
-  organizationId: string;
+export interface AddApiKeyRequest extends BaseOrganizationRequest {
   /**
    * Specified name for the relevant API key
    */
