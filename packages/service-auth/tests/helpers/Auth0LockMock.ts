@@ -1,5 +1,5 @@
-import { Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import { Auth0Error, Auth0UserProfile } from 'auth0-js';
 import { API } from '../../src';
 import { LockEvent, Auth0LockMockOptions, LockEventType } from './types';
@@ -12,6 +12,7 @@ export class Auth0LockMock {
   private isNewSession: boolean;
   private checkSessionError: Auth0Error | null;
   private getUserInfoError: Auth0Error | null;
+  private subscriptions: Subscription[] = [];
   constructor({
     events$ = new Subject<LockEvent>(),
     authData = {},
@@ -28,12 +29,22 @@ export class Auth0LockMock {
     this.isNewSession = isNewSession;
     this.checkSessionError = checkSessionError;
     this.getUserInfoError = getUserInfoError;
+    this.events$
+      .pipe(
+        filter((event) => event.type === 'destroy'),
+        take(1)
+      )
+      .subscribe(() => {
+        this.subscriptions.forEach((sub) => sub.unsubscribe());
+      });
   }
 
   public on(eventType: LockEventType, callback: (eventData: object) => void) {
-    this.events$.pipe(filter((event) => event.type === eventType)).subscribe((event) => {
-      callback(event.data);
-    });
+    this.subscriptions.push(
+      this.events$.pipe(filter((event) => event.type === eventType)).subscribe((event) => {
+        callback(event.data);
+      })
+    );
   }
 
   public checkSession(_: object, callback: (error: Auth0Error | null, profile?: AuthResult) => void) {
