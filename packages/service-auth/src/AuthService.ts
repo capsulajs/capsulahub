@@ -111,7 +111,7 @@ export class Auth implements API.AuthService {
       this.authStatusSubject$.pipe(take(1)).subscribe(
         (authData) => {
           if (this.isUserAuth(authData)) {
-            this.lock.logout({});
+            this.lock.logout({ redirectTo: window.location.href });
             this.authStatusSubject$.next({});
             resolve();
           } else {
