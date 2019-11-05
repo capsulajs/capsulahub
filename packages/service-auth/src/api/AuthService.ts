@@ -22,7 +22,7 @@ export interface AuthService {
    * The method, that is responsible for triggering the logout logic of "auth0"
    * @returns A promise, that resolves with void, when a user is successfully logged out
    */
-  logout(logoutOptions: { returnTo?: string }): Promise<void>;
+  logout(logoutOptions: {}): Promise<void>;
   /**
    * The method, that is responsible for providing updates about the current auth status
    * @returns An observable, that emits new value each time, when auth status is changed
