@@ -106,12 +106,12 @@ export class Auth implements API.AuthService {
     });
   }
 
-  public logout({ returnTo }: { returnTo?: string }): Promise<void> {
+  public logout({}): Promise<void> {
     return this.createPromise<void>(({ resolve, reject }) => {
       this.authStatusSubject$.pipe(take(1)).subscribe(
         (authData) => {
           if (this.isUserAuth(authData)) {
-            this.lock.logout({ returnTo: returnTo || window.location.href });
+            this.lock.logout({ returnTo: window.location.href });
             this.authStatusSubject$.next({});
             resolve();
           } else {
