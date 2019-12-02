@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-service-renderer",
-  "version": "0.0.2-alpha.3",
+  "version": "0.0.2",
   "description": "Service extension, that renders all the web-components, that are registered in Workspace",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -28,7 +28,7 @@
     "deploy": "SERVICE=$(echo $npm_package_name | cut -d '/' -f 2) && ../../scripts/deploy.sh -s $SERVICE"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3",
+    "@capsulajs/capsulahub-workspace": "^0.0.2",
     "react": "16.8.6",
     "react-dom": "16.8.6"
   }
