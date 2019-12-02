@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-widget-logger",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2",
   "description": "Widget item extension, that provides a web-component with the logs of all the events, that happen in the application",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -25,8 +25,8 @@
     "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-ui": "^0.0.2-alpha.1",
-    "@capsulajs/capsulahub-utils": "^0.0.2-alpha.2",
+    "@capsulajs/capsulahub-ui": "^0.0.2",
+    "@capsulajs/capsulahub-utils": "^0.0.2",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "rxjs": "6.5.2"
