@@ -32,7 +32,7 @@
     "rxjs": "6.5.2"
   },
   "devDependencies": {
-    "@capsulajs/capsulajs-configuration-service": "latest",
+    "@capsulajs/capsulajs-configuration-service": "^0.1.16",
     "@types/express": "4.17.0",
     "@types/parcel-bundler": "1.12.0"
   }
