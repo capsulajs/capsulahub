@@ -1105,12 +1105,20 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@capsulajs/capsulajs-configuration-service@^0.1.14", "@capsulajs/capsulajs-configuration-service@latest":
+"@capsulajs/capsulajs-configuration-service@^0.1.14":
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/@capsulajs/capsulajs-configuration-service/-/capsulajs-configuration-service-0.1.14.tgz#5a1cae76f4cbce96aa07ce19f3a1505110976eca"
   integrity sha512-v1rLmDwakfgmAf2DpCUkrhecGGc+vf9HWzaNnjGhmYSqefJ+NqBihq0ZZ5+nIFQnpUjnRjxtvPEsxpX498ONOQ==
   dependencies:
     "@capsulajs/capsulajs-transport-providers" "^0.1.1"
+
+"@capsulajs/capsulajs-configuration-service@^0.1.16":
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/@capsulajs/capsulajs-configuration-service/-/capsulajs-configuration-service-0.1.16.tgz#0990ddf26c04959f20c82899e2c27ed9d230b884"
+  integrity sha512-xrwqkBkJKEzgiCDUET2LQoZNql1lPZZ9yGPfnUTLlmVFsLnRWHJxv1mM9JN26qbsqfIYeLQ0oudypRxy0fluTw==
+  dependencies:
+    "@capsulajs/capsulajs-transport-providers" "^0.1.1"
+    whatwg-fetch "^2.0.4"
 
 "@capsulajs/capsulajs-transport-providers@^0.1.1", "@capsulajs/capsulajs-transport-providers@latest":
   version "0.1.1"
@@ -16903,6 +16911,11 @@ whatwg-fetch@>=0.10.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
   integrity sha512-9GSJUgz1D4MfyKU7KRqwOjXCXTqWdFNvEr7eUBYchQiVc744mqK/MzXPNR2WsPkmkOa4ywfg8C2n8h+13Bey1Q==
+
+whatwg-fetch@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
+  integrity sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
 
 whatwg-mimetype@^2.1.0, whatwg-mimetype@^2.2.0:
   version "2.3.0"
