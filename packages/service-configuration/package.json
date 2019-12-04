@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-service-configuration",
-  "version": "0.0.2-alpha.3",
+  "version": "0.0.2",
   "description": "Service extension, that providers an ability to use ConfigurationService, that you can use for managing different configurations across your projects",
   "main": "lib/index.js",
   "module": "lib/index.js",

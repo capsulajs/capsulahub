@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-service-auth",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Auth extension allows to use auth0 for authentication logic",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -29,8 +29,8 @@
     "rxjs": "6.5.2"
   },
   "devDependencies": {
-    "@types/lodash.omitby": "^4.6.6",
-    "@capsulajs/capsulahub-workspace": "0.0.2-alpha.3",
-    "@types/auth0-lock": "^11.4.12"
+    "@capsulajs/capsulahub-workspace": "^0.0.2",
+    "@types/auth0-lock": "^11.4.12",
+    "@types/lodash.omitby": "^4.6.6"
   }
 }
