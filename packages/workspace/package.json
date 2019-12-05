@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-workspace",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The core package of Capsulahub. Includes the implementation of Workspace, that inits the application and keeps track of service and widgets extensions",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -35,8 +35,8 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@capsulajs/capsulahub-cdn-emulator": "^0.0.2",
-    "@capsulajs/capsulahub-utils": "^0.0.2",
+    "@capsulajs/capsulahub-cdn-emulator": "^0.0.3",
+    "@capsulajs/capsulahub-utils": "^0.0.3",
     "@scalecube/api": "0.0.2-alpha.12",
     "@types/uuid": "^3.4.5",
     "lodash": "^4.17.15",

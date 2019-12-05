@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Different common utils for Capsulahub",
   "main": "lib/index.js",
   "module": "lib/index.js",

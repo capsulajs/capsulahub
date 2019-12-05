@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This package provides an ability to use CLI to run and build Capsulahub application.",
   "main": "bin/index.js",
   "module": "bin/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-service-connection",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Connection extension allows to use different protocols to establish connection to a server",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -28,7 +28,7 @@
     "rxjs": "6.5.2"
   },
   "devDependencies": {
-    "@capsulajs/capsulahub-workspace": "^0.0.2",
+    "@capsulajs/capsulahub-workspace": "^0.0.3",
     "rsocket-flowable": "^0.0.10",
     "rsocket-websocket-server": "^0.0.10"
   }
