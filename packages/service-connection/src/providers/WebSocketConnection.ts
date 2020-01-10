@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
+import WebSocketForNode from 'ws';
 import { API } from '..';
 import { eventTypes, messages } from '../consts';
 import {
@@ -127,7 +128,7 @@ export default class WebSocketConnection implements API.Connection {
       this.receivedEvents$.next({ envKey, type: eventTypes.connecting, endpoint });
       let ws: WebSocket;
       try {
-        ws = new WebSocket(endpoint);
+        ws = typeof window === 'undefined' ? new WebSocketForNode(endpoint) : new WebSocket(endpoint);
       } catch (error) {
         this.receivedEvents$.next({
           envKey,
