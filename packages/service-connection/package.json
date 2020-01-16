@@ -16,7 +16,7 @@
     "clean": "rimraf lib dist node_modules",
     "doc": "typedoc src/api --out ./doc --mode file --hideGenerator",
     "build:dist": "rimraf dist && webpack --env.production=true",
-    "build:lib": "rimraf lib && tsc",
+    "build:lib": "rimraf lib && tsc --module CommonJS",
     "lint:md": "remark . --rc-path ../../.remarkrc --output",
     "lint:ts": "tslint '{src,tests}/**/*.{ts,tsx}' --fix",
     "publish:comment": "bash ../../scripts/publish_comment.sh $(echo $npm_package_name)",
@@ -25,10 +25,12 @@
   "dependencies": {
     "rsocket-core": "^0.0.10",
     "rsocket-websocket-client": "^0.0.10",
-    "rxjs": "6.5.2"
+    "@capsulajs/capsulahub-workspace": "^0.0.3",
+    "rxjs": "6.5.2",
+    "ws": "^7.2.1"
   },
   "devDependencies": {
-    "@capsulajs/capsulahub-workspace": "^0.0.3",
+    "@types/ws": "^6.0.4",
     "rsocket-flowable": "^0.0.10",
     "rsocket-websocket-server": "^0.0.10"
   }

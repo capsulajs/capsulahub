@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
+import WebSocketForNode from 'ws';
 import { API } from '..';
 import { eventTypes, messages } from '../consts';
 import {
@@ -12,7 +13,7 @@ import {
 } from '../helpers/validators';
 import { ReadyState } from '../helpers/types';
 
-type WsConnection = Promise<{ ws?: WebSocket; error?: string }>;
+type WsConnection = Promise<{ ws?: WebSocket | WebSocketForNode; error?: string }>;
 
 export default class WebSocketConnection implements API.Connection {
   private connections: {
@@ -125,9 +126,9 @@ export default class WebSocketConnection implements API.Connection {
   private createNewConnection = ({ envKey, endpoint }: API.OpenConnectionRequest): Promise<void> => {
     return new Promise((resolve, reject) => {
       this.receivedEvents$.next({ envKey, type: eventTypes.connecting, endpoint });
-      let ws: WebSocket;
+      let ws: WebSocket | WebSocketForNode;
       try {
-        ws = new WebSocket(endpoint);
+        ws = typeof window === 'undefined' ? new WebSocketForNode(endpoint) : new WebSocket(endpoint);
       } catch (error) {
         this.receivedEvents$.next({
           envKey,
