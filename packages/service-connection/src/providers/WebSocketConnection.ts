@@ -38,11 +38,11 @@ export default class WebSocketConnection implements API.Connection {
         .subscribe(({ type, envKey }) => {
           if (type === eventTypes.connected) {
             this.pingIntervalId = setInterval(async () => {
-              const ws = await this.connections[envKey].wsConnection;
+              const { ws } = await this.connections[envKey].wsConnection;
               if (ws instanceof WebSocketForNode) {
                 // NodeJS ping
                 ws.ping();
-              } else if (ws instanceof WebSocket) {
+              } else if (typeof WebSocket !== 'undefined') {
                 // Browser ping
                 this.send({ envKey, data: 'ping' });
               }
