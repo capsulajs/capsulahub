@@ -12,7 +12,6 @@ import {
   validateReadyStateForSend,
 } from '../helpers/validators';
 import { ReadyState } from '../helpers/types';
-import Timeout = NodeJS.Timeout;
 
 type WsConnection = Promise<{ ws?: WebSocket | WebSocketForNode; error?: string }>;
 
@@ -26,7 +25,7 @@ export default class WebSocketConnection implements API.Connection {
     };
   };
   private readonly receivedEvents$: Subject<API.ConnectionEventData>;
-  private pingIntervalId?: number | Timeout;
+  private pingIntervalId?: any;
 
   constructor({ pingInterval }: { pingInterval?: number } = {}) {
     this.connections = {};
@@ -39,11 +38,11 @@ export default class WebSocketConnection implements API.Connection {
           if (type === eventTypes.connected) {
             this.pingIntervalId = setInterval(async () => {
               const { ws } = await this.connections[envKey].wsConnection;
-              if (ws instanceof WebSocketForNode) {
+              if (typeof window === 'undefined') {
                 // NodeJS ping
                 console.info('Going to Ping to WS');
-                ws.ping();
-              } else if (typeof WebSocket !== 'undefined') {
+                (ws as WebSocketForNode).ping('ping', undefined, () => console.info('sent ping'));
+              } else {
                 // Browser ping
                 this.send({ envKey, data: 'ping' });
               }
