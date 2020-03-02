@@ -12,6 +12,7 @@ import {
   validateReadyStateForSend,
 } from '../helpers/validators';
 import { ReadyState } from '../helpers/types';
+import Timeout = NodeJS.Timeout;
 
 type WsConnection = Promise<{ ws?: WebSocket | WebSocketForNode; error?: string }>;
 
@@ -25,10 +26,34 @@ export default class WebSocketConnection implements API.Connection {
     };
   };
   private readonly receivedEvents$: Subject<API.ConnectionEventData>;
+  private pingIntervalId?: number | Timeout;
 
-  constructor() {
+  constructor({ pingInterval }: { pingInterval?: number } = {}) {
     this.connections = {};
     this.receivedEvents$ = new Subject<API.ConnectionEventData>();
+
+    if (pingInterval) {
+      this.receivedEvents$
+        .pipe(filter(({ type }) => type === eventTypes.connected || type === eventTypes.disconnected))
+        .subscribe(({ type, envKey }) => {
+          if (type === eventTypes.connected) {
+            this.pingIntervalId = setInterval(async () => {
+              const { ws } = await this.connections[envKey].wsConnection;
+              if (ws instanceof WebSocketForNode) {
+                // NodeJS ping
+                console.info('Going to Ping to WS');
+                ws.ping();
+              } else if (typeof WebSocket !== 'undefined') {
+                // Browser ping
+                this.send({ envKey, data: 'ping' });
+              }
+            }, pingInterval);
+          } else if (type === eventTypes.disconnected) {
+            clearInterval(this.pingIntervalId as number);
+            this.pingIntervalId = undefined;
+          }
+        });
+    }
   }
 
   public open = (openConnectionRequest: API.OpenConnectionRequest): Promise<void> => {
