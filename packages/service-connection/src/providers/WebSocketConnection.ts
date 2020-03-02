@@ -41,6 +41,7 @@ export default class WebSocketConnection implements API.Connection {
               const { ws } = await this.connections[envKey].wsConnection;
               if (ws instanceof WebSocketForNode) {
                 // NodeJS ping
+                console.log('Going to Ping to WS');
                 ws.ping();
               } else if (typeof WebSocket !== 'undefined') {
                 // Browser ping
