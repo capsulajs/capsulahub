@@ -97,3 +97,9 @@ export interface ConnectionEventData {
   envKey: string;
   data?: any;
 }
+
+export interface ConnectionOptions {
+  // Specifies the interval in milliseconds to ping tp the established connection
+  // Currently supported only for WebSocket provided
+  pingInterval?: number;
+}

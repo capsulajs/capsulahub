@@ -1,12 +1,14 @@
 import { Subscription } from 'rxjs';
+import { filter, takeWhile, tap } from 'rxjs/operators';
 import { baseInvalidValues, defaultEnvKey, defaultRequests } from '../helpers/consts';
 import { API } from '../../src';
 import { eventTypes, messages, providers } from '../../src/consts';
 import { getConnectionProvider } from '../helpers/utils';
 import RSocketServer, { IRSocketServer } from '../helpers/RSocketServer';
 
+const port = 4040;
+
 describe.each(Object.values(providers))('ConnectionService (%s) open method test suite', (provider) => {
-  const port = 4040;
   let connection: API.Connection;
   let subscription: Subscription;
   let rsServer: IRSocketServer;
@@ -183,5 +185,33 @@ describe.each(Object.values(providers))('ConnectionService (%s) open method test
     expect.assertions(1);
     await connection.open({ envKey, endpoint });
     return expect(connection.open({ envKey, endpoint })).rejects.toEqual(new Error(messages.alreadyConnected(envKey)));
+  });
+});
+
+describe('Connection options', () => {
+  const { envKey, getEndpoint } = defaultRequests[providers.websocket];
+  const endpoint = getEndpoint(port);
+
+  it('Ping interval (currently supported only for Websocket)', async () => {
+    jest.useFakeTimers();
+    const pingInterval = 5000;
+    const connection = getConnectionProvider(providers.websocket, { pingInterval })!;
+
+    let pingCount = 0;
+    const allPingsAreSent = connection
+      .events$({})
+      .pipe(
+        filter(({ type }) => type === eventTypes.messageSent),
+        tap(() => {
+          pingCount++;
+        }),
+        takeWhile(() => pingCount < 3)
+      )
+      .toPromise();
+
+    await connection.open({ envKey, endpoint });
+    jest.advanceTimersByTime(pingInterval * 3);
+    await allPingsAreSent;
+    return connection.close({ envKey });
   });
 });
