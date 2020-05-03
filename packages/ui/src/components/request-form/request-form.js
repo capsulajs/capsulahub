@@ -15,6 +15,7 @@ import {
   defaultColor,
   defaultRequestFormBgColor,
   codeModes,
+  namespace,
 } from '../constants';
 import './styles.css';
 import { darkTheme } from './theme-material-ui';
@@ -82,6 +83,26 @@ const defaultHeight = 561;
 
 const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
+const setDefaults = ({ content, clearCache, msgId, cache }) => {
+  const { requestArgs } = content;
+  let args = typeof requestArgs === 'string' ? [requestArgs] : requestArgs;
+
+  if (!!msgId && cache) {
+    if (clearCache) {
+      localStorage.removeItem(`${namespace}-${msgId}`);
+    } else {
+      const val = localStorage.getItem(`${namespace}-${msgId}`);
+      if (!!val) {
+        args = JSON.parse(val);
+      }
+    }
+  }
+  return {
+    requestArgs: args,
+    argsCount: args.length,
+  };
+};
+
 export default class RequestForm extends PureComponent {
   static propTypes = {
     selectedMethodPath: PropTypes.string,
@@ -110,6 +131,9 @@ export default class RequestForm extends PureComponent {
         })
       ).isRequired,
     }),
+    msgId: PropTypes.string.isRequired,
+    cache: PropTypes.bool.isRequired,
+    clearCache: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -129,15 +153,13 @@ export default class RequestForm extends PureComponent {
     title: 'Request Form',
     width: '100%',
     height: '100%',
+    msgId: null,
+    cache: false,
   };
 
   state = {
     language: this.props.content.language,
-    requestArgs:
-      typeof this.props.content.requestArgs === 'string'
-        ? [this.props.content.requestArgs]
-        : this.props.content.requestArgs,
-    argsCount: 1,
+    ...setDefaults(this.props),
     editorsIsValid: [true],
     executionError: '',
     additionalOptionValue: this.getAdditionalOptionValueFromOptions(this.props.additionalOptions),
@@ -217,10 +239,14 @@ export default class RequestForm extends PureComponent {
   };
 
   onChangeArgument = (index, newArgument) => {
+    const { msgId, cache } = this.props;
     this.setState(
       (prevState) => {
         const newArgs = [...prevState.requestArgs];
         newArgs[index] = newArgument;
+        if (!!msgId && cache) {
+          localStorage.setItem(`${namespace}-${msgId}`, JSON.stringify(newArgs));
+        }
         return { requestArgs: newArgs, executionError: '' };
       },
       () => {

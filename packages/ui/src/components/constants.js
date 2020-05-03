@@ -14,3 +14,5 @@ export const codeModes = {
   javascript: 'javascript',
   json: 'json',
 };
+
+export const namespace = 'capsula-message-cache';
