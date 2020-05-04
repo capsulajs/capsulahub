@@ -3,7 +3,7 @@ import { API } from '../../src';
 export const baseInvalidValues = [null, undefined, 123, ' ', '', true, false, [], ['test'], {}, { test: 'test' }];
 
 const endpoints = {
-  websocket: (_: number) => 'ws://demos.kaazing.com/echo',
+  websocket: (_: number) => 'ws://echo.websocket.org/echo',
   rsocket: (port: number) => `ws://localhost:${port}`,
 };
 
