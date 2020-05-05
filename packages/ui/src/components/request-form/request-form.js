@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { ThemeProvider } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import { Tooltip, IconButton } from '@material-ui/core';
-import { Block } from '@material-ui/icons';
+import { Cached } from '@material-ui/icons';
 import styled from 'styled-components';
 import Editor from './editor';
 import Dropdown from '../form/dropdown';
@@ -75,7 +75,9 @@ const ArgumentsCount = styled.div`
 const ArgumentsCountLabel = styled.label`
   margin-right: 10px;
 `;
-
+const IconWrapper = styled.div`
+  ${(props) => props.iconStyle}
+`;
 const defaultArgVal = {
   javascript: 'return {};',
   json: '{}',
@@ -88,16 +90,18 @@ const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 const setContent = ({ content, msgId, cache }) => {
   const { requestArgs } = content;
   let args = typeof requestArgs === 'string' ? [requestArgs] : requestArgs;
-
+  let iconClass = 'transparentIcon';
   if (cache) {
     const val = localStorage.getItem(`${namespace}-${msgId}`);
     if (!!val) {
       args = JSON.parse(val);
+      iconClass = '';
     }
   }
   return {
     requestArgs: args,
     argsCount: args.length,
+    iconClass,
   };
 };
 
@@ -241,10 +245,12 @@ export default class RequestForm extends PureComponent {
       (prevState) => {
         const newArgs = [...prevState.requestArgs];
         newArgs[index] = newArgument;
+        let iconClass = 'transparentIcon';
         if (cache) {
           localStorage.setItem(`${namespace}-${msgId}`, JSON.stringify(newArgs));
+          iconClass = '';
         }
-        return { requestArgs: newArgs, executionError: '' };
+        return { requestArgs: newArgs, executionError: '', iconClass };
       },
       () => {
         const triggerRemountAfterPasting = () => {
@@ -298,10 +304,10 @@ export default class RequestForm extends PureComponent {
   };
 
   onClearCache = () => {
-    const { msgId, content } = this.props;
+    const { msgId, content, cache } = this.props;
     localStorage.removeItem(`${namespace}-${msgId}`);
     this.setState({
-      ...setContent({ content, msgId, cache: false }),
+      ...setContent({ content, msgId, cache }),
     });
   };
   isFormValid = () =>
@@ -357,16 +363,19 @@ export default class RequestForm extends PureComponent {
                   />
                 )}
               </Wrapper>
-              <Tooltip title="Clear cache">
-                <IconButton
-                  aria-label="Clear"
-                  size="small"
-                  onClick={this.onClearCache}
-                  data-cy="request-form-btn-clear-cache"
-                >
-                  <Block fontSize="inherit" />
-                </IconButton>
-              </Tooltip>
+              <IconWrapper>
+                <Tooltip title="Clear cache">
+                  <IconButton
+                    aria-label="Clear"
+                    size="small"
+                    onClick={this.onClearCache}
+                    data-cy="request-form-btn-clear-cache"
+                    className={this.state.iconClass}
+                  >
+                    <Cached fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
+              </IconWrapper>
             </Header>
             {requestArgs.map((value, index) => {
               let height = this.props.height;
