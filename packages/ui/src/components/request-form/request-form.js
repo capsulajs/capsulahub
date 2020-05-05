@@ -75,9 +75,7 @@ const ArgumentsCount = styled.div`
 const ArgumentsCountLabel = styled.label`
   margin-right: 10px;
 `;
-const IconWrapper = styled.div`
-  ${(props) => props.iconStyle}
-`;
+
 const defaultArgVal = {
   javascript: 'return {};',
   json: '{}',
@@ -135,6 +133,7 @@ export default class RequestForm extends PureComponent {
     }),
     msgId: PropTypes.string.isRequired,
     cache: PropTypes.bool.isRequired,
+    iconStyle: PropTypes.object,
   };
 
   static defaultProps = {
@@ -328,6 +327,7 @@ export default class RequestForm extends PureComponent {
       width,
       isLineNumberVisible,
       additionalOptions,
+      iconStyle,
     } = this.props;
 
     return (
@@ -363,19 +363,17 @@ export default class RequestForm extends PureComponent {
                   />
                 )}
               </Wrapper>
-              <IconWrapper>
-                <Tooltip title="Clear cache">
-                  <IconButton
-                    aria-label="Clear"
-                    size="small"
-                    onClick={this.onClearCache}
-                    data-cy="request-form-btn-clear-cache"
-                    className={this.state.iconClass}
-                  >
-                    <Cached fontSize="inherit" />
-                  </IconButton>
-                </Tooltip>
-              </IconWrapper>
+              <Tooltip title="Clear cache" style={iconStyle}>
+                <IconButton
+                  aria-label="Clear"
+                  size="small"
+                  onClick={this.onClearCache}
+                  data-cy="request-form-btn-clear-cache"
+                  className={this.state.iconClass}
+                >
+                  <Cached fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
             </Header>
             {requestArgs.map((value, index) => {
               let height = this.props.height;
