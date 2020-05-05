@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { ThemeProvider } from '@material-ui/styles';
 import PropTypes from 'prop-types';
+import { Tooltip, IconButton } from '@material-ui/core';
+import { Block } from '@material-ui/icons';
 import styled from 'styled-components';
 import Editor from './editor';
 import Dropdown from '../form/dropdown';
@@ -83,18 +85,14 @@ const defaultHeight = 561;
 
 const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
-const setDefaults = ({ content, clearCache, msgId, cache }) => {
+const setContent = ({ content, msgId, cache }) => {
   const { requestArgs } = content;
   let args = typeof requestArgs === 'string' ? [requestArgs] : requestArgs;
 
-  if (!!msgId && cache) {
-    if (clearCache) {
-      localStorage.removeItem(`${namespace}-${msgId}`);
-    } else {
-      const val = localStorage.getItem(`${namespace}-${msgId}`);
-      if (!!val) {
-        args = JSON.parse(val);
-      }
+  if (cache) {
+    const val = localStorage.getItem(`${namespace}-${msgId}`);
+    if (!!val) {
+      args = JSON.parse(val);
     }
   }
   return {
@@ -133,7 +131,6 @@ export default class RequestForm extends PureComponent {
     }),
     msgId: PropTypes.string.isRequired,
     cache: PropTypes.bool.isRequired,
-    clearCache: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -153,13 +150,13 @@ export default class RequestForm extends PureComponent {
     title: 'Request Form',
     width: '100%',
     height: '100%',
-    msgId: null,
-    cache: false,
+    msgId: 'defaultId',
+    cache: true,
   };
 
   state = {
     language: this.props.content.language,
-    ...setDefaults(this.props),
+    ...setContent(this.props),
     editorsIsValid: [true],
     executionError: '',
     additionalOptionValue: this.getAdditionalOptionValueFromOptions(this.props.additionalOptions),
@@ -244,7 +241,7 @@ export default class RequestForm extends PureComponent {
       (prevState) => {
         const newArgs = [...prevState.requestArgs];
         newArgs[index] = newArgument;
-        if (!!msgId && cache) {
+        if (cache) {
           localStorage.setItem(`${namespace}-${msgId}`, JSON.stringify(newArgs));
         }
         return { requestArgs: newArgs, executionError: '' };
@@ -300,6 +297,13 @@ export default class RequestForm extends PureComponent {
     }
   };
 
+  onClearCache = () => {
+    const { msgId, content } = this.props;
+    localStorage.removeItem(`${namespace}-${msgId}`);
+    this.setState({
+      ...setContent({ content, msgId, cache: false }),
+    });
+  };
   isFormValid = () =>
     !!this.props.selectedMethodPath &&
     this.state.requestArgs.every((content) => !!content.trim()) &&
@@ -353,6 +357,16 @@ export default class RequestForm extends PureComponent {
                   />
                 )}
               </Wrapper>
+              <Tooltip title="Clear cache">
+                <IconButton
+                  aria-label="Clear"
+                  size="small"
+                  onClick={this.onClearCache}
+                  data-cy="request-form-btn-clear-cache"
+                >
+                  <Block fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
             </Header>
             {requestArgs.map((value, index) => {
               let height = this.props.height;
