@@ -87,12 +87,17 @@ const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
 const setContent = ({ content, msgId, cache }) => {
   const { requestArgs } = content;
-  let args = typeof requestArgs === 'string' ? [requestArgs] : requestArgs;
+  let args = Array.isArray(requestArgs) ? requestArgs : [requestArgs];
   let iconClass = 'transparentIcon';
   if (cache) {
     const val = localStorage.getItem(`${namespace}-${msgId}`);
     if (!!val) {
-      args = JSON.parse(val);
+      try {
+        const tmp = JSON.parse(val);
+        args = Array.isArray(tmp) ? tmp : [tmp];
+      } catch (e) {
+        console.error(e);
+      }
       iconClass = '';
     }
   }
@@ -305,9 +310,11 @@ export default class RequestForm extends PureComponent {
   onClearCache = () => {
     const { msgId, content, cache } = this.props;
     localStorage.removeItem(`${namespace}-${msgId}`);
-    this.setState({
-      ...setContent({ content, msgId, cache }),
-    });
+    if (cache) {
+      this.setState({
+        ...setContent({ content, msgId, cache }),
+      });
+    }
   };
   isFormValid = () =>
     !!this.props.selectedMethodPath &&
