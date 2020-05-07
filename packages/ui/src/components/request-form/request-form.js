@@ -92,13 +92,17 @@ const setContent = ({ content, msgId, cache }) => {
   if (cache) {
     const val = localStorage.getItem(`${namespace}-${msgId}`);
     if (!!val) {
+      let tmpArgs = '';
       try {
         const tmp = JSON.parse(val);
-        args = Array.isArray(tmp) ? tmp : [tmp];
+        tmpArgs = Array.isArray(tmp) ? tmp : [tmp];
       } catch (e) {
         console.error(e);
       }
-      iconClass = '';
+      if (JSON.stringify(args) !== JSON.stringify(tmpArgs)) {
+        iconClass = '';
+        args = tmpArgs;
+      }
     }
   }
   return {
@@ -309,8 +313,9 @@ export default class RequestForm extends PureComponent {
 
   onClearCache = () => {
     const { msgId, content, cache } = this.props;
-    localStorage.removeItem(`${namespace}-${msgId}`);
     if (cache) {
+      localStorage.removeItem(`${namespace}-${msgId}`);
+
       this.setState({
         ...setContent({ content, msgId, cache }),
       });

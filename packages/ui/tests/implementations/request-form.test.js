@@ -4,6 +4,16 @@ import { render, fireEvent, configure } from '@testing-library/react';
 import { getAllByTestId } from '@testing-library/dom';
 import RequestForm from '../../src/components/request-form/request-form';
 import { additionalOptions, generateBaseProps } from '../helpers/consts';
+import { namespace } from '../../src/components/constants';
+
+let editorMock;
+
+jest.mock('../../src/components/request-form/editor', () => {
+  return (props) => {
+    editorMock = props;
+    return null;
+  };
+});
 
 describe('Request Form tests', () => {
   configure({ testIdAttribute: 'data-cy' });
@@ -69,5 +79,51 @@ describe('Request Form tests', () => {
     );
 
     expect(getByTestIdInRequestForm('additional-options-select')).toHaveTextContent('requestStream');
+  });
+
+  it(`cache set to false and refresh button disabled`, () => {
+    expect.assertions(3);
+
+    const onSubmitMock = jest.fn();
+    const props = generateBaseProps({ onSubmit: onSubmitMock });
+    const cachedMsg = 'cached value';
+    const content = { ...props.content, requestArgs: 'simple content' };
+    localStorage.setItem(`${namespace}-${props.msgId}`, JSON.stringify([cachedMsg]));
+
+    const { getByTestId: getByTestIdInRequestForm } = render(
+      <RequestForm {...props} cache={false} content={content} />
+    );
+    expect(editorMock.value).toMatch(content.requestArgs);
+    fireEvent.click(getByTestIdInRequestForm('request-form-btn-clear-cache'));
+    expect(localStorage.getItem(`${namespace}-${props.msgId}`)).toMatch(cachedMsg);
+    expect(editorMock.value).toMatch(content.requestArgs);
+  });
+
+  it(`cache set to true and refresh button enabled`, () => {
+    expect.assertions(3);
+
+    const onSubmitMock = jest.fn();
+    const props = generateBaseProps({ onSubmit: onSubmitMock });
+    const content = { ...props.content, requestArgs: 'simple content' };
+    const cachedMsg = 'cached value';
+    localStorage.setItem(`${namespace}-${props.msgId}`, JSON.stringify([cachedMsg]));
+
+    const { getByTestId: getByTestIdInRequestForm } = render(<RequestForm {...props} cache={true} content={content} />);
+    expect(editorMock.value).toMatch(cachedMsg);
+    fireEvent.click(getByTestIdInRequestForm('request-form-btn-clear-cache'));
+
+    expect(localStorage.getItem(`${namespace}-${props.msgId}`)).toBe(null);
+    expect(editorMock.value).toMatch(content.requestArgs);
+  });
+
+  it('cache set to true but not value in localStorage', () => {
+    expect.assertions(1);
+
+    const onSubmitMock = jest.fn();
+    const props = generateBaseProps({ onSubmit: onSubmitMock });
+    const content = { ...props.content, requestArgs: 'simple content' };
+
+    const { getByTestId: getByTestIdInRequestForm } = render(<RequestForm {...props} content={content} />);
+    expect(editorMock.value).toMatch(content.requestArgs);
   });
 });
