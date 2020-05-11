@@ -376,9 +376,9 @@ export default class RequestForm extends PureComponent {
                   />
                 )}
               </Wrapper>
-              <Tooltip title="Clear cache" style={iconStyle}>
+              <Tooltip title="Restore default" style={iconStyle}>
                 <IconButton
-                  aria-label="Restore default"
+                  aria-label="Clear"
                   size="small"
                   onClick={this.onClearCache}
                   data-cy="request-form-btn-clear-cache"
