@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { ThemeProvider } from '@material-ui/styles';
 import PropTypes from 'prop-types';
+import { Tooltip, IconButton } from '@material-ui/core';
+import { Cached } from '@material-ui/icons';
 import styled from 'styled-components';
 import Editor from './editor';
 import Dropdown from '../form/dropdown';
@@ -15,6 +17,7 @@ import {
   defaultColor,
   defaultRequestFormBgColor,
   codeModes,
+  namespace,
 } from '../constants';
 import './styles.css';
 import { darkTheme } from './theme-material-ui';
@@ -82,6 +85,33 @@ const defaultHeight = 561;
 
 const languages = [{ label: codeModes.javascript }, { label: codeModes.json }];
 
+const setContent = ({ content, msgId, cache }) => {
+  const { requestArgs } = content;
+  let args = Array.isArray(requestArgs) ? requestArgs : [requestArgs];
+  let iconClass = 'transparentIcon';
+  if (cache) {
+    const val = localStorage.getItem(`${namespace}-${msgId}`);
+    if (!!val) {
+      let tmpArgs = '';
+      try {
+        const tmp = JSON.parse(val);
+        tmpArgs = Array.isArray(tmp) ? tmp : [tmp];
+      } catch (e) {
+        console.error(e);
+      }
+      if (JSON.stringify(args) !== JSON.stringify(tmpArgs)) {
+        iconClass = '';
+        args = tmpArgs;
+      }
+    }
+  }
+  return {
+    requestArgs: args,
+    argsCount: args.length,
+    iconClass,
+  };
+};
+
 export default class RequestForm extends PureComponent {
   static propTypes = {
     selectedMethodPath: PropTypes.string,
@@ -110,6 +140,9 @@ export default class RequestForm extends PureComponent {
         })
       ).isRequired,
     }),
+    msgId: PropTypes.string.isRequired,
+    cache: PropTypes.bool.isRequired,
+    iconStyle: PropTypes.object,
   };
 
   static defaultProps = {
@@ -129,15 +162,13 @@ export default class RequestForm extends PureComponent {
     title: 'Request Form',
     width: '100%',
     height: '100%',
+    msgId: 'defaultId',
+    cache: true,
   };
 
   state = {
     language: this.props.content.language,
-    requestArgs:
-      typeof this.props.content.requestArgs === 'string'
-        ? [this.props.content.requestArgs]
-        : this.props.content.requestArgs,
-    argsCount: 1,
+    ...setContent(this.props),
     editorsIsValid: [true],
     executionError: '',
     additionalOptionValue: this.getAdditionalOptionValueFromOptions(this.props.additionalOptions),
@@ -217,11 +248,18 @@ export default class RequestForm extends PureComponent {
   };
 
   onChangeArgument = (index, newArgument) => {
+    const { msgId, cache, content } = this.props;
     this.setState(
       (prevState) => {
         const newArgs = [...prevState.requestArgs];
         newArgs[index] = newArgument;
-        return { requestArgs: newArgs, executionError: '' };
+        let iconClass = 'transparentIcon';
+        if (cache) {
+          localStorage.setItem(`${namespace}-${msgId}`, JSON.stringify(newArgs));
+          const args = Array.isArray(content.requestArgs) ? content.requestArgs : [content.requestArgs];
+          iconClass = JSON.stringify(newArgs) !== JSON.stringify(args) ? '' : 'transparentIcon';
+        }
+        return { requestArgs: newArgs, executionError: '', iconClass };
       },
       () => {
         const triggerRemountAfterPasting = () => {
@@ -274,6 +312,16 @@ export default class RequestForm extends PureComponent {
     }
   };
 
+  onClearCache = () => {
+    const { msgId, content, cache } = this.props;
+    if (cache) {
+      localStorage.removeItem(`${namespace}-${msgId}`);
+
+      this.setState({
+        ...setContent({ content, msgId, cache }),
+      });
+    }
+  };
   isFormValid = () =>
     !!this.props.selectedMethodPath &&
     this.state.requestArgs.every((content) => !!content.trim()) &&
@@ -292,6 +340,7 @@ export default class RequestForm extends PureComponent {
       width,
       isLineNumberVisible,
       additionalOptions,
+      iconStyle,
     } = this.props;
 
     return (
@@ -327,6 +376,17 @@ export default class RequestForm extends PureComponent {
                   />
                 )}
               </Wrapper>
+              <Tooltip title="Restore default" style={iconStyle}>
+                <IconButton
+                  aria-label="Clear"
+                  size="small"
+                  onClick={this.onClearCache}
+                  data-cy="request-form-btn-clear-cache"
+                  className={this.state.iconClass}
+                >
+                  <Cached fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
             </Header>
             {requestArgs.map((value, index) => {
               let height = this.props.height;

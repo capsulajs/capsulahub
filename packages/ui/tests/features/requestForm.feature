@@ -39,3 +39,29 @@ Scenario: If "initialValue" is provided in "additionalOptions" prop - this value
     And   all other required props are provided
     Then  the dropdown with options appears in the Request Form
     And   the selected value in dropdown is 'initialValue' that was provided in props
+
+
+Scenario: cache set to false and refresh button disabled
+  Given cache set to false
+  And   msgId has value in the localStorage,
+  And   editor value receive the data from the props
+  When  refresh icon clicked
+  Then  cache will not clear
+  And   editor value will not change
+
+Scenario: cache set to true and refresh button enabled
+  Given Request Form component
+  And   cache set to true
+  And   msgId has value in the localStorage,
+  And   editor value receive the data from the localStorage
+  When  refresh icon clicked
+  Then  cache is clear
+  And   editor value restore to default
+
+
+Scenario: cache set to true but not value in localStorage
+  Given Request Form component
+  And   cache set to true
+  And   msgId does not value in the localStorage,
+  And   editor value receive the data from the props
+

@@ -6,3 +6,7 @@
   background-color: #686868 !important;
   opacity: 0.4;
 }
+
+.transparentIcon {
+  visibility: hidden;
+}

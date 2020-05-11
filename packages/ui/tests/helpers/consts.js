@@ -26,5 +26,7 @@ export const generateBaseProps = ({ onSubmit = () => {} }) => {
     onSubmit,
     width: '100%',
     title: 'Message',
+    cache: true,
+    msgId: 'test',
   };
 };
