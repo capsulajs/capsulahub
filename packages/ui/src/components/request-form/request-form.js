@@ -248,7 +248,7 @@ export default class RequestForm extends PureComponent {
   };
 
   onChangeArgument = (index, newArgument) => {
-    const { msgId, cache } = this.props;
+    const { msgId, cache, content } = this.props;
     this.setState(
       (prevState) => {
         const newArgs = [...prevState.requestArgs];
@@ -256,7 +256,8 @@ export default class RequestForm extends PureComponent {
         let iconClass = 'transparentIcon';
         if (cache) {
           localStorage.setItem(`${namespace}-${msgId}`, JSON.stringify(newArgs));
-          iconClass = '';
+          const args = Array.isArray(content.requestArgs) ? content.requestArgs : [content.requestArgs];
+          iconClass = JSON.stringify(newArgs) !== JSON.stringify(args) ? '' : 'transparentIcon';
         }
         return { requestArgs: newArgs, executionError: '', iconClass };
       },
@@ -377,7 +378,7 @@ export default class RequestForm extends PureComponent {
               </Wrapper>
               <Tooltip title="Clear cache" style={iconStyle}>
                 <IconButton
-                  aria-label="Clear"
+                  aria-label="Restore default"
                   size="small"
                   onClick={this.onClearCache}
                   data-cy="request-form-btn-clear-cache"
