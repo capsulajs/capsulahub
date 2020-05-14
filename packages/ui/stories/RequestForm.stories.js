@@ -33,6 +33,7 @@ export const props = {
     fieldName: 'asyncModel',
     options: [{ id: 'request/response', label: 'request/response' }, { id: 'request/stream', label: 'request/stream' }],
   },
+  iconStyle: { marginTop: '-6px' },
 };
 
 storiesOf('RequestForm', module).add('default', () => <RequestForm {...props} />);
