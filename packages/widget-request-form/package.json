@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-widget-request-form",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Widget item extension, that provides a web-component with an editor, that allows to create JS or JSON code snippets",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -25,7 +25,7 @@
     "lint:ts": "tslint '{src,tests,cypress}/**/*.{ts,tsx}' --fix"
   },
   "dependencies": {
-    "@capsulajs/capsulahub-ui": "^0.0.3",
+    "@capsulajs/capsulahub-ui": "^0.0.4",
     "@capsulajs/capsulahub-utils": "^0.0.3",
     "react": "16.8.6",
     "react-dom": "16.8.6",

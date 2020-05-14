@@ -1,6 +1,6 @@
 {
   "name": "@capsulajs/capsulahub-ui",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Common reusable ui components",
   "main": "./lib/index.js",
   "author": "CapsulaJS",
