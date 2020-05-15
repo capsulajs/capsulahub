@@ -75,6 +75,8 @@ export interface Connection {
 export interface OpenConnectionRequest {
   envKey: string;
   endpoint: string;
+  // Headers are supported only for WSConnection via NodeJS
+  headers?: { [key: string]: string };
 }
 
 export interface CloseConnectionRequest {
