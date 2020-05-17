@@ -219,7 +219,8 @@ export default class WebSocketConnection implements API.Connection {
         });
       };
 
-      ws.onerror = () => {
+      ws.onerror = (...args: any[]) => {
+        console.log('WS ONERROR ...args', args);
         this.receivedEvents$.next({
           envKey,
           data: messages.connectionError,
