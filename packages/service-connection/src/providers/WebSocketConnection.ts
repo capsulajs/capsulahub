@@ -220,7 +220,7 @@ export default class WebSocketConnection implements API.Connection {
       };
 
       ws.onerror = (error?: WebSocketForNode.ErrorEvent) => {
-        const errorMessage = error ? error.message : messages.connectionError;
+        const errorMessage = error && error.message ? error.message : messages.connectionError;
         this.receivedEvents$.next({
           envKey,
           data: errorMessage,
