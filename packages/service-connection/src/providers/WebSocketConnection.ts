@@ -61,7 +61,7 @@ export default class WebSocketConnection implements API.Connection {
         return reject(new Error(messages.invalidRequest));
       }
 
-      const { envKey, endpoint } = openConnectionRequest;
+      const { envKey, endpoint, headers } = openConnectionRequest;
       if (!!this.connections[envKey]) {
         try {
           validateReadyStateForOpen({ connection: this.connections[envKey], envKey });
@@ -70,7 +70,7 @@ export default class WebSocketConnection implements API.Connection {
         }
       }
 
-      return this.createNewConnection({ envKey, endpoint })
+      return this.createNewConnection({ envKey, endpoint, headers })
         .then(resolve)
         .catch((error) => {
           reject(error);
@@ -147,12 +147,12 @@ export default class WebSocketConnection implements API.Connection {
     return this.receivedEvents$.asObservable();
   };
 
-  private createNewConnection = ({ envKey, endpoint }: API.OpenConnectionRequest): Promise<void> => {
+  private createNewConnection = ({ envKey, endpoint, headers }: API.OpenConnectionRequest): Promise<void> => {
     return new Promise((resolve, reject) => {
       this.receivedEvents$.next({ envKey, type: eventTypes.connecting, endpoint });
       let ws: WebSocket | WebSocketForNode;
       try {
-        ws = typeof window === 'undefined' ? new WebSocketForNode(endpoint) : new WebSocket(endpoint);
+        ws = typeof window === 'undefined' ? new WebSocketForNode(endpoint, { headers }) : new WebSocket(endpoint);
       } catch (error) {
         this.receivedEvents$.next({
           envKey,
@@ -219,14 +219,15 @@ export default class WebSocketConnection implements API.Connection {
         });
       };
 
-      ws.onerror = () => {
+      ws.onerror = (error?: WebSocketForNode.ErrorEvent) => {
+        const errorMessage = error && error.message ? error.message : messages.connectionError;
         this.receivedEvents$.next({
           envKey,
-          data: messages.connectionError,
+          data: errorMessage,
           type: eventTypes.error,
           endpoint,
         });
-        reject(new Error(messages.connectionError));
+        reject(new Error(errorMessage));
       };
 
       ws.onclose = () => {
