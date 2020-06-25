@@ -169,8 +169,8 @@ export default class RSocketConnection implements API.Connection {
           serializers: JsonSerializers,
           setup: {
             dataMimeType: 'application/json',
-            keepAlive: 100000,
-            lifetime: 100000,
+            keepAlive: 20000,
+            lifetime: 180000,
             metadataMimeType: 'application/json',
           },
           transport: new RSocketWebSocketClient({ url: endpoint }),
